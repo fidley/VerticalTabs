@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="abapBlog.com - Vertical Tabs" topic="html/maintopic.html">
+	<topic label="Vertical Tabs"  href="html/maintopic.html"> 
+		<topic href="html/changelog.html" label="Changelog">
+     <topic href="html/changelog/version1.0.3.html" label="version 1.0.3">
+     </topic>
+     <topic href="html/changelog/version1.0.2.html" label="version 1.0.2">
+     </topic>
+  </topic>
+	</topic>
+</toc>

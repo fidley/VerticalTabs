@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html id="doc-page">
+<head>
+<link rel="stylesheet" type="text/css" href="../../css/toc.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ADT Classic Outline</title>
+</head>
+
+<body id="doc-body">
+		<h2 class="heading">ABAP Classic Outline - Changelog version 1.0.2</h2>
+<blockquote>It is recommended to update also the backend component using abapGit. This allows most of the new functionality and makes this plugin ready for S/4HANA 2021</blockquote>
+<p>
+		<ul id="supported-types" class="list">
+		<li>Help content added to plugin</li>
+		<li>Outline tree is now refreshed at save of the object. Works so far only in case of single save. (Save All still in backlog)</li>
+		<li>Preferences window added in ABAP Development Category<br>
+		<figure>
+		<img src="../../media/preferencesWindow1.0.2.png">
+		<figcaption><strong>Figure 1:</strong> New preferences window</figcaption>
+		</figure></li>
+		<li>You can choose now, if you want the navigation of the outline element to happen on double-click or at selection of element, like in ADT standard Outline</li>
+		<li>Fetch redefinitions for methods parameter<br>If latest backend component is installed and this parameter is enabled, the redefinitions of methods in subclasses are displayed under the method node.<br>
+		In default redefinitions for first level subclasses are fetch. If you wan to load redefinitions from all levels of subclasses, enable parameter <strong>Load all levels of redefinitions for methods</strong>.
+		<br>
+		<figure>
+		<img src="../../media/redefinitionsForMethods1.0.2.png">
+		<figcaption><strong>Figure 2:</strong> Redefinitions of method SET_ATTRIBUTE (CL_BCS_CONTROLLER)</figcaption>
+		</figure></li>
+		<li>Load all levels of sublcass parameter<br>If latest backend component is installled and this parameter is enabled, then in the subclasses node, all subclasses from all levels will be visible. When disabled, then only first level of inheritance will be shown.<br>
+		In case of previous backend version, parameter has no effect and all levels will be visible.<br>
+		<figure>
+		<img src="../../media/LoadAllLevelsOfSubclassEnabled1.0.2.png">
+			<figcaption><strong>Figure 3:</strong> All levels of subclasses for CL_BCS_CONTROLLER loaded</figcaption>
+		</figure>
+		<figure><img src="../../media/LoadAllLevelsOfSubclassesDisabled1.0.2.png">
+			<figcaption><strong>Figure 4:</strong> First level of subclasses for CL_BCS_CONTROLLER loaded</figcaption>
+		</figure></li>
+		<li>Icon decoration added to display static, read-only, abstract, constructors, etc.<br>Needs latest back-end component<br><figure><img src="../../media/IconDecoration1.0.2.png"><figcaption><strong>Figure 5:</strong> Icons decorators</figcaption>
+		</figure></li>
+		<li>Item counter added<br><figure><img src="../../media/counterOfItems1.0.2.png">
+			<figcaption><strong>Figure 6:</strong> Counter of items</figcaption>
+		</figure></li>
+	</ul>
+	</p>
+</body>
+</html>
