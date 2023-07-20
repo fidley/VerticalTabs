@@ -18,6 +18,7 @@ import com.abapblog.verticaltabs.tree.TreeContentProvider;
 
 public class TabNode extends TreeNode implements IPropertyListener {
 	private IEditorReference editorReference;
+	private IProject project;
 	private boolean pinned = false;
 
 	public TabNode(IEditorReference editorReference) throws PartInitException {
@@ -39,8 +40,8 @@ public class TabNode extends TreeNode implements IPropertyListener {
 
 					IFileEditorInput input = (IFileEditorInput) editorInput;
 					IFile file = input.getFile();
-					IProject activeProject = file.getProject();
-					setProjectName(activeProject.getName());
+					setProject(file.getProject());
+					setProjectName(getProject().getName());
 					file.getFullPath();
 					if (file.getFullPath() != null)
 						setPath(file.getFullPath().toString());
@@ -49,9 +50,9 @@ public class TabNode extends TreeNode implements IPropertyListener {
 				}
 
 			} else {
-				IProject project = editorInput.getAdapter(IProject.class);
-				if (project != null) {
-					setProjectName(project.getName());
+				setProject(editorInput.getAdapter(IProject.class));
+				if (getProject() != null) {
+					setProjectName(getProject().getName());
 				}
 			}
 		} catch (PartInitException e) {
@@ -174,6 +175,14 @@ public class TabNode extends TreeNode implements IPropertyListener {
 		setTitle(editorReference.getTitle());
 		setImage(editorReference.getTitleImage());
 		setProjectAndPath(editorReference);
+	}
+
+	public IProject getProject() {
+		return project;
+	}
+
+	private void setProject(IProject project) {
+		this.project = project;
 	}
 
 }

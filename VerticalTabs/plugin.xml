@@ -20,6 +20,12 @@
             allPopups="false"
             locationURI="toolbar:com.abapblog.verticaltabs.view">
          <command
+               commandId="com.abapblog.verticaltabs.commands.groupbyproject"
+               icon="platform:/plugin/org.eclipse.search/icons/full/etool16/group_by_project.png"
+               label="Group by project"
+               style="toggle">
+         </command>
+         <command
                commandId="com.abapblog.verticaltabs.commands.sort"
                icon="platform:/plugin/org.eclipse.xtext.ui/icons/elcl16/alphab_sort_co.gif"
                label="Sort"
@@ -67,6 +73,11 @@
             defaultHandler="com.abapblog.verticaltabs.handlers.SortCommand"
             id="com.abapblog.verticaltabs.commands.sort"
             name="Sort">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.GroupByProject"
+            id="com.abapblog.verticaltabs.commands.groupbyproject"
+            name="Group by project">
       </command>
    </extension>
 

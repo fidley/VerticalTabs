@@ -25,6 +25,10 @@ public class TreeCloseCellLabelProvider extends StyledCellLabelProvider {
 
 	@Override
 	public void update(ViewerCell cell) {
+		if (!(cell.getElement() instanceof TabNode)) {
+			super.update(cell);
+			return;
+		}
 		if (ImageToDispose == null) {
 			try {
 				ImageToDispose = ImageDescriptor

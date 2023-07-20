@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
+import com.abapblog.verticaltabs.tree.nodes.NodeType;
+import com.abapblog.verticaltabs.tree.nodes.NodesFactory;
 
 public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 
@@ -64,27 +66,43 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 			try {
 				ITreeNode targetNode = (ITreeNode) targetItem.getData();
 				ITreeNode sourceNode = (ITreeNode) dndSourceSelection.getFirstElement();
-				Integer targetIndex = targetNode.getSortIndex();
-
-				TreeContentProvider tcp = (TreeContentProvider) treeViewer.getContentProvider();
-				tcp.getInvisibleRoot();
-				ITreeNode[] treeNodes = tcp.getInvisibleRoot().getChildren();
-				for (int i = 0; i < treeNodes.length; i++) {
-					if (treeNodes[i] instanceof ITreeNode) {
-						ITreeNode tn = treeNodes[i];
-						if (!tn.equals(sourceNode)) {
-							if (tn.getSortIndex() >= targetIndex) {
-								tn.setSortIndex(tn.getSortIndex() + 1);
-							}
-						} else {
-							tn.setSortIndex(targetIndex);
-						}
-					}
-				}
-				TreeContentProvider.refreshTree();
+				if (targetNode.getNodeType().equals(sourceNode.getNodeType()))
+					manualSort(targetNode, sourceNode);
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	private void manualSort(ITreeNode targetNode, ITreeNode sourceNode) {
+		Integer targetIndex = targetNode.getSortIndex();
+		for (ITreeNode tn : getNodesColection(targetNode.getNodeType())) {
+			if (!tn.equals(sourceNode)) {
+				if (tn.getSortIndex() >= targetIndex) {
+					tn.setSortIndex(tn.getSortIndex() + 1);
+				}
+			} else {
+				tn.setSortIndex(targetIndex);
+			}
+		}
+		TreeContentProvider.refreshTree();
+	}
+
+	private ITreeNode[] getNodesColection(NodeType nodeType) {
+		TreeContentProvider tcp = (TreeContentProvider) treeViewer.getContentProvider();
+		NodesFactory nodesFactory = tcp.getNodesFactory();
+		switch (nodeType) {
+		case PROJECT:
+			return nodesFactory.getProjectNodes().values().toArray(new ITreeNode[0]);
+		case TAB:
+			return nodesFactory.getTabNodes().values().toArray(new ITreeNode[0]);
+		case GROOT:
+			break;
+		case GROUP:
+			break;
+		default:
+			break;
+		}
+		return null;
 	}
 
 	@Override

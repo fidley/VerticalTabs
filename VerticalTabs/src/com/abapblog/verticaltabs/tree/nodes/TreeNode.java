@@ -14,7 +14,7 @@ public abstract class TreeNode implements IAdaptable, ITreeNode {
 	private String projectName = "";
 	private String path = "";
 	private Integer sortIndex = Integer.valueOf(0);
-	private ArrayList<ITreeNode> children = new ArrayList<ITreeNode>();
+	protected ArrayList<ITreeNode> children = new ArrayList<ITreeNode>();
 
 	public TreeNode(String title, Image image, String tooltip) {
 		this.setTitle(title);
