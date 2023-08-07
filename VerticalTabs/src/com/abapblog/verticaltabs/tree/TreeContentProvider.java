@@ -111,8 +111,6 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		for (int i = 0; i < editorReferences.length; i++) {
 			editorReferences[i].getEditor(true);
 			addEditorReferenceToNodesAndGroups(editorReferences[i]);
-//			if (!invisibleRoot.contains(editorReferences[i]))
-//				invisibleRoot.addChild(new TabNode(editorReferences[i]));
 		}
 	}
 
@@ -122,7 +120,6 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 			if (!manualRoot.contains(tabNode))
 				manualRoot.addChild(tabNode);
 		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -174,7 +171,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 					TabNode tabNode = (TabNode) treeNodes[i];
 					if (tabNode.getEditorReference().equals(er)) {
 						tabNode.updateFromEditorReferenece();
-						refreshTree();
+//						refreshTree();
 						break;
 					}
 				}
@@ -187,6 +184,8 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 			@Override
 			public void run() {
 				try {
+					if (invisibleRoot.equals(projectsRoot))
+						expandedProjects = treeViewer.getExpandedElements();
 					treeViewer.refresh();
 					try {
 						if (invisibleRoot.equals(projectsRoot) && expandedProjects != null)

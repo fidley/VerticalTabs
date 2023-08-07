@@ -35,10 +35,12 @@ public class Sorter extends ViewerComparator {
 			rc = p1.getSortIndex().compareTo(p2.getSortIndex());
 			break;
 		case NAME:
-			rc = (p1.getTitle() + "_" + p1.getProjectName()).compareTo((p2.getTitle() + "_" + p2.getProjectName()));
+			rc = (p1.getTitle() + "_" + p1.getProjectName()).toUpperCase()
+					.compareTo((p2.getTitle() + "_" + p2.getProjectName()).toUpperCase());
 			break;
 		case PROJECT:
-			rc = (p1.getProjectName() + "_" + p1.getTitle()).compareTo((p2.getProjectName() + "_" + p2.getTitle()));
+			rc = (p1.getProjectName() + "_" + p1.getTitle()).toUpperCase()
+					.compareTo((p2.getProjectName() + "_" + p2.getTitle()).toUpperCase());
 			break;
 		default:
 			rc = 0;

@@ -40,7 +40,11 @@ public class NodesFactory {
 	private TabNode createTabNode(IEditorReference editorReference) throws PartInitException {
 		TabNode tabNode = new TabNode(editorReference);
 		getTabNodes().put(editorReference, tabNode);
-		getProjectNode(tabNode.getProject()).addChild(tabNode);
+		ProjectNode projectNode = getProjectNode(tabNode.getProject());
+		projectNode.addChild(tabNode);
+		if (!contentProvider.getProjectsRoot().contains(projectNode)) {
+			contentProvider.getProjectsRoot().addChild(projectNode);
+		}
 		return tabNode;
 	}
 
