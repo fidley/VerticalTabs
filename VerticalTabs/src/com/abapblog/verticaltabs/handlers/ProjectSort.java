@@ -5,11 +5,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 
-import com.abapblog.verticaltabs.tree.TreeContentProvider;
-import com.abapblog.verticaltabs.views.TreeSorting;
-import com.abapblog.verticaltabs.views.VTView;
+import com.abapblog.verticaltabs.tree.TreeSorting;
 
-public class ProjectSort implements IHandler {
+public class ProjectSort extends SortCommand implements IHandler {
+	public static final String ID = "com.abapblog.verticaltabs.commands.sort.project";
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -25,8 +24,7 @@ public class ProjectSort implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		VTView.sorter.setSorting(TreeSorting.PROJECT_NAME);
-		TreeContentProvider.refreshTree();
+		sort(TreeSorting.PROJECT);
 		return null;
 	}
 

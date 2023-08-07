@@ -5,10 +5,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 
-import com.abapblog.verticaltabs.tree.TreeSorting;
-
-public class NameSort extends SortCommand implements IHandler {
-	public static final String ID = "com.abapblog.verticaltabs.commands.sort.name";
+public class linkWIthEditor implements IHandler {
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -24,18 +21,20 @@ public class NameSort extends SortCommand implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		sort(TreeSorting.NAME);
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public boolean isHandled() {
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override

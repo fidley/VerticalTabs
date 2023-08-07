@@ -1,4 +1,4 @@
-package com.abapblog.verticaltabs.views;
+package com.abapblog.verticaltabs.tree;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -11,7 +11,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.TreeItem;
 
-import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.NodeType;
 import com.abapblog.verticaltabs.tree.nodes.NodesFactory;

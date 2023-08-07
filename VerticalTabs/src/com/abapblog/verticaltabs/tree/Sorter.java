@@ -1,4 +1,4 @@
-package com.abapblog.verticaltabs.views;
+package com.abapblog.verticaltabs.tree;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -34,10 +34,10 @@ public class Sorter extends ViewerComparator {
 		case MANUAL:
 			rc = p1.getSortIndex().compareTo(p2.getSortIndex());
 			break;
-		case TITLE:
+		case NAME:
 			rc = (p1.getTitle() + "_" + p1.getProjectName()).compareTo((p2.getTitle() + "_" + p2.getProjectName()));
 			break;
-		case PROJECT_NAME:
+		case PROJECT:
 			rc = (p1.getProjectName() + "_" + p1.getTitle()).compareTo((p2.getProjectName() + "_" + p2.getTitle()));
 			break;
 		default:

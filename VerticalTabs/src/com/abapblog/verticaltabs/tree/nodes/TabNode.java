@@ -56,7 +56,6 @@ public class TabNode extends TreeNode implements IPropertyListener {
 				}
 			}
 		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

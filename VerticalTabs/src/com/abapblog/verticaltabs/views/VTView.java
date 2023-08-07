@@ -2,6 +2,7 @@ package com.abapblog.verticaltabs.views;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -15,11 +16,20 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.abapblog.verticaltabs.Activator;
+import com.abapblog.verticaltabs.handlers.ManualSort;
+import com.abapblog.verticaltabs.handlers.NameSort;
+import com.abapblog.verticaltabs.handlers.ProjectSort;
+import com.abapblog.verticaltabs.handlers.SortCommand;
+import com.abapblog.verticaltabs.preferences.PreferenceConstants;
+import com.abapblog.verticaltabs.tree.ColumnControlListener;
 import com.abapblog.verticaltabs.tree.Columns;
+import com.abapblog.verticaltabs.tree.Sorter;
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
-import com.abapblog.verticaltabs.tree.TreeExpandListener;
+import com.abapblog.verticaltabs.tree.TreeDragAndDrop;
 import com.abapblog.verticaltabs.tree.TreeMouseHandler;
 import com.abapblog.verticaltabs.tree.TreePatternFilter;
+import com.abapblog.verticaltabs.tree.TreeSorting;
 import com.abapblog.verticaltabs.tree.VTFilteredTree;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeCloseCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreePinCellLabelProvider;
@@ -35,10 +45,16 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 	private boolean linkingActive = true;
 	protected String LinkedEditorProject = "";
 	protected IProject LinkedProject;
+	private final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+	private final ColumnControlListener columnListener = new ColumnControlListener();
 
 	@Override
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
+		createTreeViewer(parent);
+	}
+
+	private void createTreeViewer(Composite parent) {
 		filteredTree = new VTFilteredTree(parent, SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL,
 				new TreePatternFilter(), true, true);
 		TreeViewer viewer = filteredTree.getViewer();
@@ -48,11 +64,34 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 		setTreeProperties(viewer.getTree());
 		createColumns(viewer);
 		createGridData(viewer);
-		viewer.expandToLevel(2);
-		sorter = new Sorter();
-		viewer.setComparator(sorter);
+		createSorter(viewer);
 		new TreeDragAndDrop(viewer);
 //		setLinkingWithEditor();
+	}
+
+	private void createSorter(TreeViewer viewer) {
+		sorter = new Sorter();
+		viewer.setComparator(sorter);
+		TreeSorting treeSorter = SortCommand.getSorterFromPreference();
+		sorter.setSorting(treeSorter);
+		markSortRadiobutton(treeSorter);
+	}
+
+	private void markSortRadiobutton(TreeSorting treeSorter) {
+		switch (treeSorter) {
+		case MANUAL:
+			SortCommand.setSelectedStatus(true, ManualSort.ID);
+			break;
+		case PROJECT:
+			SortCommand.setSelectedStatus(true, ProjectSort.ID);
+			break;
+		case NAME:
+			SortCommand.setSelectedStatus(true, NameSort.ID);
+			break;
+		default:
+			break;
+
+		}
 	}
 
 	public static TreeViewer getTreeViewer() {
@@ -70,10 +109,11 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 		tree.setLinesVisible(true);
 		TreeMouseHandler treeMouseHandler = new TreeMouseHandler();
 		tree.addMouseListener(treeMouseHandler);
-		tree.addListener(SWT.Expand, new TreeExpandListener());
+//		tree.addListener(SWT.Expand, new TreeExpandListener());
 	}
 
 	private void createColumns(TreeViewer viewer) {
+
 		createColumnName(Columns.fromInteger(0), viewer);
 		createColumnName(Columns.fromInteger(1), viewer);
 		createColumnName(Columns.fromInteger(2), viewer);
@@ -97,37 +137,55 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 		}
 	}
 
+	private int getColumnWidth(Columns column) {
+		switch (column) {
+		case CLOSE:
+			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_CLOSE);
+		case PIN:
+			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_PIN);
+		case TAB:
+			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_NAME);
+		case PROJECT:
+			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_PROJECT);
+		}
+		return 40;
+	}
+
 	private void createCLOSEColumn(TreeViewer viewer) {
 		TreeViewerColumn closeColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		closeColumn.getColumn().setWidth(50);
+		closeColumn.getColumn().setWidth(getColumnWidth(Columns.CLOSE));
 		closeColumn.getColumn().setResizable(true);
 		closeColumn.getColumn().setText("Close");
 		closeColumn.setLabelProvider(new TreeCloseCellLabelProvider());
+		closeColumn.getColumn().addControlListener(columnListener);
 	}
 
 	private void createProjectColumn(TreeViewer viewer) {
 		TreeViewerColumn projectColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		projectColumn.getColumn().setWidth(120);
+		projectColumn.getColumn().setWidth(getColumnWidth(Columns.PROJECT));
 		projectColumn.getColumn().setResizable(true);
 		projectColumn.getColumn().setText("Project");
 		projectColumn.setLabelProvider(new TreeProjectCellLabelProvider());
+		projectColumn.getColumn().addControlListener(columnListener);
 	}
 
 	private void createTABColumn(TreeViewer viewer) {
 		TreeViewerColumn tabColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		tabColumn.getColumn().setWidth(300);
+		tabColumn.getColumn().setWidth(getColumnWidth(Columns.TAB));
 		tabColumn.getColumn().setText("Name");
 		tabColumn.getColumn().setResizable(true);
 		tabColumn.setLabelProvider(new TreeTabCellLabelProvider());
 		ColumnViewerToolTipSupport.enableFor(viewer);
+		tabColumn.getColumn().addControlListener(columnListener);
 	}
 
 	private void createPINColumn(TreeViewer viewer) {
 		TreeViewerColumn pinColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		pinColumn.getColumn().setWidth(30);
+		pinColumn.getColumn().setWidth(getColumnWidth(Columns.PIN));
 		pinColumn.getColumn().setText("Pin");
 		pinColumn.getColumn().setResizable(true);
 		pinColumn.setLabelProvider(new TreePinCellLabelProvider());
+		pinColumn.getColumn().addControlListener(columnListener);
 	}
 
 	private void createGridData(TreeViewer viewer) {

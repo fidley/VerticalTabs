@@ -1,20 +1,36 @@
 package com.abapblog.verticaltabs.tree.nodes;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 
 public class ProjectNode extends TreeNode {
+
+	private static Image ImageToDispose = null;
+
 	private IProject project = null;
 
+	private static final Image getProjectImage() {
+		try {
+			ImageToDispose = ImageDescriptor
+					.createFromURL(new URL("platform:/plugin/org.eclipse.wb.core/icons/project_open.gif"))
+					.createImage();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return ImageToDispose;
+	}
+
 	public ProjectNode(IProject project) {
-		super(project.getName(), PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER),
-				project.getFullPath().toString());
+		super(project.getName(), getProjectImage(), project.getFullPath().toString());
 		this.setProject(project);
 	}
 
 	public ProjectNode() {
-		super("Not linked", PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER), "");
+		super("Not linked", ImageToDispose, "");
 	}
 
 	@Override

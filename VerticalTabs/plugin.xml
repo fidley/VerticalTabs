@@ -7,7 +7,7 @@
             allowMultiple="false"
             category="org.eclipse.ui"
             class="com.abapblog.verticaltabs.views.VTView"
-            icon="platform:/plugin/org.eclipse.ui.views/icons/full/elcl16/tree_mode.png"
+            icon="icons/tree_mode.png"
             id="com.abapblog.verticaltabs.view"
             inject="false"
             name="Vertical Tabs"
@@ -21,64 +21,96 @@
             locationURI="toolbar:com.abapblog.verticaltabs.view">
          <command
                commandId="com.abapblog.verticaltabs.commands.groupbyproject"
-               icon="platform:/plugin/org.eclipse.search/icons/full/etool16/group_by_project.png"
+               icon="icons/group_by_project.png"
                label="Group by project"
                style="toggle">
          </command>
          <command
                commandId="com.abapblog.verticaltabs.commands.sort"
-               icon="platform:/plugin/org.eclipse.xtext.ui/icons/elcl16/alphab_sort_co.gif"
+               icon="icons/alphab_sort_co.gif"
                label="Sort"
                style="pulldown">
+            <parameter
+                  name="org.eclipse.ui.commands.radioStateParameter"
+                  value="Next">
+            </parameter>
          </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="menu:com.abapblog.verticaltabs.commands.sort">
          <command
-               commandId="com.abapblog.verticaltabs.commands.sort.manual"
+               commandId="com.abapblog.verticaltabs.commands.sort"
+               id="com.abapblog.verticaltabs.commands.sort.manual"
                label="Manual"
-               style="push">
+               style="radio">
+              <parameter
+                    name="org.eclipse.ui.commands.radioStateParameter"
+                    value="Manual">
+              </parameter>
          </command>
          <command
-               commandId="com.abapblog.verticaltabs.commands.sort.project"
+               commandId="com.abapblog.verticaltabs.commands.sort"
+               id="com.abapblog.verticaltabs.commands.sort.project"
                label="Project"
-               style="push">
+               style="radio">
+              <parameter
+                    name="org.eclipse.ui.commands.radioStateParameter"
+                    value="Project">
+              </parameter>
          </command>
          <command
-               commandId="com.abapblog.verticaltabs.commands.sort.name"
+               commandId="com.abapblog.verticaltabs.commands.sort"
+               id="com.abapblog.verticaltabs.commands.sort.name"
                label="Name"
-               style="push">
+               style="radio">
+              <parameter
+                    name="org.eclipse.ui.commands.radioStateParameter"
+                    value="Name">
+              </parameter>
          </command>
       </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="com.abapblog.verticaltabs.handlers.ManualSort"
-            id="com.abapblog.verticaltabs.commands.sort.manual"
-            name="Manual">
-      </command>
-      <command
-            defaultHandler="com.abapblog.verticaltabs.handlers.ProjectSort"
-            id="com.abapblog.verticaltabs.commands.sort.project"
-            name="Project">
-      </command>
-      <command
-            defaultHandler="com.abapblog.verticaltabs.handlers.NameSort"
-            id="com.abapblog.verticaltabs.commands.sort.name"
-            name="Name">
-      </command>
-      <command
             defaultHandler="com.abapblog.verticaltabs.handlers.SortCommand"
             id="com.abapblog.verticaltabs.commands.sort"
             name="Sort">
+         <state
+               class="org.eclipse.ui.handlers.RadioState"
+               id="org.eclipse.ui.commands.radioState">
+         </state>
+         <commandParameter
+               id="org.eclipse.ui.commands.radioStateParameter"
+               name="Sort Name"
+               optional="false">
+         </commandParameter>
       </command>
       <command
             defaultHandler="com.abapblog.verticaltabs.handlers.GroupByProject"
             id="com.abapblog.verticaltabs.commands.groupbyproject"
             name="Group by project">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
       </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.linkWIthEditor"
+            id="com.abapblog.verticaltabs.commands.linkWithEditor"
+            name="Link with Editor">
+         <state
+               class=" org.eclipse.ui.handlers.RegistryToggleState:true"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.abapblog.verticaltabs.preferences.PreferenceInitilizer">
+      </initializer>
    </extension>
 
 </plugin>
