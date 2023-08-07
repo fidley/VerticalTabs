@@ -1,27 +1,16 @@
 package com.abapblog.verticaltabs.tree.nodes;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
-public class ProjectNode extends TreeNode {
+import com.abapblog.verticaltabs.icons.Icons;
 
-	private static Image ImageToDispose = null;
+public class ProjectNode extends TreeNode {
 
 	private IProject project = null;
 
 	private static final Image getProjectImage() {
-		try {
-			ImageToDispose = ImageDescriptor
-					.createFromURL(new URL("platform:/plugin/org.eclipse.wb.core/icons/project_open.gif"))
-					.createImage();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return ImageToDispose;
+		return Icons.getIcon(Icons.ICON_PROJECT);
 	}
 
 	public ProjectNode(IProject project) {
@@ -30,7 +19,7 @@ public class ProjectNode extends TreeNode {
 	}
 
 	public ProjectNode() {
-		super("Not linked", ImageToDispose, "");
+		super("Not linked", getProjectImage(), "");
 	}
 
 	@Override

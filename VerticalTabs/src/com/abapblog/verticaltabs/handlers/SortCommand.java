@@ -119,7 +119,7 @@ public class SortCommand implements IHandler {
 		preferenceStore.setValue(PreferenceConstants.TREE_SORTING, treeSorting.name());
 	}
 
-	public static void setSelectedStatus(Boolean selected, String ID) {
+	public static void setSelectedStatus(TreeSorting treeSorting) {
 		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand(ID);
 		State state = command.getState(RadioState.STATE_ID);
@@ -128,7 +128,7 @@ public class SortCommand implements IHandler {
 			command.addState(RadioState.STATE_ID, state);
 		}
 
-		switch (getSorterFromPreference()) {
+		switch (treeSorting) {
 		case MANUAL:
 			changeState(command, state, STATE_MANUAL);
 			break;

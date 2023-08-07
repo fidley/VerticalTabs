@@ -17,9 +17,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.abapblog.verticaltabs.Activator;
-import com.abapblog.verticaltabs.handlers.ManualSort;
-import com.abapblog.verticaltabs.handlers.NameSort;
-import com.abapblog.verticaltabs.handlers.ProjectSort;
 import com.abapblog.verticaltabs.handlers.SortCommand;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
 import com.abapblog.verticaltabs.tree.ColumnControlListener;
@@ -78,20 +75,9 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 	}
 
 	private void markSortRadiobutton(TreeSorting treeSorter) {
-		switch (treeSorter) {
-		case MANUAL:
-			SortCommand.setSelectedStatus(true, ManualSort.ID);
-			break;
-		case PROJECT:
-			SortCommand.setSelectedStatus(true, ProjectSort.ID);
-			break;
-		case NAME:
-			SortCommand.setSelectedStatus(true, NameSort.ID);
-			break;
-		default:
-			break;
 
-		}
+		SortCommand.setSelectedStatus(treeSorter);
+
 	}
 
 	public static TreeViewer getTreeViewer() {
@@ -100,7 +86,8 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 
 	@Override
 	public void setFocus() {
-		this.parent.setFocus();
+		filteredTree.getViewer().getTree().setFocus();
+//		this.parent.setFocus();
 
 	}
 
