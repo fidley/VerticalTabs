@@ -11,19 +11,23 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.abapblog.verticaltabs.tree.nodes.GroupNode;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.NodeType;
 import com.abapblog.verticaltabs.tree.nodes.NodesFactory;
+import com.abapblog.verticaltabs.tree.nodes.TabNode;
 
 public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 
 	protected IStructuredSelection dndSourceSelection;
 	private final TreeViewer treeViewer;
+	private TreeContentProvider contentProvider;
 
 	public TreeDragAndDrop(TreeViewer treeViewer) {
 		final Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
-		final int operations = DND.DROP_MOVE;
+		final int operations = DND.DROP_MOVE | DND.DROP_COPY;
 		this.treeViewer = treeViewer;
+		contentProvider = (TreeContentProvider) treeViewer.getContentProvider();
 		treeViewer.addDragSupport(operations, types, this);
 		treeViewer.addDropSupport(operations, types, this);
 	}
@@ -41,7 +45,7 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 
 	@Override
 	public void dragOver(final DropTargetEvent event) {
-		event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
+		event.feedback = DND.FEEDBACK_SCROLL | DND.FEEDBACK_SELECT | DND.FEEDBACK_EXPAND;
 	}
 
 	@Override
@@ -60,15 +64,81 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 
 	@Override
 	public void drop(final DropTargetEvent event) {
-		if (event.detail == DND.DROP_MOVE) {
-			final TreeItem targetItem = (TreeItem) event.item;
-			try {
-				ITreeNode targetNode = (ITreeNode) targetItem.getData();
-				ITreeNode sourceNode = (ITreeNode) dndSourceSelection.getFirstElement();
-				if (targetNode.getNodeType().equals(sourceNode.getNodeType()))
-					manualSort(targetNode, sourceNode);
-			} catch (Exception e) {
+		switch (event.detail) {
+		case DND.DROP_MOVE:
+			resortNodes(event);
+			break;
+		case DND.DROP_COPY:
+			groupNodes(event);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void groupNodes(DropTargetEvent event) {
+		GroupNode groupNode = null;
+		NodesFactory nodesFactory = contentProvider.getNodesFactory();
+		if (!contentProvider.getInvisibleRoot().equals(contentProvider.getManualRoot())) {
+			return;
+		}
+		final TreeItem targetItem = (TreeItem) event.item;
+		try {
+			ITreeNode targetNode = (ITreeNode) targetItem.getData();
+			for (Object selectedNode : dndSourceSelection) {
+				ITreeNode sourceNode = (ITreeNode) selectedNode;
+				if (targetNode.equals(selectedNode))
+					continue;
+				if (targetNode.getNodeType().equals(sourceNode.getNodeType())
+						&& targetNode.getNodeType().equals(NodeType.TAB)
+						&& !(targetNode.getParent() instanceof GroupNode)) {
+
+					if (groupNode == null) {
+						groupNode = nodesFactory.createGroupNode((TabNode) targetNode);
+					}
+					nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, groupNode);
+				}
+				if (targetNode.getNodeType().equals(NodeType.GROUP) && sourceNode.getNodeType().equals(NodeType.TAB)) {
+					nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, (GroupNode) targetNode);
+				}
+				if (targetNode.getNodeType().equals(sourceNode.getNodeType())
+						&& targetNode.getNodeType().equals(NodeType.TAB)
+						&& (targetNode.getParent() instanceof GroupNode)) {
+					nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, (GroupNode) targetNode.getParent());
+				}
+
 			}
+			TreeContentProvider.refreshTree();
+		} catch (Exception e) {
+			for (Object selectedNode : dndSourceSelection) {
+				ITreeNode sourceNode = (ITreeNode) selectedNode;
+				if (sourceNode.getNodeType().equals(NodeType.TAB)) {
+					nodesFactory.moveTabNodeFromGroupToRoot(sourceNode);
+				}
+
+			}
+			TreeContentProvider.refreshTree();
+		}
+	}
+
+	private void resortNodes(final DropTargetEvent event) {
+		final TreeItem targetItem = (TreeItem) event.item;
+		try {
+			ITreeNode targetNode = (ITreeNode) targetItem.getData();
+			for (Object selectedNode : dndSourceSelection) {
+				ITreeNode sourceNode = (ITreeNode) selectedNode;
+				if (targetNode.getNodeType().equals(sourceNode.getNodeType())) {
+					if (contentProvider.getInvisibleRoot().equals(contentProvider.getProjectsRoot())
+							&& targetNode.getProjectName().equals(sourceNode.getProjectName())) {
+						manualSort(targetNode, sourceNode);
+					} else if (contentProvider.getInvisibleRoot().equals(contentProvider.getManualRoot())) {
+						manualSort(targetNode, sourceNode);
+					}
+				} else if (contentProvider.getInvisibleRoot().equals(contentProvider.getManualRoot())) {
+					manualSort(targetNode, sourceNode);
+				}
+			}
+		} catch (Exception e) {
 		}
 	}
 
@@ -87,8 +157,7 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 	}
 
 	private ITreeNode[] getNodesColection(NodeType nodeType) {
-		TreeContentProvider tcp = (TreeContentProvider) treeViewer.getContentProvider();
-		NodesFactory nodesFactory = tcp.getNodesFactory();
+		NodesFactory nodesFactory = contentProvider.getNodesFactory();
 		switch (nodeType) {
 		case PROJECT:
 			return nodesFactory.getProjectNodes().values().toArray(new ITreeNode[0]);
@@ -97,7 +166,7 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 		case GROOT:
 			break;
 		case GROUP:
-			break;
+			return nodesFactory.getGroupNodes().values().toArray(new ITreeNode[0]);
 		default:
 			break;
 		}

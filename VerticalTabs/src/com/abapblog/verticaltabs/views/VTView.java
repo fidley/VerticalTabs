@@ -1,7 +1,6 @@
 package com.abapblog.verticaltabs.views;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -9,11 +8,9 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import com.abapblog.verticaltabs.Activator;
@@ -29,19 +26,14 @@ import com.abapblog.verticaltabs.tree.TreePatternFilter;
 import com.abapblog.verticaltabs.tree.TreeSorting;
 import com.abapblog.verticaltabs.tree.VTFilteredTree;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeCloseCellLabelProvider;
+import com.abapblog.verticaltabs.tree.labelproviders.TreeNameCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreePinCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeProjectCellLabelProvider;
-import com.abapblog.verticaltabs.tree.labelproviders.TreeTabCellLabelProvider;
 
-public class VTView extends ViewPart implements ILinkedWithEditorView {
+public class VTView extends ViewPart {
 	private Composite parent;
 	private static VTFilteredTree filteredTree;
 	public static Sorter sorter;
-	protected IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
-	protected Action linkWithEditorAction;
-	private boolean linkingActive = true;
-	protected String LinkedEditorProject = "";
-	protected IProject LinkedProject;
 	private final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 	private final ColumnControlListener columnListener = new ColumnControlListener();
 
@@ -49,21 +41,34 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
 		createTreeViewer(parent);
+		IContextService contextService = getSite().getService(IContextService.class);
+		contextService.activateContext("com.abapblog.verticaltabs.view.context");
 	}
 
 	private void createTreeViewer(Composite parent) {
-		filteredTree = new VTFilteredTree(parent, SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL,
+		filteredTree = new VTFilteredTree(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL,
 				new TreePatternFilter(), true, true);
 		TreeViewer viewer = filteredTree.getViewer();
-		TreeContentProvider contentProvider = new TreeContentProvider(filteredTree.getViewer());
-		contentProvider.initialize();
+		TreeContentProvider contentProvider = TreeContentProvider.getTreeContentProvider(filteredTree.getViewer());
 		viewer.setContentProvider(contentProvider);
 		setTreeProperties(viewer.getTree());
 		createColumns(viewer);
 		createGridData(viewer);
 		createSorter(viewer);
 		new TreeDragAndDrop(viewer);
-//		setLinkingWithEditor();
+		createMenuManager(viewer);
+
+		contentProvider.setExpandedElementsForTreeViewer();
+		contentProvider.setInitialRootNode();
+	}
+
+	private void createMenuManager(TreeViewer viewer) {
+		final MenuManager menuMgr = new MenuManager();
+		menuMgr.setRemoveAllWhenShown(true);
+		final Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(menuMgr, viewer);
+		getSite().setSelectionProvider(viewer);
 	}
 
 	private void createSorter(TreeViewer viewer) {
@@ -86,6 +91,7 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 
 	@Override
 	public void setFocus() {
+
 		filteredTree.getViewer().getTree().setFocus();
 //		this.parent.setFocus();
 
@@ -109,8 +115,8 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 
 	private void createColumnName(Columns column, TreeViewer viewer) {
 		switch (column) {
-		case TAB:
-			createTABColumn(viewer);
+		case NAME:
+			createNAMEColumn(viewer);
 			break;
 		case PIN:
 			createPINColumn(viewer);
@@ -130,7 +136,7 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_CLOSE);
 		case PIN:
 			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_PIN);
-		case TAB:
+		case NAME:
 			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_NAME);
 		case PROJECT:
 			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_PROJECT);
@@ -141,7 +147,7 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 	private void createCLOSEColumn(TreeViewer viewer) {
 		TreeViewerColumn closeColumn = new TreeViewerColumn(viewer, SWT.NONE);
 		closeColumn.getColumn().setWidth(getColumnWidth(Columns.CLOSE));
-		closeColumn.getColumn().setResizable(true);
+		closeColumn.getColumn().setResizable(false);
 		closeColumn.getColumn().setText("Close");
 		closeColumn.setLabelProvider(new TreeCloseCellLabelProvider());
 		closeColumn.getColumn().addControlListener(columnListener);
@@ -156,12 +162,12 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 		projectColumn.getColumn().addControlListener(columnListener);
 	}
 
-	private void createTABColumn(TreeViewer viewer) {
+	private void createNAMEColumn(TreeViewer viewer) {
 		TreeViewerColumn tabColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		tabColumn.getColumn().setWidth(getColumnWidth(Columns.TAB));
+		tabColumn.getColumn().setWidth(getColumnWidth(Columns.NAME));
 		tabColumn.getColumn().setText("Name");
 		tabColumn.getColumn().setResizable(true);
-		tabColumn.setLabelProvider(new TreeTabCellLabelProvider());
+		tabColumn.setLabelProvider(new TreeNameCellLabelProvider());
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		tabColumn.getColumn().addControlListener(columnListener);
 	}
@@ -186,67 +192,10 @@ public class VTView extends ViewPart implements ILinkedWithEditorView {
 	}
 
 	@Override
-	public void editorActivated(IEditorPart activeEditor) {
-		IProject project = activeEditor.getEditorInput().getAdapter(IProject.class);
-		if (project != null) {
-
-		}
-
-	}
-
-	@Override
 	public void dispose() {
-		getSite().getPage().removePartListener(this.linkWithEditorPartListener);
 		filteredTree = null;
 		sorter = null;
 		super.dispose();
-	}
-
-	public void enableLinkingOfEditor() {
-		if (this.linkWithEditorAction != null) {
-			this.linkWithEditorAction.setEnabled(true);
-		}
-	}
-
-	private void setLinkingWithEditor() {
-		// Linking with editor
-		this.linkWithEditorAction = new Action("Link with Editor", SWT.TOGGLE) {
-			@Override
-			public void run() {
-				toggleLinking();
-			}
-
-		};
-		this.linkWithEditorAction.setText("Link with Editor");
-		this.linkWithEditorAction.setImageDescriptor(
-				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_SYNCED));
-		getViewSite().getActionBars().getToolBarManager().add(this.linkWithEditorAction);
-		getSite().getPage().addPartListener(this.linkWithEditorPartListener);
-		this.linkWithEditorAction.setChecked(isLinkingActive());
-		enableLinkingOfEditor();
-	}
-
-	protected void toggleLinking() {
-		if (isLinkingActive()) {
-			setLinkingActive(false);
-
-		} else {
-			setLinkingActive(true);
-			editorActivated(getSite().getPage().getActiveEditor());
-		}
-
-	}
-
-	public boolean isLinkingActive() {
-		return this.linkingActive;
-	}
-
-	public void setLinkingActive(final boolean linkingActive) {
-		this.linkingActive = linkingActive;
-	}
-
-	public void setLinkedEditorProject(final String linkedEditorProject) {
-		this.LinkedEditorProject = linkedEditorProject;
 	}
 
 }

@@ -9,7 +9,7 @@
             class="com.abapblog.verticaltabs.views.VTView"
             icon="icons/tree_mode.png"
             id="com.abapblog.verticaltabs.view"
-            inject="false"
+            inject="true"
             name="Vertical Tabs"
             restorable="true">
       </view>
@@ -19,6 +19,24 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:com.abapblog.verticaltabs.view">
+         <command
+               commandId="com.abapblog.verticaltabs.commands.expandAll"
+               icon="icons/expand_all.gif"
+               label="Expand All"
+               style="push"
+               tooltip="Expand All">
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.collapseAll"
+               icon="icons/collapse_all.gif"
+               label="Collapse All"
+               style="push"
+               tooltip="Collapse All">
+         </command>
+         <separator
+               name="separator"
+               visible="true">
+         </separator>
          <command
                commandId="com.abapblog.verticaltabs.commands.groupbyproject"
                icon="icons/group_by_project.png"
@@ -70,6 +88,32 @@
               </parameter>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:com.abapblog.verticaltabs.view">
+         <command
+               commandId="com.abapblog.verticaltabs.commands.renameGroup"
+               icon="icons/rename.gif"
+               label="Rename"
+               style="push"
+               tooltip="Rename Group">
+            <visibleWhen>
+			<with variable="activeMenuSelection">
+			<count value="+" />
+			<iterate ifEmpty="false" operator="and">
+			<instanceof value="com.abapblog.verticaltabs.tree.nodes.GroupNode">
+			</instanceof>
+			</iterate>
+			</with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.closeSelected"
+               icon="icons/notification-close.png"
+               label="Close"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -105,12 +149,55 @@
                id="org.eclipse.ui.commands.toggleState">
          </state>
       </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.RenameGroup"
+            id="com.abapblog.verticaltabs.commands.renameGroup"
+            name="Rename">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.CloseSelectedTabNodes"
+            id="com.abapblog.verticaltabs.commands.closeSelected"
+            name="Close Selected">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.CollapseAll"
+            id="com.abapblog.verticaltabs.commands.collapseAll"
+            name="Collapse All">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.ExpandAll"
+            id="com.abapblog.verticaltabs.commands.expandAll"
+            name="Expand All">
+      </command>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
             class="com.abapblog.verticaltabs.preferences.PreferenceInitilizer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.abapblog.verticaltabs.commands.renameGroup"
+            contextId="com.abapblog.verticaltabs.view.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F2">
+      </key>
+      <key
+            commandId="com.abapblog.verticaltabs.commands.closeSelected"
+            contextId="com.abapblog.verticaltabs.view.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="DELETE">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="com.abapblog.verticaltabs.view.context"
+            name="Vertical Tabs View Context"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
    </extension>
 
 </plugin>

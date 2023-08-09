@@ -8,13 +8,18 @@ import org.eclipse.ui.PlatformUI;
 
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
+import com.abapblog.verticaltabs.views.VTView;
 
 public class RowClickHandler {
 
 	public void handleClick(MouseEvent e, ITreeNode treeNode, int columnIndex) {
+		if (e.button == 3) {
+			VTView.getTreeViewer().getTree().setFocus();
+			return;
+		}
 
 		switch (Columns.fromInteger(columnIndex)) {
-		case TAB:
+		case NAME:
 			if (treeNode.isOpenable())
 				treeNode.open();
 			break;

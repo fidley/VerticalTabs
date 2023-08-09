@@ -6,12 +6,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 
+import com.abapblog.verticaltabs.icons.Icons;
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
 
 public class NodesFactory {
-	// private static List<TabNode> tabNodes = new ArrayList<>();
+
 	HashMap<IEditorReference, TabNode> tabNodes = new HashMap<IEditorReference, TabNode>();
 	HashMap<IProject, ProjectNode> projectNodes = new HashMap<IProject, ProjectNode>();
+	HashMap<TabNode, GroupNode> groupNodes = new HashMap<TabNode, GroupNode>();
 	private TreeContentProvider contentProvider;
 
 	public NodesFactory(TreeContentProvider contentProvider) {
@@ -26,6 +28,44 @@ public class NodesFactory {
 			if (!projectNode.hasChildren()) {
 				contentProvider.getProjectsRoot().removeChild(projectNode);
 			}
+			GroupNode groupNode = getGroupNodes().get(tabNode);
+			if (groupNode != null) {
+				groupNode.removeChild(tabNode);
+				if (!groupNode.hasChildren()) {
+					contentProvider.getManualRoot().removeChild(groupNode);
+					getGroupNodes().remove(tabNode);
+				}
+			}
+			if (tabNode.getParent() != null)
+				tabNode.getParent().removeChild(tabNode);
+			contentProvider.getManualRoot().removeChild(tabNode);
+		}
+	}
+
+	public void moveTabNodeToGroup(TabNode tabNode, GroupNode groupNode) {
+		ITreeNode oldParent = tabNode.getParent();
+		if (oldParent != null)
+			oldParent.removeChild(tabNode);
+
+		if (oldParent instanceof GroupNode) {
+			getGroupNodes().remove(tabNode);
+			if (!oldParent.hasChildren()) {
+				contentProvider.getManualRoot().removeChild(oldParent);
+			}
+		}
+		getGroupNodes().put(tabNode, groupNode);
+		groupNode.addChild(tabNode);
+	}
+
+	public void moveTabNodeFromGroupToRoot(ITreeNode tabNode) {
+		GroupNode groupNode = getGroupNodes().get(tabNode);
+		if (groupNode == null)
+			return;
+		getGroupNodes().remove(tabNode);
+		groupNode.removeChild(tabNode);
+		contentProvider.getManualRoot().addChild(tabNode);
+		if (!groupNode.hasChildren()) {
+			contentProvider.getManualRoot().removeChild(groupNode);
 		}
 	}
 
@@ -44,6 +84,8 @@ public class NodesFactory {
 		projectNode.addChild(tabNode);
 		if (!contentProvider.getProjectsRoot().contains(projectNode)) {
 			contentProvider.getProjectsRoot().addChild(projectNode);
+			if (!contentProvider.getExpandedProjects().contains(projectNode))
+				contentProvider.getExpandedProjects().add(projectNode);
 		}
 		return tabNode;
 	}
@@ -66,7 +108,19 @@ public class NodesFactory {
 		}
 		getProjectNodes().put(project, projectNode);
 		contentProvider.getProjectsRoot().addChild(projectNode);
+		contentProvider.getExpandedProjects().add(projectNode);
 		return projectNode;
+	}
+
+	public GroupNode createGroupNode(TabNode tabNode) {
+		GroupNode groupNode = new GroupNode(GroupNode.getNextGroupName(), Icons.getIcon(Icons.ICON_FOLDER_OPEN));
+		contentProvider.getManualRoot().addChild(groupNode);
+		contentProvider.getManualRoot().removeChild(tabNode);
+		groupNode.addChild(tabNode);
+
+		getGroupNodes().put(tabNode, groupNode);
+		return groupNode;
+
 	}
 
 	public HashMap<IEditorReference, TabNode> getTabNodes() {
@@ -75,6 +129,10 @@ public class NodesFactory {
 
 	public HashMap<IProject, ProjectNode> getProjectNodes() {
 		return projectNodes;
+	}
+
+	public HashMap<TabNode, GroupNode> getGroupNodes() {
+		return groupNodes;
 	}
 
 }

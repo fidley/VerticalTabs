@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
+import com.abapblog.verticaltabs.tree.nodes.NodeType;
 
 public class Sorter extends ViewerComparator {
 	private TreeSorting treeSorting;
@@ -32,7 +33,20 @@ public class Sorter extends ViewerComparator {
 		int rc = 0;
 		switch (treeSorting) {
 		case MANUAL:
-			rc = p1.getSortIndex().compareTo(p2.getSortIndex());
+			if (p1.getNodeType().equals(p2.getNodeType())) {
+				rc = p1.getSortIndex().compareTo(p2.getSortIndex());
+				break;
+			}
+			if (p1.getNodeType().equals(NodeType.GROUP)) {
+				rc = -1;
+				break;
+			}
+
+			if (p2.getNodeType().equals(NodeType.GROUP)) {
+				rc = 1;
+				break;
+			}
+
 			break;
 		case NAME:
 			rc = (p1.getTitle() + "_" + p1.getProjectName()).toUpperCase()
