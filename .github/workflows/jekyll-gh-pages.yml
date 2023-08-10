@@ -33,7 +33,7 @@ jobs:
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./VerticalTabs Update Site
+          source: ./VerticalTabs Update Site/
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
