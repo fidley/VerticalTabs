@@ -1,6 +1,7 @@
 package com.abapblog.verticaltabs.tree.nodes;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.graphics.Image;
@@ -14,6 +15,7 @@ public abstract class TreeNode implements IAdaptable, ITreeNode {
 	private String projectName = "";
 	private String path = "";
 	private Integer sortIndex = Integer.valueOf(0);
+	private UUID id = UUID.randomUUID();
 	protected ArrayList<ITreeNode> children = new ArrayList<ITreeNode>();
 
 	public TreeNode(String title, Image image, String tooltip) {
@@ -166,4 +168,16 @@ public abstract class TreeNode implements IAdaptable, ITreeNode {
 		this.sortIndex = sortIndex;
 
 	}
+
+	@Override
+	public UUID getID() {
+		return id;
+	}
+
+	@Override
+	public void setID(UUID uuid) {
+		id = uuid;
+
+	}
+
 }

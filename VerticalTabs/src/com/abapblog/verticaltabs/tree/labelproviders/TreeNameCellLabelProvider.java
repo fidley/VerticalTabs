@@ -5,13 +5,14 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Event;
 
+import com.abapblog.verticaltabs.tree.nodes.GroupNode;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.ProjectNode;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
 
-public class TreeTabCellLabelProvider extends StyledCellLabelProvider {
+public class TreeNameCellLabelProvider extends StyledCellLabelProvider {
 
-	public TreeTabCellLabelProvider() {
+	public TreeNameCellLabelProvider() {
 	}
 
 	@Override
@@ -30,8 +31,7 @@ public class TreeTabCellLabelProvider extends StyledCellLabelProvider {
 		if (element instanceof ITreeNode) {
 			ITreeNode node = (ITreeNode) element;
 			StyledString styledString = new StyledString(node.getTitle());
-//			if (node instanceof TabNode)
-//				styledString.append(" (" + node.getProjectName() + ")", StyledString.DECORATIONS_STYLER);
+			addCounters(node, styledString);
 			cell.setText(styledString.toString());
 			cell.setStyleRanges(styledString.getStyleRanges());
 			try {
@@ -45,6 +45,11 @@ public class TreeTabCellLabelProvider extends StyledCellLabelProvider {
 
 	}
 
+	private void addCounters(ITreeNode node, StyledString styledString) {
+		if (node instanceof GroupNode || node instanceof ProjectNode)
+			styledString.append(" (" + node.getChildren().length + ")", StyledString.DECORATIONS_STYLER);
+	}
+
 	@Override
 	protected void measure(Event event, Object element) {
 		super.measure(event, element);
@@ -56,8 +61,8 @@ public class TreeTabCellLabelProvider extends StyledCellLabelProvider {
 			TabNode node = (TabNode) element;
 			return node.getEditorReference().getTitleToolTip();
 		}
-		if (element instanceof ProjectNode) {
-			ProjectNode node = (ProjectNode) element;
+		if (element instanceof ITreeNode) {
+			ITreeNode node = (ITreeNode) element;
 			return node.getTooltip();
 		}
 		return "";

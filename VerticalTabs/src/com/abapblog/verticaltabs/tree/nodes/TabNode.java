@@ -16,17 +16,18 @@ import org.eclipse.ui.PlatformUI;
 
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
 
-public class TabNode extends TreeNode implements IPropertyListener {
+public class TabNode extends TreeNode implements IPropertyListener, Comparable<TabNode> {
 	private IEditorReference editorReference;
 	private IProject project;
 	private boolean pinned = false;
+	private static Integer biggestIndex = Integer.valueOf(9999);
 
 	public TabNode(IEditorReference editorReference) throws PartInitException {
 		super(editorReference.getTitle(), editorReference.getTitleImage(), editorReference.getTitleToolTip());
 		this.setEditorReference(editorReference);
 		editorReference.addPropertyListener(this);
 		setProjectAndPath(editorReference);
-		setSortIndex(TreeContentProvider.getNextSortIndex());
+		setSortIndex(getNextSortIndex());
 
 	}
 
@@ -184,4 +185,15 @@ public class TabNode extends TreeNode implements IPropertyListener {
 		this.project = project;
 	}
 
+	public static Integer getNextSortIndex() {
+		biggestIndex += 1;
+		return biggestIndex;
+	}
+
+	@Override
+	public int compareTo(TabNode o) {
+		if (o == null)
+			return 0;
+		return getSortIndex().compareTo(o.getSortIndex());
+	}
 }

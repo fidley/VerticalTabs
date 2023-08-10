@@ -13,10 +13,6 @@ public class ColumnControlListener implements ControlListener {
 	private final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 
 	@Override
-	public void controlMoved(ControlEvent arg0) {
-	}
-
-	@Override
 	public void controlResized(ControlEvent arg0) {
 		TreeColumn column = (TreeColumn) arg0.getSource();
 		TreeColumn[] allColumns = VTView.getTreeViewer().getTree().getColumns();
@@ -31,9 +27,10 @@ public class ColumnControlListener implements ControlListener {
 					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PIN, column.getWidth());
 					break;
 				case PROJECT:
-					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PROJECT, column.getWidth());
+					if (column.getWidth() != 0)
+						preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PROJECT, column.getWidth());
 					break;
-				case TAB:
+				case NAME:
 					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_NAME, column.getWidth());
 					break;
 				default:
@@ -44,6 +41,10 @@ public class ColumnControlListener implements ControlListener {
 			}
 
 		}
+	}
+
+	@Override
+	public void controlMoved(ControlEvent arg0) {
 	}
 
 }

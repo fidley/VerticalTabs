@@ -5,8 +5,8 @@ import org.eclipse.swt.graphics.Image;
 
 import com.abapblog.verticaltabs.icons.Icons;
 
-public class ProjectNode extends TreeNode {
-
+public class ProjectNode extends TreeNode implements Comparable<ProjectNode> {
+	private static Integer biggestIndex = Integer.valueOf(9999);
 	private IProject project = null;
 
 	private static final Image getProjectImage() {
@@ -16,6 +16,7 @@ public class ProjectNode extends TreeNode {
 	public ProjectNode(IProject project) {
 		super(project.getName(), getProjectImage(), project.getFullPath().toString());
 		this.setProject(project);
+		setSortIndex(getNextSortIndex());
 	}
 
 	public ProjectNode() {
@@ -71,4 +72,15 @@ public class ProjectNode extends TreeNode {
 		children.remove(child);
 	}
 
+	public static Integer getNextSortIndex() {
+		biggestIndex += 1;
+		return biggestIndex;
+	}
+
+	@Override
+	public int compareTo(ProjectNode o) {
+		if (o == null)
+			return 0;
+		return getSortIndex().compareTo(o.getSortIndex());
+	}
 }
