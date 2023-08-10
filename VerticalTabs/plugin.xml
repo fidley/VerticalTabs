@@ -53,6 +53,12 @@
                   value="Next">
             </parameter>
          </command>
+         <command
+               commandId="com.abapblog.verticaltabs.view.More"
+               icon="icons/view_menu.png"
+               label="More"
+               style="pulldown">
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -108,9 +114,41 @@
             </visibleWhen>
          </command>
          <command
+               commandId="com.abapblog.verticaltabs.commands.ungroup"
+               icon="icons/ungroup.gif"
+               label="Ungroup"
+               style="push"
+               tooltip="Ungroup">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="com.abapblog.verticaltabs.tree.nodes.GroupNode">
+                     </instanceof>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
                commandId="com.abapblog.verticaltabs.commands.closeSelected"
                icon="icons/notification-close.png"
                label="Close"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:com.abapblog.verticaltabs.view.More">
+         <command
+               commandId="com.abapblog.verticaltabs.commands.releaseNotes"
+               icon="icons/info_tsk.png"
+               label="Show Release Notes"
                style="push">
          </command>
       </menuContribution>
@@ -141,15 +179,6 @@
          </state>
       </command>
       <command
-            defaultHandler="com.abapblog.verticaltabs.handlers.linkWIthEditor"
-            id="com.abapblog.verticaltabs.commands.linkWithEditor"
-            name="Link with Editor">
-         <state
-               class=" org.eclipse.ui.handlers.RegistryToggleState:true"
-               id="org.eclipse.ui.commands.toggleState">
-         </state>
-      </command>
-      <command
             defaultHandler="com.abapblog.verticaltabs.handlers.RenameGroup"
             id="com.abapblog.verticaltabs.commands.renameGroup"
             name="Rename">
@@ -168,6 +197,21 @@
             defaultHandler="com.abapblog.verticaltabs.handlers.ExpandAll"
             id="com.abapblog.verticaltabs.commands.expandAll"
             name="Expand All">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.Ungroup"
+            id="com.abapblog.verticaltabs.commands.ungroup"
+            name="Ungroup">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.More"
+            id="com.abapblog.verticaltabs.view.More"
+            name="More">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.RleaseNotes"
+            id="com.abapblog.verticaltabs.commands.releaseNotes"
+            name="Show Release Notes">
       </command>
    </extension>
    <extension
@@ -198,6 +242,29 @@
             name="Vertical Tabs View Context"
             parentId="org.eclipse.ui.contexts.window">
       </context>
+   </extension>
+   <extension
+         point="org.eclipse.ui.elementFactories">
+      <factory
+            class="com.abapblog.verticaltabs.release.notes.EditorInputPersistant"
+            id="com.abapblog.verticaltabs.release.notes.EditorInputPersistant">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.abapblog.verticaltabs.release.notes.ReleaseNotesEditor"
+            default="false"
+            icon="icons/tree_mode.png"
+            id="com.abapblog.verticaltabs.release.notes.editor"
+            name="Vertical Tabs Release Notes">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="com.abapblog.verticaltabs.release.notes.Startup">
+      </startup>
    </extension>
 
 </plugin>
