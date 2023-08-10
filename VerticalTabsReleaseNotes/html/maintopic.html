@@ -3,31 +3,67 @@
 <head>
 <link rel="stylesheet" type="text/css" href="../css/toc.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>ADT Classic Outline</title>
+<title>Vertical Tabs</title>
 </head>
 
 <body id="doc-body">
 	<h2 class="heading">Vertical Tabs</h2>
 	<p>
 		This plugin adds new view called <b>Vertical Tabs</b> into your Eclipse installation.<br>
-		It is create to simulate the same outline which you used in SAP GUI transaction SE80.
-	<p><strong>In order to use the plugin, you need to install back-end component using abapGit from <a href="https://github.com/fidley/ADT-Classic-Outline-Backend">this repository</a></strong>
-	<p> </p>
-	<p><a href="changelog.html">Changelog of the plugin</a></p>
-	<p>
+		This view will allow you to <strong>see, filter, sort, group and navigate</strong> to all open editor tabs.<br><br><br>
+		When the view will be open, it will add all open editors into the tree.
+		<h3>Grouping</h3>
+		<p>There are two possibilities to do grouping in the view: manual and by project.</p>
+		<h4>Manual Grouping</h4>
+		<p>In manual grouping mode, all editor tabs are added directly to the root node of the tree.<br>
 			<figure>
-		<img src="../media/OutlinesComparison1.0.0.jfif">
-		<figcaption><strong>Figure 1:</strong> Comparison of Classic Outline with ADT standard Outline</figcaption>
+		<img src="../media/img/verticalTabsView.png">
+		<figcaption><strong>Figure 1:</strong> Vertical Tabs View - Manual Groups</figcaption>
 		</figure>
-				<figure>
-		<img src="../media/abapGitCodeVsStandard1.0.0.jfif">
-		<figcaption><strong>Figure 2:</strong> View for more than 50k of lines (standard setting)</figcaption>
+		</p>
+		<p>In order to group tabs, you need select one or more tabs in the tree,press CTRL button and do drag & drop on another entry.<br>
+		Group will be created from all entries. Using F2 button or context menu, you can rename your group.</p>
+
+		<figure>
+		<img src="../media/img/manualTabGrouping.gif">
+		<figcaption><strong>Figure 2:</strong> Manual Tab Grouping</figcaption>
 		</figure>
-				<figure>
-		<img src="../media/filteringOnOutline1.0.0.jfif">
-		<figcaption><strong>Figure 3:</strong> Filtering possibilities of the Classic Outline</figcaption>
+<h4>Group by Project</h4>
+<p>In order to group tabs by project, use the "Group by Project" button on the view toolbar.<br>
+Tabs will be automatically grouped in folders of their projects.<br>
+Tabs not linked with any projects, will be kept in separate folder named 'Not linked'</p>
+
+		<figure>
+		<img src="../media/img/verticalTabsViewByProject.png">
+		<figcaption><strong>Figure 3:</strong> Vertical Tabs View - Project Groups</figcaption>
 		</figure>
 
+<h3>Sorting</h3>
+<p>Sort button allows you to choose how the tabs should be displayed. Currently Manual, Name or Project sorting is allowed.<br></p>
+		<figure>
+		<img src="../media/img/viewSortingPossibilities.png">
+		<figcaption><strong>Figure 4:</strong> Sorting possibilties of the View</figcaption>
+		</figure>
+<h4>Manual sorting</h4>
+<P>Manual sorting is done by drag & drop. You can sort tabs, groups or projects.</P>
+		<figure>
+		<img src="../media/img/manualTabSorting.gif">
+		<figcaption><strong>Figure 5:</strong> Manual sorting</figcaption>
+		</figure>
+<h4>Sorting by Name</h4>
+	<p>When used Tabs, Groups and Projects will be sorted alpabetically by Name/Project</p>
+<h4>Sorting by Project</h4>
+	<p>When used Tabs, Groups and Projects will be sorted alpabetically by Project/Name</p>
+<h3>Pinning</h3>
+<p>When you select your tab to be pinned in the Vertical Tabs view, then after closing the editor window linked with that tab, the tab will remain on the tree.<br>
+On selection of the pinned tab, linked editor will be restored.</p>
+		<figure>
+		<img src="../media/img/pinTab.png">
+		<figcaption><strong>Figure 6:</strong> Manual sorting</figcaption>
+		</figure>
+<h3>Restoring after startup</h3>
+<p>During the shutdown of the Eclipse, sorting & grouping of the tabs is stored.<br>
+This data is then used, to restore grouping and sorting after the next Eclipse startup</p>
 
 </body>
 </html>

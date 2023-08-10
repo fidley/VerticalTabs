@@ -85,7 +85,8 @@ public class MementoConverter {
 			IProject project = projects[i];
 			if (project.isOpen()) {
 				for (IMemento pm : projectsMemento) {
-					if (pm.getString(MementoConstants.Keys.NodeName).equals("Not linked")) {
+					if (pm.getString(MementoConstants.Keys.NodeName).equals("Not linked")
+							&& projectMementoMap.get(null) == null) {
 						projectMementoMap.put(null, pm);
 					}
 					if (pm.getString(MementoConstants.Keys.NodeName).equals(project.getName())) {

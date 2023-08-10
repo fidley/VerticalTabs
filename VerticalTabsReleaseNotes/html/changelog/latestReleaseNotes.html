@@ -3,67 +3,67 @@
 <head>
 <link rel="stylesheet" type="text/css" href="../../css/toc.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>ADT Classic Outline</title>
+<title>Vertical Tabs</title>
 </head>
 
 <body id="doc-body">
-		<h2 class="heading">ABAP Classic Outline - Changelog version 1.0.3</h2>
-<p>
-		<ul id="supported-types" class="list">
-		<li>Expand / Collapse buttons added to Classic Outline View</br>
-		<figure>
-				<img src="../../media/adtco1.0.3expandcollapse.png">
-		<figcaption><strong>Figure 1:</strong>New buttons on the view toolbar</figcaption>
-		</figure></li>
-		<li>Context menu added with functionality:<br>
-		<ul><li>Run ATC (with default system check variant)<br></li>
-		<li>Run Unit Tests<br></li>
-		<li>Run Unit Tests with Coverage</li></ul>
-		<figure>
-				<img src="../../media/adtco1.0.3runatcunittest.png">
-		<figcaption><strong>Figure 2:</strong>Context menu for running ATC and Unit Tests</figcaption>
-		</figure>	</li>
-		<li><strong>Bugs Solved:</strong>
-		<ul><li>When removing the filter from outline, tree was fully collapsed</li>
-		<li>During creation of the Outline tree, tree was expanded to all levels in some circumstances</li>
-		</ul></li>
-	</ul>
-	</p>
-
-	<h2 class="heading">ABAP Classic Outline - Changelog version 1.0.2</h2>
-<blockquote>It is recommended to update also the backend component using abapGit. This allows most of the new functionality and makes this plugin ready for S/4HANA 2021</blockquote>
-<p>
-		<ul id="supported-types" class="list">
-		<li>Help content added to plugin</li>
-		<li>Outline tree is now refreshed at save of the object. Works so far only in case of single save. (Save All still in backlog)</li>
-		<li>Preferences window added in ABAP Development Category<br>
-		<figure>
-		<img src="../../media/preferencesWindow1.0.2.png">
-		<figcaption><strong>Figure 1:</strong> New preferences window</figcaption>
-		</figure></li>
-		<li>You can choose now, if you want the navigation of the outline element to happen on double-click or at selection of element, like in ADT standard Outline</li>
-		<li>Fetch redefinitions for methods parameter<br>If latest backend component is installed and this parameter is enabled, the redefinitions of methods in subclasses are displayed under the method node.<br>
-		In default redefinitions for first level subclasses are fetch. If you wan to load redefinitions from all levels of subclasses, enable parameter <strong>Load all levels of redefinitions for methods</strong>.
-		<br>
-		<figure>
-		<img src="../../media/redefinitionsForMethods1.0.2.png">
-		<figcaption><strong>Figure 2:</strong> Redefinitions of method SET_ATTRIBUTE (CL_BCS_CONTROLLER)</figcaption>
-		</figure></li>
-		<li>Load all levels of sublcass parameter<br>If latest backend component is installled and this parameter is enabled, then in the subclasses node, all subclasses from all levels will be visible. When disabled, then only first level of inheritance will be shown.<br>
-		In case of previous backend version, parameter has no effect and all levels will be visible.<br>
-		<figure>
-		<img src="../../media/LoadAllLevelsOfSubclassEnabled1.0.2.png">
-			<figcaption><strong>Figure 3:</strong> All levels of subclasses for CL_BCS_CONTROLLER loaded</figcaption>
+	<h2 class="heading">Vertical Tabs</h2>
+	<p>
+		This plugin adds new view called <b>Vertical Tabs</b> into your Eclipse installation.<br>
+		This view will allow you to <strong>see, filter, sort, group and navigate</strong> to all open editor tabs.<br><br><br>
+		When the view will be open, it will add all open editors into the tree.
+		<h3>Grouping</h3>
+		<p>There are two possibilities to do grouping in the view: manual and by project.</p>
+		<h4>Manual Grouping</h4>
+		<p>In manual grouping mode, all editor tabs are added directly to the root node of the tree.<br>
+			<figure>
+		<img src="../../media/img/verticalTabsView.png">
+		<figcaption><strong>Figure 1:</strong> Vertical Tabs View - Manual Groups</figcaption>
 		</figure>
-		<figure><img src="../../media/LoadAllLevelsOfSubclassesDisabled1.0.2.png">
-			<figcaption><strong>Figure 4:</strong> First level of subclasses for CL_BCS_CONTROLLER loaded</figcaption>
-		</figure></li>
-		<li>Icon decoration added to display static, read-only, abstract, constructors, etc.<br>Needs latest back-end component<br><figure><img src="../../media/IconDecoration1.0.2.png"><figcaption><strong>Figure 5:</strong> Icons decorators</figcaption>
-		</figure></li>
-		<li>Item counter added<br><figure><img src="../../media/counterOfItems1.0.2.png">
-			<figcaption><strong>Figure 6:</strong> Counter of items</figcaption>
-		</figure></li>
-	</ul>
-	</p>
+		</p>
+		<p>In order to group tabs, you need select one or more tabs in the tree,press CTRL button and do drag & drop on another entry.<br>
+		Group will be created from all entries. Using F2 button or context menu, you can rename your group.</p>
+
+		<figure>
+		<img src="../../media/img/manualTabGrouping.gif">
+		<figcaption><strong>Figure 2:</strong> Manual Tab Grouping</figcaption>
+		</figure>
+<h4>Group by Project</h4>
+<p>In order to group tabs by project, use the "Group by Project" button on the view toolbar.<br>
+Tabs will be automatically grouped in folders of their projects.<br>
+Tabs not linked with any projects, will be kept in separate folder named 'Not linked'</p>
+
+		<figure>
+		<img src="../../media/img/verticalTabsViewByProject.png">
+		<figcaption><strong>Figure 3:</strong> Vertical Tabs View - Project Groups</figcaption>
+		</figure>
+
+<h3>Sorting</h3>
+<p>Sort button allows you to choose how the tabs should be displayed. Currently Manual, Name or Project sorting is allowed.<br></p>
+		<figure>
+		<img src="../../media/img/viewSortingPossibilities.png">
+		<figcaption><strong>Figure 4:</strong> Sorting possibilties of the View</figcaption>
+		</figure>
+<h4>Manual sorting</h4>
+<P>Manual sorting is done by drag & drop. You can sort tabs, groups or projects.</P>
+		<figure>
+		<img src="../../media/img/manualTabSorting.gif">
+		<figcaption><strong>Figure 5:</strong> Manual sorting</figcaption>
+		</figure>
+<h4>Sorting by Name</h4>
+	<p>When used Tabs, Groups and Projects will be sorted alpabetically by Name/Project</p>
+<h4>Sorting by Project</h4>
+	<p>When used Tabs, Groups and Projects will be sorted alpabetically by Project/Name</p>
+<h3>Pinning</h3>
+<p>When you select your tab to be pinned in the Vertical Tabs view, then after closing the editor window linked with that tab, the tab will remain on the tree.<br>
+On selection of the pinned tab, linked editor will be restored.</p>
+		<figure>
+		<img src="../../media/img/pinTab.png">
+		<figcaption><strong>Figure 6:</strong> Manual sorting</figcaption>
+		</figure>
+<h3>Restoring after startup</h3>
+<p>During the shutdown of the Eclipse, sorting & grouping of the tabs is stored.<br>
+This data is then used, to restore grouping and sorting after the next Eclipse startup</p>
+
 </body>
 </html>

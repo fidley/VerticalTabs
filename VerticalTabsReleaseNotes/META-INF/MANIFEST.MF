@@ -1,12 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VerticalTabsReleaseNotes
-Bundle-SymbolicName: com.abapblog.verticaltabs.release.notes
-Bundle-Vendor: abapblog.com
-Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.abapblog.verticaltabs.release.notes.content;singleton:=true
+Bundle-Vendor: ABAPBlog.com
+Bundle-Version: 0.0.0.qualifier
 Bundle-Activator: com.abapblog.verticaltabs.release.notes.Activator
+Eclipse-BundleShape: dir
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-20
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: VerticalTabsReleaseNotes
 Bundle-ActivationPolicy: lazy
