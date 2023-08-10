@@ -10,6 +10,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -31,10 +33,11 @@ import com.abapblog.verticaltabs.tree.labelproviders.TreePinCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeProjectCellLabelProvider;
 
 public class VTView extends ViewPart {
+	private IMemento memento;
 	private Composite parent;
 	private static VTFilteredTree filteredTree;
 	public static Sorter sorter;
-	private final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+	private final static IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 	private final ColumnControlListener columnListener = new ColumnControlListener();
 
 	@Override
@@ -130,7 +133,7 @@ public class VTView extends ViewPart {
 		}
 	}
 
-	private int getColumnWidth(Columns column) {
+	private static int getColumnWidth(Columns column) {
 		switch (column) {
 		case CLOSE:
 			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_CLOSE);
@@ -155,11 +158,20 @@ public class VTView extends ViewPart {
 
 	private void createProjectColumn(TreeViewer viewer) {
 		TreeViewerColumn projectColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		projectColumn.getColumn().setWidth(getColumnWidth(Columns.PROJECT));
+		if (isRootNodeManualNode(viewer)) {
+			projectColumn.getColumn().setWidth(getColumnWidth(Columns.PROJECT));
+		} else {
+			projectColumn.getColumn().setWidth(0);
+		}
 		projectColumn.getColumn().setResizable(true);
 		projectColumn.getColumn().setText("Project");
 		projectColumn.setLabelProvider(new TreeProjectCellLabelProvider());
 		projectColumn.getColumn().addControlListener(columnListener);
+	}
+
+	private boolean isRootNodeManualNode(TreeViewer viewer) {
+		return ((TreeContentProvider) viewer.getContentProvider()).getInvisibleRoot()
+				.equals(((TreeContentProvider) viewer.getContentProvider()).getManualRoot());
 	}
 
 	private void createNAMEColumn(TreeViewer viewer) {
@@ -189,6 +201,16 @@ public class VTView extends ViewPart {
 		} catch (Exception e) {
 
 		}
+	}
+
+	public static void hideProjectColumn() {
+		TreeColumn projectColumn = filteredTree.getViewer().getTree().getColumn(Columns.getInteger(Columns.PROJECT));
+		projectColumn.setWidth(0);
+	}
+
+	public static void showProjectColumn() {
+		TreeColumn projectColumn = filteredTree.getViewer().getTree().getColumn(Columns.getInteger(Columns.PROJECT));
+		projectColumn.setWidth(getColumnWidth(Columns.PROJECT));
 	}
 
 	@Override

@@ -132,4 +132,5 @@ public class VTFilteredTree extends FilteredTree {
 		if (getFilterControl() != null && getFilterControl().getText().length() == 0)
 			treeViewer.expandToLevel(2);
 	}
+
 }

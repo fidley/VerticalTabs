@@ -1,5 +1,7 @@
 package com.abapblog.verticaltabs.tree.nodes;
 
+import java.util.UUID;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorReference;
 
@@ -54,5 +56,9 @@ public interface ITreeNode {
 	public Integer getSortIndex();
 
 	public void setSortIndex(Integer sortIndex);
+
+	public UUID getID();
+
+	public void setID(UUID uuid);
 
 }

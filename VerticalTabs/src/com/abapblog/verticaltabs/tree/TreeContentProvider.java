@@ -30,6 +30,7 @@ import com.abapblog.verticaltabs.tree.nodes.ProjectNode;
 import com.abapblog.verticaltabs.tree.nodes.RootNode;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
 import com.abapblog.verticaltabs.tree.nodes.TreeNode;
+import com.abapblog.verticaltabs.views.VTView;
 
 public class TreeContentProvider implements ITreeContentProvider, IPartListener2, IWorkbenchListener {
 	private static RootNode invisibleRoot;
@@ -38,7 +39,6 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private static List<Object> expandedProjects = new ArrayList<Object>();
 	private static List<Object> expandedGroups = new ArrayList<Object>();
 	private static TreeViewer treeViewer;
-	private static Integer biggestIndex = Integer.valueOf(0);
 	private NodesFactory nodesFactory = new NodesFactory(this);
 	private static TreeContentProvider contentProvider;
 
@@ -47,6 +47,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		TreeContentProvider.treeViewer = treeViewer;
 		PlatformUI.getWorkbench().addWorkbenchListener(this);
 		addExpandCollapseListeners(treeViewer);
+
 	}
 
 	public static TreeContentProvider getTreeContentProvider(TreeViewer treeViewer) {
@@ -68,7 +69,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 				final TreeItem item = (TreeItem) event.item;
 				ITreeNode treeNode = (ITreeNode) item.getData();
 				if (treeNode instanceof GroupNode)
-					expandedGroups.add(treeNode);
+					getExpandedGroups().add(treeNode);
 				if (treeNode instanceof ProjectNode)
 					expandedProjects.add(treeNode);
 
@@ -80,7 +81,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 				final TreeItem item = (TreeItem) event.item;
 				ITreeNode treeNode = (ITreeNode) item.getData();
 				if (treeNode instanceof GroupNode)
-					expandedGroups.remove(treeNode);
+					getExpandedGroups().remove(treeNode);
 				if (treeNode instanceof ProjectNode)
 					expandedProjects.remove(treeNode);
 
@@ -170,7 +171,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private void addEditorReferenceToNodesAndGroups(IEditorReference editorReference) {
 		try {
 			TabNode tabNode = getNodesFactory().getTabNode(editorReference);
-			if (!manualRoot.contains(tabNode))
+			if (!manualRoot.contains(tabNode) && tabNode.getParent() == null)
 				manualRoot.addChild(tabNode);
 		} catch (PartInitException e) {
 			e.printStackTrace();
@@ -189,44 +190,6 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 			IEditorReference er = (IEditorReference) partRef;
 			partInTabs = nodesFactory.getTabNodes().containsKey(er);
 			if (!partInTabs) {
-//				try {
-//					er.getEditorInput().getPersistable();
-//					er.getEditor(false);
-//					if (er.getEditor(false) instanceof CompatibilityPart) {
-//						er.getClass();
-//					}
-//					er.getPage();
-//
-//					IWorkbenchPart part = er.getPart(false);
-//					MPart modelPart = part.getSite().getService(MPart.class);
-//					modelPart.getContext();
-//					CompatibilityEditor view = (CompatibilityEditor) modelPart.getObject();
-//					if (modelPart instanceof CompatibilityPart) {
-//						CompatibilityPart cp = (CompatibilityPart) modelPart;
-//					}
-//					modelService.getContainer(modelPart);
-//					modelPart.getParent();
-////					view.getReference().get;
-//					modelPart.getVariables();
-//					modelPart.getBindingContexts();
-//					modelPart.getTransientData();
-//
-////					try {
-//////						part.getAdapter(Class.forName("org.eclipse.e4.ui.model.application.MPart"));
-////
-////					} catch (ClassNotFoundException e) {
-////						// TODO Auto-generated catch block
-////						e.printStackTrace();
-////					}
-//					IEditorRegistry registry = er.getPage().getWorkbenchWindow().getWorkbench().getEditorRegistry();
-//					IEditorPart ed = er.getEditor(false);
-//
-//					EditorDescriptor descriptor = (EditorDescriptor) registry.findEditor(ed.getSite().getId());
-//
-//				} catch (PartInitException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 				addEditorReferenceToNodesAndGroups(er);
 				refreshTree();
 			}
@@ -261,7 +224,6 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 					TabNode tabNode = (TabNode) treeNodes[i];
 					if (tabNode.getEditorReference().equals(er)) {
 						tabNode.updateFromEditorReferenece();
-//						refreshTree();
 						break;
 					}
 				}
@@ -279,10 +241,12 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	public static void refreshTree() {
 		if (treeViewer == null)
 			return;
+		Control redrawFalseControl = treeViewer.getControl();
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
+					redrawFalseControl.setRedraw(false);
 					treeViewer.refresh();
 					try {
 						contentProvider.setExpandedElementsForTreeViewer();
@@ -292,18 +256,21 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
+				} finally {
+					redrawFalseControl.setRedraw(true);
 				}
 
 			}
-
 		});
 	}
 
 	public void setExpandedElementsForTreeViewer() {
+
 		if (invisibleRoot.equals(projectsRoot) && getExpandedProjects() != null)
 			treeViewer.setExpandedElements(getExpandedProjects().toArray());
-		if (invisibleRoot.equals(manualRoot) && expandedGroups != null)
-			treeViewer.setExpandedElements(expandedGroups.toArray());
+		if (invisibleRoot.equals(manualRoot) && getExpandedGroups() != null)
+			treeViewer.setExpandedElements(getExpandedGroups().toArray());
+
 	}
 
 	@Override
@@ -323,16 +290,9 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		}
 	}
 
-	public static Integer getNextSortIndex() {
-		biggestIndex += 1;
-		return biggestIndex;
-	}
-
 	@Override
 	public void dispose() {
-//		nodesFactory = null;
-//		removePartListener();
-//		ITreeContentProvider.super.dispose();
+		nodesFactory.dispose();
 		treeViewer = null;
 	}
 
@@ -344,14 +304,22 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private void setInvisibleRoot(RootNode root) {
 		if (invisibleRoot.equals(projectsRoot))
 			getExpandedElementsIntoList(expandedProjects);
+		VTView.showProjectColumn();
 		if (invisibleRoot.equals(manualRoot))
-			getExpandedElementsIntoList(expandedGroups);
+			getExpandedElementsIntoList(getExpandedGroups());
+		VTView.hideProjectColumn();
 
 		if (root.equals(projectsRoot) && getExpandedProjects() != null)
 			treeViewer.setExpandedElements(getExpandedProjects());
-		if (root.equals(manualRoot) && expandedGroups != null)
-			treeViewer.setExpandedElements(expandedGroups);
+		if (root.equals(manualRoot) && getExpandedGroups() != null)
+			treeViewer.setExpandedElements(getExpandedGroups());
 		invisibleRoot = root;
+
+		if (invisibleRoot.equals(projectsRoot)) {
+			VTView.hideProjectColumn();
+		} else if (invisibleRoot.equals(manualRoot)) {
+			VTView.showProjectColumn();
+		}
 	}
 
 	public RootNode getProjectsRoot() {
@@ -377,13 +345,11 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	public void toggleGrouping(Boolean groupByProject) {
 		if (groupByProject) {
 			if (!invisibleRoot.equals(projectsRoot)) {
-//				getExpandedElementsIntoList(expandedGroups);
 				setInvisibleRoot(projectsRoot);
 				refreshTree();
 			}
 		} else {
 			if (invisibleRoot.equals(projectsRoot)) {
-//				getExpandedElementsIntoList(expandedProjects);
 				setInvisibleRoot(manualRoot);
 				refreshTree();
 			}
@@ -405,4 +371,9 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	public static List<Object> getExpandedProjects() {
 		return expandedProjects;
 	}
+
+	public static List<Object> getExpandedGroups() {
+		return expandedGroups;
+	}
+
 }

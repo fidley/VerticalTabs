@@ -37,24 +37,32 @@ public class Sorter extends ViewerComparator {
 				rc = p1.getSortIndex().compareTo(p2.getSortIndex());
 				break;
 			}
-			if (p1.getNodeType().equals(NodeType.GROUP)) {
-				rc = -1;
-				break;
-			}
 
-			if (p2.getNodeType().equals(NodeType.GROUP)) {
-				rc = 1;
-				break;
+			else {
+				rc = sortWhenOneIsGroupNode(p1, p2, rc);
 			}
 
 			break;
 		case NAME:
-			rc = (p1.getTitle() + "_" + p1.getProjectName()).toUpperCase()
-					.compareTo((p2.getTitle() + "_" + p2.getProjectName()).toUpperCase());
+			if (p1.getNodeType().equals(p2.getNodeType())) {
+				rc = (p1.getTitle() + "_" + p1.getProjectName()).toUpperCase()
+						.compareTo((p2.getTitle() + "_" + p2.getProjectName()).toUpperCase());
+				break;
+			} else {
+				rc = sortWhenOneIsGroupNode(p1, p2, rc);
+			}
+
 			break;
+
 		case PROJECT:
-			rc = (p1.getProjectName() + "_" + p1.getTitle()).toUpperCase()
-					.compareTo((p2.getProjectName() + "_" + p2.getTitle()).toUpperCase());
+			if (p1.getNodeType().equals(p2.getNodeType())) {
+				rc = (p1.getProjectName() + "_" + p1.getTitle()).toUpperCase()
+						.compareTo((p2.getProjectName() + "_" + p2.getTitle()).toUpperCase());
+				break;
+			} else {
+				rc = sortWhenOneIsGroupNode(p1, p2, rc);
+			}
+
 			break;
 		default:
 			rc = 0;
@@ -62,6 +70,15 @@ public class Sorter extends ViewerComparator {
 		// If descending order, flip the direction
 		if (direction == DESCENDING) {
 			rc = -rc;
+		}
+		return rc;
+	}
+
+	private int sortWhenOneIsGroupNode(ITreeNode p1, ITreeNode p2, int rc) {
+		if (p1.getNodeType().equals(NodeType.GROUP)) {
+			rc = -1;
+		} else if (p2.getNodeType().equals(NodeType.GROUP)) {
+			rc = 1;
 		}
 		return rc;
 	}

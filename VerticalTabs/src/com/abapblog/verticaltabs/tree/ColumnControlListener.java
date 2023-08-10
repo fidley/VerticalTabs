@@ -27,7 +27,8 @@ public class ColumnControlListener implements ControlListener {
 					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PIN, column.getWidth());
 					break;
 				case PROJECT:
-					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PROJECT, column.getWidth());
+					if (column.getWidth() != 0)
+						preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PROJECT, column.getWidth());
 					break;
 				case NAME:
 					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_NAME, column.getWidth());

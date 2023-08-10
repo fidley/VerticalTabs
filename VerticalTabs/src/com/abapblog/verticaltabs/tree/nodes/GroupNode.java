@@ -2,11 +2,13 @@ package com.abapblog.verticaltabs.tree.nodes;
 
 import org.eclipse.swt.graphics.Image;
 
-public class GroupNode extends TreeNode {
+public class GroupNode extends TreeNode implements Comparable<GroupNode> {
 	private static int nextGroupNumber = 0;
+	private static Integer biggestIndex = Integer.valueOf(9999);
 
 	public GroupNode(String title, Image image) {
 		super(title, image, title);
+		setSortIndex(getNextSortIndex());
 	}
 
 	@Override
@@ -58,4 +60,17 @@ public class GroupNode extends TreeNode {
 		super.setTitle(title);
 		super.setTooltip(title);
 	}
+
+	public static Integer getNextSortIndex() {
+		biggestIndex += 1;
+		return biggestIndex;
+	}
+
+	@Override
+	public int compareTo(GroupNode o) {
+		if (o == null)
+			return 0;
+		return getSortIndex().compareTo(o.getSortIndex());
+	}
+
 }
