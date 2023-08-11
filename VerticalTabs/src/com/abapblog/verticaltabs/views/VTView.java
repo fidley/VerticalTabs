@@ -17,6 +17,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.abapblog.verticaltabs.Activator;
 import com.abapblog.verticaltabs.handlers.SortCommand;
+import com.abapblog.verticaltabs.icons.Icons;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
 import com.abapblog.verticaltabs.tree.ColumnControlListener;
 import com.abapblog.verticaltabs.tree.Columns;
@@ -42,6 +43,7 @@ public class VTView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		new Icons();
 		this.parent = parent;
 		createTreeViewer(parent);
 		IContextService contextService = getSite().getService(IContextService.class);
