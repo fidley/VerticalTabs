@@ -11,3 +11,7 @@ What is working:
 - Pin tab - even if editor is closed the tab will not disappear from the view and on press the editor will be re-opened
 - saving sorting at close of eclipse
 - grouping like in Edge cards
+
+
+<h1>Vertical Tabs plugin update Site</h1>
+<p>Please user this link https://fidley.github.io/VerticalTabs/</p>
