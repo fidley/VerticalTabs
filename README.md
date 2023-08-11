@@ -17,4 +17,5 @@ What is working:
 
 
 <h1>Vertical Tabs plugin update Site</h1>
-<p>Please user this link https://fidley.github.io/VerticalTabs/</p>
+<p>Please use this link https://fidley.github.io/VerticalTabs/ to install it manually in Eclipse</p>
+<P>or https://marketplace.eclipse.org/content/vertical-tabs for Eclipse Marketplace installation</P>
