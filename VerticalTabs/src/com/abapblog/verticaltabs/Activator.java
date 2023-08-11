@@ -3,8 +3,6 @@ package com.abapblog.verticaltabs;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.abapblog.verticaltabs.icons.Icons;
-
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -12,7 +10,6 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.abapblog.verticaltabs"; //$NON-NLS-1$
-	public static final Icons icons = new Icons();
 	// The shared instance
 	private static Activator plugin;
 
@@ -20,6 +17,7 @@ public class Activator extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Activator() {
+
 	}
 
 	@Override
