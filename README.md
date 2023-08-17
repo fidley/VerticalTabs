@@ -19,3 +19,6 @@ What is working:
 <h1>Vertical Tabs plugin update Site</h1>
 <p>Please use this link https://fidley.github.io/VerticalTabs/ to install it manually in Eclipse</p>
 <P>or https://marketplace.eclipse.org/content/vertical-tabs for Eclipse Marketplace installation</P>
+
+[![Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client](https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.svg) ](https://marketplace.eclipse.org/marketplace-client-intro?mpc_install=5651642 "Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client")
+
