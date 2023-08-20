@@ -37,7 +37,6 @@ public class ColumnControlListener implements ControlListener {
 					break;
 
 				}
-				;
 			}
 
 		}
@@ -45,6 +44,7 @@ public class ColumnControlListener implements ControlListener {
 
 	@Override
 	public void controlMoved(ControlEvent arg0) {
+		// Not needed at the moment
 	}
 
 }

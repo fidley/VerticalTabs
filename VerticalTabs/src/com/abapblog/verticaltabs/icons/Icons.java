@@ -23,6 +23,16 @@ public class Icons {
 	}
 
 	public Icons() {
+		if (isRegistryEmpty()) {
+			registerIcons();
+		}
+	}
+
+	private boolean isRegistryEmpty() {
+		return registry.get(ICON_PROJECT) == null;
+	}
+
+	private void registerIcons() {
 		registry.put(ICON_PROJECT, getImageDescriptor(ICON_PROJECT));
 		registry.put(ICON_FOLDER_OPEN, getImageDescriptor(ICON_FOLDER_OPEN));
 		registry.put(ICON_FOLDER_CLOSED, getImageDescriptor(ICON_FOLDER_CLOSED));
@@ -30,7 +40,7 @@ public class Icons {
 		registry.put(ICON_PIN_TAB, getImageDescriptor(ICON_PIN_TAB));
 	}
 
-	public ImageDescriptor getImageDescriptor(String iconName) {
+	private ImageDescriptor getImageDescriptor(String iconName) {
 		Bundle bundle = FrameworkUtil.getBundle(getClass());
 		URL url = FileLocator.find(bundle, new Path("icons/" + iconName), null);
 		return ImageDescriptor.createFromURL(url);

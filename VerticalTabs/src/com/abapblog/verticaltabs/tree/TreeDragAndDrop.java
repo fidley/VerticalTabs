@@ -50,16 +50,19 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 
 	@Override
 	public void dragOperationChanged(final DropTargetEvent event) {
+		// Not needed at the moment
 
 	}
 
 	@Override
 	public void dragLeave(final DropTargetEvent event) {
+		// Not needed at the moment
 
 	}
 
 	@Override
 	public void dropAccept(final DropTargetEvent event) {
+		// Not needed at the moment
 	}
 
 	@Override
@@ -79,7 +82,7 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 	private void groupNodes(DropTargetEvent event) {
 		GroupNode groupNode = null;
 		NodesFactory nodesFactory = contentProvider.getNodesFactory();
-		if (!contentProvider.getInvisibleRoot().equals(contentProvider.getManualRoot())) {
+		if (!contentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
 			return;
 		}
 		final TreeItem targetItem = (TreeItem) event.item;
@@ -87,37 +90,54 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 			ITreeNode targetNode = (ITreeNode) targetItem.getData();
 			for (Object selectedNode : dndSourceSelection) {
 				ITreeNode sourceNode = (ITreeNode) selectedNode;
-				if (targetNode.equals(selectedNode))
+				if (targetNode.equals(selectedNode)) {
 					continue;
-				if (targetNode.getNodeType().equals(sourceNode.getNodeType())
-						&& targetNode.getNodeType().equals(NodeType.TAB)
-						&& !(targetNode.getParent() instanceof GroupNode)) {
-
-					if (groupNode == null) {
-						groupNode = nodesFactory.createGroupNode((TabNode) targetNode);
-					}
-					nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, groupNode);
 				}
-				if (targetNode.getNodeType().equals(NodeType.GROUP) && sourceNode.getNodeType().equals(NodeType.TAB)) {
-					nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, (GroupNode) targetNode);
-				}
-				if (targetNode.getNodeType().equals(sourceNode.getNodeType())
-						&& targetNode.getNodeType().equals(NodeType.TAB)
-						&& (targetNode.getParent() instanceof GroupNode)) {
-					nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, (GroupNode) targetNode.getParent());
-				}
+				groupNode = addTabToNewGroup(groupNode, nodesFactory, targetNode, sourceNode);
+				addTabToExistingGroup(nodesFactory, targetNode, sourceNode);
+				addTabToTargetParentGroup(nodesFactory, targetNode, sourceNode);
 
 			}
 			TreeContentProvider.refreshTree();
 		} catch (Exception e) {
-			for (Object selectedNode : dndSourceSelection) {
-				ITreeNode sourceNode = (ITreeNode) selectedNode;
-				if (sourceNode.getNodeType().equals(NodeType.TAB)) {
-					nodesFactory.moveTabNodeFromGroupToRoot(sourceNode);
-				}
-
-			}
+			moveTabsFromGroupToRoot(nodesFactory);
 			TreeContentProvider.refreshTree();
+		}
+	}
+
+	private void addTabToExistingGroup(NodesFactory nodesFactory, ITreeNode targetNode, ITreeNode sourceNode) {
+		if (targetNode.getNodeType().equals(NodeType.GROUP) && sourceNode.getNodeType().equals(NodeType.TAB)) {
+			nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, (GroupNode) targetNode);
+		}
+	}
+
+	private GroupNode addTabToNewGroup(GroupNode groupNode, NodesFactory nodesFactory, ITreeNode targetNode,
+			ITreeNode sourceNode) {
+		if (targetNode.getNodeType().equals(sourceNode.getNodeType()) && targetNode.getNodeType().equals(NodeType.TAB)
+				&& !(targetNode.getParent() instanceof GroupNode)) {
+
+			if (groupNode == null) {
+				groupNode = nodesFactory.createGroupNode((TabNode) targetNode);
+			}
+			nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, groupNode);
+		}
+		return groupNode;
+	}
+
+	private void addTabToTargetParentGroup(NodesFactory nodesFactory, ITreeNode targetNode, ITreeNode sourceNode) {
+		if (targetNode.getNodeType().equals(sourceNode.getNodeType()) && targetNode.getNodeType().equals(NodeType.TAB)
+				&& (targetNode.getParent() instanceof GroupNode)) {
+			nodesFactory.moveTabNodeToGroup((TabNode) sourceNode, (GroupNode) targetNode.getParent());
+		}
+	}
+
+	private void moveTabsFromGroupToRoot(NodesFactory nodesFactory) {
+		for (Object selectedNode : dndSourceSelection) {
+			ITreeNode sourceNode = (ITreeNode) selectedNode;
+			if (sourceNode.getNodeType().equals(NodeType.TAB)) {
+				nodesFactory.moveTabNodeFromGroupToRoot(sourceNode);
+			}
+
 		}
 	}
 
@@ -128,17 +148,17 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 			for (Object selectedNode : dndSourceSelection) {
 				ITreeNode sourceNode = (ITreeNode) selectedNode;
 				if (targetNode.getNodeType().equals(sourceNode.getNodeType())) {
-					if (contentProvider.getInvisibleRoot().equals(contentProvider.getProjectsRoot())
-							&& targetNode.getProjectName().equals(sourceNode.getProjectName())) {
-						manualSort(targetNode, sourceNode);
-					} else if (contentProvider.getInvisibleRoot().equals(contentProvider.getManualRoot())) {
+					if (contentProvider.getInvisibleRoot().equals(TreeContentProvider.getProjectsRoot())
+							&& targetNode.getProjectName().equals(sourceNode.getProjectName())
+							|| contentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
 						manualSort(targetNode, sourceNode);
 					}
-				} else if (contentProvider.getInvisibleRoot().equals(contentProvider.getManualRoot())) {
+				} else if (contentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
 					manualSort(targetNode, sourceNode);
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -170,7 +190,7 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 		default:
 			break;
 		}
-		return null;
+		return new ITreeNode[0];
 	}
 
 	@Override
@@ -193,7 +213,7 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 
 	@Override
 	public void dragFinished(DragSourceEvent event) {
-		// TODO Auto-generated method stub
+		// Not needed at the moment
 
 	}
 }

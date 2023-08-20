@@ -9,11 +9,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -36,18 +33,22 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private static RootNode invisibleRoot;
 	private static RootNode projectsRoot;
 	private static RootNode manualRoot;
-	private static List<Object> expandedProjects = new ArrayList<Object>();
-	private static List<Object> expandedGroups = new ArrayList<Object>();
+	private static List<Object> expandedProjects = new ArrayList<>();
+	private static List<Object> expandedGroups = new ArrayList<>();
 	private static TreeViewer treeViewer;
 	private NodesFactory nodesFactory = new NodesFactory(this);
 	private static TreeContentProvider contentProvider;
 
 	private TreeContentProvider(TreeViewer treeViewer) {
 		createPartListener();
-		TreeContentProvider.treeViewer = treeViewer;
+		setTreeViewer(treeViewer);
 		PlatformUI.getWorkbench().addWorkbenchListener(this);
 		addExpandCollapseListeners(treeViewer);
 
+	}
+
+	private static void setTreeViewer(TreeViewer treeViewer) {
+		TreeContentProvider.treeViewer = treeViewer;
 	}
 
 	public static TreeContentProvider getTreeContentProvider(TreeViewer treeViewer) {
@@ -55,7 +56,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 			contentProvider = new TreeContentProvider(treeViewer);
 			contentProvider.initialize();
 		} else {
-			TreeContentProvider.treeViewer = treeViewer;
+			setTreeViewer(treeViewer);
 			addExpandCollapseListeners(treeViewer);
 		}
 		return contentProvider;
@@ -63,29 +64,23 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	}
 
 	private static void addExpandCollapseListeners(TreeViewer treeViewer) {
-		treeViewer.getTree().addListener(SWT.Expand, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				final TreeItem item = (TreeItem) event.item;
-				ITreeNode treeNode = (ITreeNode) item.getData();
-				if (treeNode instanceof GroupNode)
-					getExpandedGroups().add(treeNode);
-				if (treeNode instanceof ProjectNode)
-					expandedProjects.add(treeNode);
+		treeViewer.getTree().addListener(SWT.Expand, event -> {
+			final TreeItem item = (TreeItem) event.item;
+			ITreeNode treeNode = (ITreeNode) item.getData();
+			if (treeNode instanceof GroupNode)
+				getExpandedGroups().add(treeNode);
+			if (treeNode instanceof ProjectNode)
+				expandedProjects.add(treeNode);
 
-			}
 		});
-		treeViewer.getTree().addListener(SWT.Collapse, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				final TreeItem item = (TreeItem) event.item;
-				ITreeNode treeNode = (ITreeNode) item.getData();
-				if (treeNode instanceof GroupNode)
-					getExpandedGroups().remove(treeNode);
-				if (treeNode instanceof ProjectNode)
-					expandedProjects.remove(treeNode);
+		treeViewer.getTree().addListener(SWT.Collapse, event -> {
+			final TreeItem item = (TreeItem) event.item;
+			ITreeNode treeNode = (ITreeNode) item.getData();
+			if (treeNode instanceof GroupNode)
+				getExpandedGroups().remove(treeNode);
+			if (treeNode instanceof ProjectNode)
+				expandedProjects.remove(treeNode);
 
-			}
 		});
 	}
 
@@ -137,8 +132,8 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 
 	}
 
-	public void setInitialRootNode() {
-		if (GroupByProject.getGroupByProjectPreference()) {
+	public static void setInitialRootNode() {
+		if (Boolean.TRUE.equals(GroupByProject.getGroupByProjectPreference())) {
 			invisibleRoot = getProjectsRoot();
 			GroupByProject.setToggleStatus(true);
 			return;
@@ -147,21 +142,19 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		invisibleRoot = getManualRoot();
 	}
 
-	private void createTabNodes() throws PartInitException {
+	private void createTabNodes() {
 		IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 				.getEditorReferences();
-		IMemento[] mementos = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getEditorState(editorReferences, true);
 		createEntriesForOpenedEditors(editorReferences);
 	}
 
-	private void createRootNodes() {
+	private static void createRootNodes() {
 		invisibleRoot = new RootNode();
 		setProjectsRoot(new RootNode());
 		setManualRoot(new RootNode());
 	}
 
-	private void createEntriesForOpenedEditors(IEditorReference[] editorReferences) throws PartInitException {
+	private void createEntriesForOpenedEditors(IEditorReference[] editorReferences) {
 		for (int i = 0; i < editorReferences.length; i++) {
 			editorReferences[i].getEditor(true);
 			addEditorReferenceToNodesAndGroups(editorReferences[i]);
@@ -242,35 +235,29 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		if (treeViewer == null)
 			return;
 		Control redrawFalseControl = treeViewer.getControl();
-		Display.getCurrent().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					redrawFalseControl.setRedraw(false);
-					treeViewer.refresh();
-					try {
-						contentProvider.setExpandedElementsForTreeViewer();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					redrawFalseControl.setRedraw(true);
-				}
-
+		Display.getCurrent().asyncExec(() -> {
+			try {
+				redrawFalseControl.setRedraw(false);
+				treeViewer.refresh();
+				contentProvider.setExpandedElementsForTreeViewer();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				redrawFalseControl.setRedraw(true);
 			}
+
 		});
 	}
 
 	public void setExpandedElementsForTreeViewer() {
-
-		if (invisibleRoot.equals(projectsRoot) && getExpandedProjects() != null)
-			treeViewer.setExpandedElements(getExpandedProjects().toArray());
-		if (invisibleRoot.equals(manualRoot) && getExpandedGroups() != null)
-			treeViewer.setExpandedElements(getExpandedGroups().toArray());
-
+		try {
+			if (invisibleRoot.equals(projectsRoot) && getExpandedProjects() != null)
+				treeViewer.setExpandedElements(getExpandedProjects().toArray());
+			if (invisibleRoot.equals(manualRoot) && getExpandedGroups() != null)
+				treeViewer.setExpandedElements(getExpandedGroups().toArray());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -293,15 +280,18 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	@Override
 	public void dispose() {
 		nodesFactory.dispose();
-		treeViewer = null;
+		clearTreeViewer();
+	}
+
+	private static void clearTreeViewer() {
+		TreeContentProvider.treeViewer = null;
 	}
 
 	private void removePartListener() {
-		final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		workbenchWindow.getPartService().removePartListener(this);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().removePartListener(this);
 	}
 
-	private void setInvisibleRoot(RootNode root) {
+	private static void setInvisibleRoot(RootNode root) {
 		if (invisibleRoot.equals(projectsRoot))
 			getExpandedElementsIntoList(expandedProjects);
 		VTView.showProjectColumn();
@@ -322,20 +312,20 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		}
 	}
 
-	public RootNode getProjectsRoot() {
+	public static RootNode getProjectsRoot() {
 		return projectsRoot;
 	}
 
-	private void setProjectsRoot(RootNode projectsRoot) {
-		this.projectsRoot = projectsRoot;
+	private static void setProjectsRoot(RootNode projectsRoot) {
+		TreeContentProvider.projectsRoot = projectsRoot;
 	}
 
-	public RootNode getManualRoot() {
+	public static RootNode getManualRoot() {
 		return manualRoot;
 	}
 
-	private void setManualRoot(RootNode manualRoot) {
-		this.manualRoot = manualRoot;
+	private static void setManualRoot(RootNode manualRoot) {
+		TreeContentProvider.manualRoot = manualRoot;
 	}
 
 	public NodesFactory getNodesFactory() {
@@ -343,7 +333,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	}
 
 	public void toggleGrouping(Boolean groupByProject) {
-		if (groupByProject) {
+		if (Boolean.TRUE.equals(groupByProject)) {
 			if (!invisibleRoot.equals(projectsRoot)) {
 				setInvisibleRoot(projectsRoot);
 				refreshTree();
@@ -358,14 +348,13 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 
 	@Override
 	public boolean preShutdown(IWorkbench workbench, boolean forced) {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().removePartListener(this);
+		removePartListener();
 		return true;
 	}
 
 	@Override
 	public void postShutdown(IWorkbench workbench) {
-		// TODO Auto-generated method stub
-
+		// Not Needed at the moment
 	}
 
 	public static List<Object> getExpandedProjects() {

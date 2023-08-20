@@ -53,12 +53,6 @@
                   value="Next">
             </parameter>
          </command>
-         <command
-               commandId="com.abapblog.verticaltabs.view.More"
-               icon="icons/view_menu.png"
-               label="More"
-               style="pulldown">
-         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -144,11 +138,23 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:com.abapblog.verticaltabs.view.More">
+            locationURI="menu:com.abapblog.verticaltabs.view">
          <command
                commandId="com.abapblog.verticaltabs.commands.releaseNotes"
                icon="icons/info_tsk.png"
                label="Show Release Notes"
+               style="push">
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.openGithub"
+               icon="icons/github.png"
+               label="Feedback, Bugs &amp; Enhancements"
+               style="push">
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.buyABeer"
+               icon="icons/beer.png"
+               label="Buy Me a Beer"
                style="push">
          </command>
       </menuContribution>
@@ -204,14 +210,19 @@
             name="Ungroup">
       </command>
       <command
-            defaultHandler="com.abapblog.verticaltabs.handlers.More"
-            id="com.abapblog.verticaltabs.view.More"
-            name="More">
-      </command>
-      <command
             defaultHandler="com.abapblog.verticaltabs.handlers.RleaseNotes"
             id="com.abapblog.verticaltabs.commands.releaseNotes"
             name="Show Release Notes">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.OpenGithub"
+            id="com.abapblog.verticaltabs.commands.openGithub"
+            name="Feedback, Bugs &amp; Enhancements">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.BuyMeABeer"
+            id="com.abapblog.verticaltabs.commands.buyABeer"
+            name="Buy Me a Beer">
       </command>
    </extension>
    <extension

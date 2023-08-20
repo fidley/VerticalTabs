@@ -22,7 +22,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	private boolean pinned = false;
 	private static Integer biggestIndex = Integer.valueOf(9999);
 
-	public TabNode(IEditorReference editorReference) throws PartInitException {
+	public TabNode(IEditorReference editorReference) {
 		super(editorReference.getTitle(), editorReference.getTitleImage(), editorReference.getTitleToolTip());
 		this.setEditorReference(editorReference);
 		editorReference.addPropertyListener(this);
@@ -37,18 +37,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 		try {
 			editorInput = editorReference.getEditorInput();
 			if (editorInput instanceof IFileEditorInput) {
-				try {
-
-					IFileEditorInput input = (IFileEditorInput) editorInput;
-					IFile file = input.getFile();
-					setProject(file.getProject());
-					setProjectName(getProject().getName());
-					file.getFullPath();
-					if (file.getFullPath() != null)
-						setPath(file.getFullPath().toString());
-				} catch (Exception e) {
-
-				}
+				extracted(editorInput);
 
 			} else {
 				setProject(editorInput.getAdapter(IProject.class));
@@ -60,6 +49,21 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			e.printStackTrace();
 		}
 
+	}
+
+	private void extracted(IEditorInput editorInput) {
+		try {
+
+			IFileEditorInput input = (IFileEditorInput) editorInput;
+			IFile file = input.getFile();
+			setProject(file.getProject());
+			setProjectName(getProject().getName());
+			file.getFullPath();
+			if (file.getFullPath() != null)
+				setPath(file.getFullPath().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -79,7 +83,6 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -137,18 +140,15 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 				} else {
 					setTitle(part.getTitle());
 				}
-				Display.getCurrent().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(500);
-							setImage(getEditorReference().getTitleImage());
-							TreeContentProvider.refreshTree();
-						} catch (Exception e) {
-						}
 
+				Display.getCurrent().asyncExec(() -> {
+					try {
+						Thread.sleep(500);
+						setImage(getEditorReference().getTitleImage());
+						TreeContentProvider.refreshTree();
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-
 				});
 
 			}
