@@ -3,7 +3,8 @@
       id="com.abapblog.verticaltabs.feature"
       label="Vertical Tabs Feature"
       version="0.0.1.qualifier"
-      provider-name="AbapBlog.com">
+      provider-name="AbapBlog.com"
+      plugin="com.abapblog.branding">
 
    <description>
       This plugin adds new view called Vertical Tabs into your Eclipse installation.
@@ -37,6 +38,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
    </license>
+
+   <url>
+      <discovery label="Feedback, Bugs &amp; Enhancements" url="https://github.com/fidley/ADT-Classic-Outline-Frontend"/>
+      <discovery label="Buy Me a Beer" url="https://www.buymeacoffee.com/AbapBlog"/>
+   </url>
 
    <plugin
          id="com.abapblog.verticaltabs"

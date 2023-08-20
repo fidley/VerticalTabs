@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.IMemento;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -34,25 +33,21 @@ import com.abapblog.verticaltabs.tree.labelproviders.TreePinCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeProjectCellLabelProvider;
 
 public class VTView extends ViewPart {
-	private IMemento memento;
-	private Composite parent;
 	private static VTFilteredTree filteredTree;
-	public static Sorter sorter;
-	private final static IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+	public static final Sorter sorter = new Sorter();
+	private static final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 	private final ColumnControlListener columnListener = new ColumnControlListener();
 
 	@Override
 	public void createPartControl(Composite parent) {
 		new Icons();
-		this.parent = parent;
 		createTreeViewer(parent);
 		IContextService contextService = getSite().getService(IContextService.class);
 		contextService.activateContext("com.abapblog.verticaltabs.view.context");
 	}
 
 	private void createTreeViewer(Composite parent) {
-		filteredTree = new VTFilteredTree(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL,
-				new TreePatternFilter(), true, true);
+		createFilteredTreeViewer(parent);
 		TreeViewer viewer = filteredTree.getViewer();
 		TreeContentProvider contentProvider = TreeContentProvider.getTreeContentProvider(filteredTree.getViewer());
 		viewer.setContentProvider(contentProvider);
@@ -67,6 +62,12 @@ public class VTView extends ViewPart {
 		contentProvider.setInitialRootNode();
 	}
 
+	private static void createFilteredTreeViewer(Composite parent) {
+		if (filteredTree == null)
+			filteredTree = new VTFilteredTree(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL,
+					new TreePatternFilter(), true, true);
+	}
+
 	private void createMenuManager(TreeViewer viewer) {
 		final MenuManager menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
@@ -77,7 +78,7 @@ public class VTView extends ViewPart {
 	}
 
 	private void createSorter(TreeViewer viewer) {
-		sorter = new Sorter();
+
 		viewer.setComparator(sorter);
 		TreeSorting treeSorter = SortCommand.getSorterFromPreference();
 		sorter.setSorting(treeSorter);
@@ -98,8 +99,6 @@ public class VTView extends ViewPart {
 	public void setFocus() {
 
 		filteredTree.getViewer().getTree().setFocus();
-//		this.parent.setFocus();
-
 	}
 
 	private void setTreeProperties(Tree tree) {
@@ -107,7 +106,6 @@ public class VTView extends ViewPart {
 		tree.setLinesVisible(true);
 		TreeMouseHandler treeMouseHandler = new TreeMouseHandler();
 		tree.addMouseListener(treeMouseHandler);
-//		tree.addListener(SWT.Expand, new TreeExpandListener());
 	}
 
 	private void createColumns(TreeViewer viewer) {
@@ -201,7 +199,7 @@ public class VTView extends ViewPart {
 		try {
 			viewer.setInput(getViewSite());
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
@@ -217,9 +215,7 @@ public class VTView extends ViewPart {
 
 	@Override
 	public void dispose() {
-		filteredTree = null;
-		sorter = null;
+		VTView.filteredTree = null;
 		super.dispose();
 	}
-
 }
