@@ -77,7 +77,8 @@ public class MementoWriter extends MementoOperations {
 		for (TabNode tn : sortedList) {
 			IMemento tabNodeMememento = tabNodesMememento.createChild(MementoConstants.Types.TabNode,
 					tn.getID().toString());
-			tabNodeMememento.putString(MementoConstants.Keys.NodeName, tn.getTitle());
+			tabNodeMememento.putString(MementoConstants.Keys.NodeName, tn.getOriginalTitle());
+			tabNodeMememento.putString(MementoConstants.Keys.NodeManualName, tn.getManualTitle());
 			tabNodeMememento.putString(MementoConstants.Keys.NodeEditorId, tn.getEditorReference().getId());
 			tabNodeMememento.putString(MementoConstants.Keys.NodeProject, tn.getProjectName());
 			tabNodeMememento.putString(MementoConstants.Keys.NodePath, tn.getPath());

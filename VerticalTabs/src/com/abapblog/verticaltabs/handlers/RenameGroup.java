@@ -8,7 +8,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 
 import com.abapblog.verticaltabs.dialogs.GroupRenameDialog;
+import com.abapblog.verticaltabs.dialogs.TabRenameDialog;
 import com.abapblog.verticaltabs.tree.nodes.GroupNode;
+import com.abapblog.verticaltabs.tree.nodes.TabNode;
 import com.abapblog.verticaltabs.views.VTView;
 
 public class RenameGroup implements IHandler {
@@ -37,6 +39,14 @@ public class RenameGroup implements IHandler {
 				dialog.create();
 				if (dialog.open() == Window.OK) {
 					gn.setTitle(dialog.getName());
+				}
+			} else if (selectedNode instanceof TabNode) {
+				TabNode tn = (TabNode) selectedNode;
+				final TabRenameDialog dialog = new TabRenameDialog(VTView.getTreeViewer().getControl().getShell(),
+						tn.getTitle());
+				dialog.create();
+				if (dialog.open() == Window.OK) {
+					tn.setManualTitle(dialog.getName());
 				}
 			}
 			VTView.getTreeViewer().refresh();

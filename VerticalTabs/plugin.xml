@@ -101,9 +101,13 @@
 			<with variable="activeMenuSelection">
 			<count value="+" />
 			<iterate ifEmpty="false" operator="and">
-			<instanceof value="com.abapblog.verticaltabs.tree.nodes.GroupNode">
-			</instanceof>
+			  <or><instanceof value="com.abapblog.verticaltabs.tree.nodes.GroupNode">	</instanceof>
+			        <instanceof
+            value="com.abapblog.verticaltabs.tree.nodes.TabNode">
+      </instanceof> </or>
+
 			</iterate>
+
 			</with>
             </visibleWhen>
          </command>
