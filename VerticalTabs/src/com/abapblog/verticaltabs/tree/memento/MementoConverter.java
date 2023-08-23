@@ -127,7 +127,7 @@ public class MementoConverter {
 		Boolean found = false;
 		IMemento foundMemento = null;
 		for (IMemento tm : tabsMemento) {
-			if (tm.getString(MementoConstants.Keys.NodeName).equals(tabNode.getTitle())
+			if (tm.getString(MementoConstants.Keys.NodeName).equals(tabNode.getOriginalTitle())
 					&& tm.getString(MementoConstants.Keys.NodePath).equals(tabNode.getPath())
 					&& tm.getString(MementoConstants.Keys.NodeProject).equals(tabNode.getProjectName())
 					&& tm.getString(MementoConstants.Keys.NodeEditorId).equals(tabNode.getEditorReference().getId())) {
@@ -161,6 +161,13 @@ public class MementoConverter {
 				Boolean pinned = tm.getBoolean(MementoConstants.Keys.NodePinned);
 				if (pinned != null && pinned == true)
 					tabNode.pin();
+			} catch (Exception e) {
+
+			}
+
+			try {
+				String manualTitle = tm.getString(MementoConstants.Keys.NodeManualName);
+				tabNode.setManualTitle(manualTitle);
 			} catch (Exception e) {
 
 			}

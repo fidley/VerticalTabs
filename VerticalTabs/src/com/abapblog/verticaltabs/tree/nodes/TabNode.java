@@ -21,6 +21,8 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	private IProject project;
 	private boolean pinned = false;
 	private static Integer biggestIndex = Integer.valueOf(9999);
+	private String manualTitle = "";
+	private String originalTitle = "";
 
 	public TabNode(IEditorReference editorReference) {
 		super(editorReference.getTitle(), editorReference.getTitleImage(), editorReference.getTitleToolTip());
@@ -28,6 +30,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 		editorReference.addPropertyListener(this);
 		setProjectAndPath(editorReference);
 		setSortIndex(getNextSortIndex());
+		setOriginalTitle(editorReference.getTitle());
 
 	}
 
@@ -121,9 +124,15 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			IWorkbenchPart part = (IWorkbenchPart) source;
 			if (part instanceof IEditorPart) {
 				if (getEditorReference().isDirty()) {
-					setTitle("*" + part.getTitle());
+					setOriginalTitle("*" + part.getTitle());
+					if (!getManualTitle().equals(""))
+						setManualTitle("*" + getManualTitle());
 				} else {
-					setTitle(part.getTitle());
+					setOriginalTitle(part.getTitle());
+
+					if (getManualTitle().length() > 0 && getManualTitle().substring(0, 1).equals("*"))
+						setManualTitle(getManualTitle().substring(1));
+
 				}
 				TreeContentProvider.refreshTree();
 			}
@@ -136,9 +145,14 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			IWorkbenchPart part = (IWorkbenchPart) source;
 			if (part instanceof IEditorPart) {
 				if (getEditorReference().isDirty()) {
-					setTitle("*" + part.getTitle());
+					setOriginalTitle("*" + part.getTitle());
+					if (!getManualTitle().equals(""))
+						setManualTitle("*" + getManualTitle());
 				} else {
-					setTitle(part.getTitle());
+					setOriginalTitle(part.getTitle());
+					if (getManualTitle().length() > 0 && getManualTitle().substring(0, 1).equals("*"))
+						setManualTitle(getManualTitle().substring(1));
+
 				}
 
 				Display.getCurrent().asyncExec(() -> {
@@ -172,7 +186,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	}
 
 	public void updateFromEditorReferenece() {
-		setTitle(editorReference.getTitle());
+		setOriginalTitle(editorReference.getTitle());
 		setImage(editorReference.getTitleImage());
 		setProjectAndPath(editorReference);
 	}
@@ -195,5 +209,30 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 		if (o == null)
 			return 0;
 		return getSortIndex().compareTo(o.getSortIndex());
+	}
+
+	public String getManualTitle() {
+		if (manualTitle == null)
+			manualTitle = "";
+		return manualTitle;
+	}
+
+	public void setManualTitle(String manualTitle) {
+		this.manualTitle = manualTitle;
+	}
+
+	@Override
+	public String getTitle() {
+		if (getManualTitle().equals(""))
+			return getOriginalTitle();
+		return getManualTitle();
+	}
+
+	public String getOriginalTitle() {
+		return originalTitle;
+	}
+
+	public void setOriginalTitle(String originalTitle) {
+		this.originalTitle = originalTitle;
 	}
 }

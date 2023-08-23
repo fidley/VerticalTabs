@@ -2,7 +2,7 @@
 <feature
       id="com.abapblog.verticaltabs.feature"
       label="Vertical Tabs Feature"
-      version="0.0.1.qualifier"
+      version="0.0.2.qualifier"
       provider-name="AbapBlog.com"
       plugin="com.abapblog.branding">
 
@@ -40,6 +40,7 @@ SOFTWARE.
    </license>
 
    <url>
+      <update label="Vertical Tabs Update Site" url="https://fidley.github.io/VerticalTabs/"/>
       <discovery label="Feedback, Bugs &amp; Enhancements" url="https://github.com/fidley/ADT-Classic-Outline-Frontend"/>
       <discovery label="Buy Me a Beer" url="https://www.buymeacoffee.com/AbapBlog"/>
    </url>

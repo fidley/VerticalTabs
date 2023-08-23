@@ -27,6 +27,7 @@ public abstract class MementoConstants {
 
 	public abstract static class Keys {
 		public static final String NodeName = "Name";
+		public static final String NodeManualName = "ManualName";
 		public static final String NodeProject = "Project";
 		public static final String NodePath = "Path";
 		public static final String NodeSortIndex = "SortIndex";
