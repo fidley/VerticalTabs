@@ -125,7 +125,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			if (part instanceof IEditorPart) {
 				if (getEditorReference().isDirty()) {
 					setOriginalTitle("*" + part.getTitle());
-					if (!getManualTitle().equals(""))
+					if (!getManualTitle().equals("") && !getManualTitle().substring(0, 1).equals("*"))
 						setManualTitle("*" + getManualTitle());
 				} else {
 					setOriginalTitle(part.getTitle());
@@ -146,7 +146,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			if (part instanceof IEditorPart) {
 				if (getEditorReference().isDirty()) {
 					setOriginalTitle("*" + part.getTitle());
-					if (!getManualTitle().equals(""))
+					if (!getManualTitle().equals("") && !getManualTitle().substring(0, 1).equals("*"))
 						setManualTitle("*" + getManualTitle());
 				} else {
 					setOriginalTitle(part.getTitle());
