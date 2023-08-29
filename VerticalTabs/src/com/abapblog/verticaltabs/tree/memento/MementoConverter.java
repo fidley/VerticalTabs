@@ -167,7 +167,8 @@ public class MementoConverter {
 
 			try {
 				String manualTitle = tm.getString(MementoConstants.Keys.NodeManualName);
-				tabNode.setManualTitle(manualTitle);
+				if (!manualTitle.equals(""))
+					tabNode.setManualTitle(manualTitle);
 			} catch (Exception e) {
 
 			}

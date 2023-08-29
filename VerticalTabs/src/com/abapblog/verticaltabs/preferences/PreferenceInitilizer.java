@@ -17,6 +17,8 @@ public class PreferenceInitilizer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.COLUMN_WIDTH_PIN, 30);
 		store.setDefault(PreferenceConstants.COLUMN_WIDTH_PROJECT, 120);
 		store.setDefault(PreferenceConstants.COLUMN_WIDTH_NAME, 300);
+		store.setDefault(PreferenceConstants.SEPARATE_TABS_FOR_SPLITTED_EDITORS, true);
+		store.setDefault(PreferenceConstants.TAB_NAVIGATION, TabNavigation.AT_SELECTION.name());
 	}
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.abapblog.verticaltabs.feature_0.0.2.202308241007.jar" id="com.abapblog.verticaltabs.feature" version="0.0.2.202308241007">
+   <feature url="features/com.abapblog.verticaltabs.feature_0.0.3.202308292324.jar" id="com.abapblog.verticaltabs.feature" version="0.0.3.202308292324">
       <category name="Vertical Tabs"/>
    </feature>
    <category-def name="Vertical Tabs" label="Vertical Tabs"/>

@@ -32,6 +32,7 @@ public class TreeNameCellLabelProvider extends StyledCellLabelProvider {
 			ITreeNode node = (ITreeNode) element;
 			StyledString styledString = new StyledString(node.getTitle());
 			addCounters(node, styledString);
+			addSplitInfo(node, styledString);
 			cell.setText(styledString.toString());
 			cell.setStyleRanges(styledString.getStyleRanges());
 			try {
@@ -42,6 +43,15 @@ public class TreeNameCellLabelProvider extends StyledCellLabelProvider {
 		}
 
 		super.update(cell);
+
+	}
+
+	private void addSplitInfo(ITreeNode node, StyledString styledString) {
+		if (node instanceof TabNode) {
+			TabNode tn = (TabNode) node;
+			if (!tn.getSplitTag().equals(""))
+				styledString.append(" (" + tn.getSplitTagDisplayName() + ")", StyledString.DECORATIONS_STYLER);
+		}
 
 	}
 

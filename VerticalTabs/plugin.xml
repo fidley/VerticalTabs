@@ -87,6 +87,16 @@
                     value="Name">
               </parameter>
          </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.sort"
+               id="com.abapblog.verticaltabs.commands.sort.editor"
+               label="Editor"
+               style="radio">
+            <parameter
+                  name="org.eclipse.ui.commands.radioStateParameter"
+                  value="Editor">
+            </parameter>
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -280,6 +290,14 @@
       <startup
             class="com.abapblog.verticaltabs.release.notes.Startup">
       </startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.abapblog.verticaltabs.preferences.pages.MainPage"
+            id="com.abapblog.verticalTabs.preferences.MainPage"
+            name="Vertical Tabs">
+      </page>
    </extension>
 
 </plugin>
