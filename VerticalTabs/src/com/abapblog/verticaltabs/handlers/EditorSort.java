@@ -4,14 +4,11 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 
-import com.abapblog.verticaltabs.tree.TreeContentProvider;
-import com.abapblog.verticaltabs.tree.nodes.GroupNode;
-import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
-import com.abapblog.verticaltabs.views.VTView;
+import com.abapblog.verticaltabs.tree.TreeSorting;
 
-public class Ungroup implements IHandler {
+public class EditorSort extends SortCommand implements IHandler {
+	public static final String ID = "com.abapblog.verticaltabs.commands.sort.name";
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -27,17 +24,7 @@ public class Ungroup implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection;
-		selection = (IStructuredSelection) VTView.getTreeViewer().getSelection();
-		for (Object selectedNode : selection) {
-			if (selectedNode instanceof GroupNode) {
-				GroupNode gn = (GroupNode) selectedNode;
-				for (ITreeNode itn : gn.getChildren()) {
-					TreeContentProvider.getNodesFactory().moveTabNodeFromGroupToRoot(itn);
-				}
-			}
-			TreeContentProvider.refreshTree();
-		}
+		sort(TreeSorting.EDITOR);
 		return null;
 	}
 

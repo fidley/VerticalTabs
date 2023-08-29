@@ -23,6 +23,7 @@ public class SortCommand implements IHandler {
 	private static final String STATE_MANUAL = "Manual";
 	private static final String STATE_PROJECT = "Project";
 	private static final String STATE_NAME = "Name";
+	private static final String STATE_EDITOR = "Editor";
 	private static final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 	private static String oldState = "";
 	public static final String ID = "com.abapblog.verticaltabs.commands.sort";
@@ -61,12 +62,21 @@ public class SortCommand implements IHandler {
 			oldState = STATE_MANUAL;
 			HandlerUtil.updateRadioState(event.getCommand(), currentState);
 			break;
+		case STATE_EDITOR:
+			new EditorSort().execute(event);
+			oldState = STATE_EDITOR;
+			HandlerUtil.updateRadioState(event.getCommand(), currentState);
+			break;
 		case STATE_NEXT:
 
 			switch (oldState) {
-			case STATE_NAME:
+			case STATE_EDITOR:
 				new ManualSort().execute(event);
 				oldState = STATE_MANUAL;
+				break;
+			case STATE_NAME:
+				new EditorSort().execute(event);
+				oldState = STATE_EDITOR;
 				break;
 			case STATE_PROJECT:
 				new NameSort().execute(event);
@@ -112,6 +122,8 @@ public class SortCommand implements IHandler {
 			return TreeSorting.PROJECT;
 		if (sorting.contentEquals(TreeSorting.NAME.name()))
 			return TreeSorting.NAME;
+		if (sorting.contentEquals(TreeSorting.EDITOR.name()))
+			return TreeSorting.EDITOR;
 		return TreeSorting.MANUAL;
 	}
 
@@ -137,6 +149,9 @@ public class SortCommand implements IHandler {
 			break;
 		case NAME:
 			changeState(command, state, STATE_NAME);
+			break;
+		case EDITOR:
+			changeState(command, state, STATE_EDITOR);
 			break;
 		default:
 			break;

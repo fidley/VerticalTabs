@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.NodeType;
+import com.abapblog.verticaltabs.tree.nodes.TabNode;
 
 public class Sorter extends ViewerComparator {
 	private TreeSorting treeSorting;
@@ -64,6 +65,20 @@ public class Sorter extends ViewerComparator {
 			}
 
 			break;
+		case EDITOR:
+			if (p1.getNodeType().equals(p2.getNodeType()) && p1.getNodeType().equals(NodeType.TAB)) {
+				TabNode t1 = (TabNode) p1;
+				TabNode t2 = (TabNode) p2;
+				rc = (t1.getEditorReference().getId() + "_" + t1.getProjectName() + "_" + t1.getTitle()).toUpperCase()
+						.compareTo((t2.getEditorReference().getId() + "_" + t2.getProjectName() + "_" + t2.getTitle())
+								.toUpperCase());
+				break;
+			} else {
+				rc = sortWhenOneIsGroupNode(p1, p2, rc);
+			}
+
+			break;
+
 		default:
 			rc = 0;
 		}

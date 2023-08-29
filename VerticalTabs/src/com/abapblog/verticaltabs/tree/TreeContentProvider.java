@@ -1,8 +1,13 @@
 package com.abapblog.verticaltabs.tree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.ICoreRunnable;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -25,6 +30,7 @@ import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.NodesFactory;
 import com.abapblog.verticaltabs.tree.nodes.ProjectNode;
 import com.abapblog.verticaltabs.tree.nodes.RootNode;
+import com.abapblog.verticaltabs.tree.nodes.SplittedEditorTabNotAllowedException;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
 import com.abapblog.verticaltabs.tree.nodes.TreeNode;
 import com.abapblog.verticaltabs.views.VTView;
@@ -36,7 +42,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private static List<Object> expandedProjects = new ArrayList<>();
 	private static List<Object> expandedGroups = new ArrayList<>();
 	private static TreeViewer treeViewer;
-	private NodesFactory nodesFactory = new NodesFactory(this);
+	private static NodesFactory nodesFactory;
 	private static TreeContentProvider contentProvider;
 
 	private TreeContentProvider(TreeViewer treeViewer) {
@@ -54,6 +60,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	public static TreeContentProvider getTreeContentProvider(TreeViewer treeViewer) {
 		if (contentProvider == null) {
 			contentProvider = new TreeContentProvider(treeViewer);
+			nodesFactory = new NodesFactory(contentProvider);
 			contentProvider.initialize();
 		} else {
 			setTreeViewer(treeViewer);
@@ -156,37 +163,22 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 
 	private void createEntriesForOpenedEditors(IEditorReference[] editorReferences) {
 		for (int i = 0; i < editorReferences.length; i++) {
-			editorReferences[i].getEditor(true);
-			addEditorReferenceToNodesAndGroups(editorReferences[i]);
+			try {
+				editorReferences[i].getEditor(false);
+			} catch (Exception e) {
+
+			}
+			nodesFactory.addEditorReferenceToNodesAndGroups(editorReferences[i]);
 		}
 	}
 
-	private void addEditorReferenceToNodesAndGroups(IEditorReference editorReference) {
-		try {
-			TabNode tabNode = getNodesFactory().getTabNode(editorReference);
-			if (!manualRoot.contains(tabNode) && tabNode.getParent() == null)
-				manualRoot.addChild(tabNode);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public TreeNode getInvisibleRoot() {
+	public static TreeNode getInvisibleRoot() {
 		return invisibleRoot;
 	}
 
 	@Override
 	public void partOpened(IWorkbenchPartReference partRef) {
-		boolean partInTabs = false;
-		if (partRef instanceof IEditorReference) {
-			IEditorReference er = (IEditorReference) partRef;
-			partInTabs = nodesFactory.getTabNodes().containsKey(er);
-			if (!partInTabs) {
-				addEditorReferenceToNodesAndGroups(er);
-				refreshTree();
-			}
-		}
+		addOpenOrActivatedEditor(partRef);
 	}
 
 	@Override
@@ -200,25 +192,72 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 				if (tn.isPinned())
 					return;
 				nodesFactory.removeTabNode(er);
+				if (tn.getClonedFrom() != null) {
+					TabNode cn = nodesFactory.getTabNode(tn.getClonedFrom());
+					cn.setSplitIndex(TabNode.SPLIT_INDEX_NONE);
+					cn.setSplitTag("");
+				}
 				refreshTree();
 			} catch (PartInitException e) {
 				e.printStackTrace();
+			} catch (SplittedEditorTabNotAllowedException e) {
 			}
+			HandleCloseAll();
 		}
+
+	}
+
+	private void HandleCloseAll() {
+		removeClosedTabs();
+	}
+
+	private void removeClosedTabs() {
+		Job job = Job.create("Update Vertical Tabs At Close", (ICoreRunnable) monitor -> {
+			try {
+				TimeUnit.SECONDS.sleep(3);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			Display.getDefault().asyncExec(() -> {
+				try {
+
+					IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage().getEditorReferences();
+					List<IEditorReference> erList = new ArrayList<IEditorReference>(Arrays.asList(editorReferences));
+					for (Entry<IEditorReference, TabNode> set : nodesFactory.getTabNodes().entrySet()) {
+						if (!erList.contains(set.getKey()))
+							nodesFactory.removeTabNode(set.getKey());
+					}
+					TreeContentProvider.refreshTree();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+		});
+		job.schedule();
+
 	}
 
 	@Override
 	public void partActivated(IWorkbenchPartReference partRef) {
+		addOpenOrActivatedEditor(partRef);
+	}
+
+	private void addOpenOrActivatedEditor(IWorkbenchPartReference partRef) {
+		boolean partInTabs = false;
 		if (partRef instanceof IEditorReference) {
 			IEditorReference er = (IEditorReference) partRef;
-			ITreeNode[] treeNodes = invisibleRoot.getChildren();
-			for (int i = 0; i < treeNodes.length; i++) {
-				if (treeNodes[i] instanceof TabNode) {
-					TabNode tabNode = (TabNode) treeNodes[i];
-					if (tabNode.getEditorReference().equals(er)) {
-						tabNode.updateFromEditorReferenece();
-						break;
-					}
+			partInTabs = nodesFactory.getTabNodes().containsKey(er);
+			if (!partInTabs) {
+				nodesFactory.addEditorReferenceToNodesAndGroups(er);
+				refreshTree();
+			} else {
+				try {
+					nodesFactory.getTabNode(er).updateFromEditorReferenece();
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				} catch (SplittedEditorTabNotAllowedException e) {
+
 				}
 			}
 		}
@@ -235,7 +274,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		if (treeViewer == null)
 			return;
 		Control redrawFalseControl = treeViewer.getControl();
-		Display.getCurrent().asyncExec(() -> {
+		Display.getDefault().asyncExec(() -> {
 			try {
 				redrawFalseControl.setRedraw(false);
 				treeViewer.refresh();
@@ -328,7 +367,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		TreeContentProvider.manualRoot = manualRoot;
 	}
 
-	public NodesFactory getNodesFactory() {
+	public static NodesFactory getNodesFactory() {
 		return nodesFactory;
 	}
 

@@ -21,13 +21,11 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 
 	protected IStructuredSelection dndSourceSelection;
 	private final TreeViewer treeViewer;
-	private TreeContentProvider contentProvider;
 
 	public TreeDragAndDrop(TreeViewer treeViewer) {
 		final Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 		final int operations = DND.DROP_MOVE | DND.DROP_COPY;
 		this.treeViewer = treeViewer;
-		contentProvider = (TreeContentProvider) treeViewer.getContentProvider();
 		treeViewer.addDragSupport(operations, types, this);
 		treeViewer.addDropSupport(operations, types, this);
 	}
@@ -81,8 +79,8 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 
 	private void groupNodes(DropTargetEvent event) {
 		GroupNode groupNode = null;
-		NodesFactory nodesFactory = contentProvider.getNodesFactory();
-		if (!contentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
+		NodesFactory nodesFactory = TreeContentProvider.getNodesFactory();
+		if (!TreeContentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
 			return;
 		}
 		final TreeItem targetItem = (TreeItem) event.item;
@@ -148,12 +146,12 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 			for (Object selectedNode : dndSourceSelection) {
 				ITreeNode sourceNode = (ITreeNode) selectedNode;
 				if (targetNode.getNodeType().equals(sourceNode.getNodeType())) {
-					if (contentProvider.getInvisibleRoot().equals(TreeContentProvider.getProjectsRoot())
+					if (TreeContentProvider.getInvisibleRoot().equals(TreeContentProvider.getProjectsRoot())
 							&& targetNode.getProjectName().equals(sourceNode.getProjectName())
-							|| contentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
+							|| TreeContentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
 						manualSort(targetNode, sourceNode);
 					}
-				} else if (contentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
+				} else if (TreeContentProvider.getInvisibleRoot().equals(TreeContentProvider.getManualRoot())) {
 					manualSort(targetNode, sourceNode);
 				}
 			}
@@ -177,7 +175,7 @@ public class TreeDragAndDrop implements DragSourceListener, DropTargetListener {
 	}
 
 	private ITreeNode[] getNodesColection(NodeType nodeType) {
-		NodesFactory nodesFactory = contentProvider.getNodesFactory();
+		NodesFactory nodesFactory = TreeContentProvider.getNodesFactory();
 		switch (nodeType) {
 		case PROJECT:
 			return nodesFactory.getProjectNodes().values().toArray(new ITreeNode[0]);
