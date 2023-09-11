@@ -25,14 +25,14 @@ public class FocusOnTreeFilter implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		if (VTView.getFilteredTree() == null || !VTView.getFilteredTree().getVisible())
-			try {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(VTView.getID());
-			} catch (PartInitException e) {
-				e.printStackTrace();
-			}
-		VTView.getFilteredTree().setFocus();
-		VTView.getFilteredTree().setFocusOnFilter();
+		try {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(VTView.getID());
+			VTView.getFilteredTree().setFocus();
+			VTView.getFilteredTree().setFocusOnFilter();
+		} catch (PartInitException e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
