@@ -10,6 +10,8 @@ import com.abapblog.verticaltabs.preferences.pages.MainPage;
 
 public class OpenPreferences implements IHandler {
 
+	private static final String ORG_ECLIPSE_UI_PREFERENCE_PAGES_KEYS = "org.eclipse.ui.preferencePages.Keys";
+
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
 		// TODO Auto-generated method stub
@@ -24,7 +26,8 @@ public class OpenPreferences implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		PreferencesUtil.createPreferenceDialogOn(null, MainPage.ID, new String[] { MainPage.ID }, null).open();
+		PreferencesUtil.createPreferenceDialogOn(null, MainPage.ID,
+				new String[] { MainPage.ID, ORG_ECLIPSE_UI_PREFERENCE_PAGES_KEYS }, null).open();
 		return null;
 	}
 
