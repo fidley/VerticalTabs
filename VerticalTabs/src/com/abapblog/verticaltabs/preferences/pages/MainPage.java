@@ -14,6 +14,7 @@ import com.abapblog.verticaltabs.tree.TreeContentProvider;
 
 public class MainPage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	private final IPreferenceStore store;
+	public static final String ID = "com.abapblog.verticalTabs.preferences.MainPage";
 
 	public MainPage() {
 		super(GRID);

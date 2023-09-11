@@ -19,6 +19,14 @@ public class VTFilteredTree extends FilteredTree {
 		super(parent, treeStyle, filter, useNewLook, useFastHashLookup);
 	}
 
+	public void setFocusOnTree() {
+		getViewer().getTree().setFocus();
+	}
+
+	public void setFocusOnFilter() {
+		getFilterControl().setFocus();
+	}
+
 	@Override
 	protected WorkbenchJob doCreateRefreshJob() {
 		return new WorkbenchJob("Refresh Filter") {//$NON-NLS-1$

@@ -154,6 +154,12 @@
             allPopups="false"
             locationURI="menu:com.abapblog.verticaltabs.view">
          <command
+               commandId="com.abapblog.verticaltabs.commands.openPreferences"
+               icon="icons/preferences.png"
+               label="Preferences"
+               style="push">
+         </command>
+         <command
                commandId="com.abapblog.verticaltabs.commands.releaseNotes"
                icon="icons/info_tsk.png"
                label="Show Release Notes"
@@ -174,8 +180,10 @@
       </menuContribution>
    </extension>
    <extension
+         id="com.abapblog.verticaltabs.commands.openPreferences"
          point="org.eclipse.ui.commands">
       <command
+            category="com.abapblog.verticaltabs.commands.category"
             defaultHandler="com.abapblog.verticaltabs.handlers.SortCommand"
             id="com.abapblog.verticaltabs.commands.sort"
             name="Sort">
@@ -190,6 +198,7 @@
          </commandParameter>
       </command>
       <command
+            category="com.abapblog.verticaltabs.commands.category"
             defaultHandler="com.abapblog.verticaltabs.handlers.GroupByProject"
             id="com.abapblog.verticaltabs.commands.groupbyproject"
             name="Group by project">
@@ -199,26 +208,31 @@
          </state>
       </command>
       <command
+            category="com.abapblog.verticaltabs.commands.category"
             defaultHandler="com.abapblog.verticaltabs.handlers.RenameGroup"
             id="com.abapblog.verticaltabs.commands.renameGroup"
             name="Rename">
       </command>
       <command
+            category="com.abapblog.verticaltabs.commands.category"
             defaultHandler="com.abapblog.verticaltabs.handlers.CloseSelectedTabNodes"
             id="com.abapblog.verticaltabs.commands.closeSelected"
             name="Close Selected">
       </command>
       <command
+            category="com.abapblog.verticaltabs.commands.category"
             defaultHandler="com.abapblog.verticaltabs.handlers.CollapseAll"
             id="com.abapblog.verticaltabs.commands.collapseAll"
             name="Collapse All">
       </command>
       <command
+            category="com.abapblog.verticaltabs.commands.category"
             defaultHandler="com.abapblog.verticaltabs.handlers.ExpandAll"
             id="com.abapblog.verticaltabs.commands.expandAll"
             name="Expand All">
       </command>
       <command
+            category="com.abapblog.verticaltabs.commands.category"
             defaultHandler="com.abapblog.verticaltabs.handlers.Ungroup"
             id="com.abapblog.verticaltabs.commands.ungroup"
             name="Ungroup">
@@ -237,6 +251,23 @@
             defaultHandler="com.abapblog.verticaltabs.handlers.BuyMeABeer"
             id="com.abapblog.verticaltabs.commands.buyABeer"
             name="Buy Me a Beer">
+      </command>
+      <command
+            category="com.abapblog.verticaltabs.commands.category"
+            defaultHandler="com.abapblog.verticaltabs.handlers.FocusOnTreeFilter"
+            description="Focus On Vertical Tabs view filter. When the view is close, it will be opened firstly."
+            id="com.abapblog.verticaltabs.commands.focusOnTreeFilter"
+            name="Focus On Vertical Tabs filter">
+      </command>
+      <category
+            description="Vertical Tabs"
+            id="com.abapblog.verticaltabs.commands.category"
+            name="Vertical Tabs">
+      </category>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.OpenPreferences"
+            id="com.abapblog.verticaltabs.commands.openPreferences"
+            name="Open Preferences">
       </command>
    </extension>
    <extension
@@ -258,6 +289,12 @@
             contextId="com.abapblog.verticaltabs.view.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="DELETE">
+      </key>
+      <key
+            commandId="com.abapblog.verticaltabs.commands.focusOnTreeFilter"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M3+V">
       </key>
    </extension>
    <extension
