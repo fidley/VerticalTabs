@@ -23,6 +23,7 @@ import com.abapblog.verticaltabs.tree.Columns;
 import com.abapblog.verticaltabs.tree.Sorter;
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.TreeDragAndDrop;
+import com.abapblog.verticaltabs.tree.TreeKeyListener;
 import com.abapblog.verticaltabs.tree.TreeMouseHandler;
 import com.abapblog.verticaltabs.tree.TreePatternFilter;
 import com.abapblog.verticaltabs.tree.TreeSorting;
@@ -37,6 +38,7 @@ public class VTView extends ViewPart {
 	public static final Sorter sorter = new Sorter();
 	private static final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 	private final ColumnControlListener columnListener = new ColumnControlListener();
+	public static final String ID = "com.abapblog.verticaltabs.view";
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -95,6 +97,10 @@ public class VTView extends ViewPart {
 		return filteredTree.getViewer();
 	}
 
+	public static VTFilteredTree getFilteredTree() {
+		return filteredTree;
+	}
+
 	@Override
 	public void setFocus() {
 
@@ -106,6 +112,7 @@ public class VTView extends ViewPart {
 		tree.setLinesVisible(true);
 		TreeMouseHandler treeMouseHandler = new TreeMouseHandler();
 		tree.addMouseListener(treeMouseHandler);
+		tree.addKeyListener(new TreeKeyListener());
 	}
 
 	private void createColumns(TreeViewer viewer) {
@@ -217,5 +224,9 @@ public class VTView extends ViewPart {
 	public void dispose() {
 		VTView.filteredTree = null;
 		super.dispose();
+	}
+
+	public static String getID() {
+		return ID;
 	}
 }
