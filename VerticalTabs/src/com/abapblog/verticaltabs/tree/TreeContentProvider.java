@@ -225,7 +225,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 							.getActivePage().getEditorReferences();
 					List<IEditorReference> erList = new ArrayList<IEditorReference>(Arrays.asList(editorReferences));
 					for (Entry<IEditorReference, TabNode> set : nodesFactory.getTabNodes().entrySet()) {
-						if (!erList.contains(set.getKey()))
+						if (!erList.contains(set.getKey()) && !set.getValue().isPinned())
 							nodesFactory.removeTabNode(set.getKey());
 					}
 					TreeContentProvider.refreshTree();
