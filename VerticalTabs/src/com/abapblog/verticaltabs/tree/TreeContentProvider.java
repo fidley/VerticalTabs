@@ -333,10 +333,10 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private static void setInvisibleRoot(RootNode root) {
 		if (invisibleRoot.equals(projectsRoot))
 			getExpandedElementsIntoList(expandedProjects);
-		VTView.showProjectColumn();
+//		VTView.showProjectColumn();
 		if (invisibleRoot.equals(manualRoot))
 			getExpandedElementsIntoList(getExpandedGroups());
-		VTView.hideProjectColumn();
+//		VTView.hideProjectColumn();
 
 		if (root.equals(projectsRoot) && getExpandedProjects() != null)
 			treeViewer.setExpandedElements(getExpandedProjects());
@@ -344,11 +344,12 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 			treeViewer.setExpandedElements(getExpandedGroups());
 		invisibleRoot = root;
 
+		VTView.changeColumnsVisibility();
+
 		if (invisibleRoot.equals(projectsRoot)) {
 			VTView.hideProjectColumn();
-		} else if (invisibleRoot.equals(manualRoot)) {
-			VTView.showProjectColumn();
 		}
+
 	}
 
 	public static RootNode getProjectsRoot() {

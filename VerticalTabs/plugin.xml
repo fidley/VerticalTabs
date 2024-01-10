@@ -335,6 +335,12 @@
             id="com.abapblog.verticalTabs.preferences.MainPage"
             name="Vertical Tabs">
       </page>
+      <page
+            category="com.abapblog.verticalTabs.preferences.MainPage"
+            class="com.abapblog.verticaltabs.preferences.pages.ColumnsSettingsPage"
+            id="com.abapblog.verticalTabs.preferences.Columns"
+            name="Columns">
+      </page>
    </extension>
 
 </plugin>

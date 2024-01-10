@@ -15,30 +15,34 @@ public class ColumnControlListener implements ControlListener {
 	@Override
 	public void controlResized(ControlEvent arg0) {
 		TreeColumn column = (TreeColumn) arg0.getSource();
-		TreeColumn[] allColumns = VTView.getTreeViewer().getTree().getColumns();
-		for (int i = 0; i < allColumns.length; i++) {
-			TreeColumn treeColumn = allColumns[i];
-			if (treeColumn.equals(column)) {
-				switch (Columns.fromInteger(i)) {
-				case CLOSE:
-					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_CLOSE, column.getWidth());
-					break;
-				case PIN:
-					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PIN, column.getWidth());
-					break;
-				case PROJECT:
-					if (column.getWidth() != 0)
+		if (column.getWidth() != 0) {
+			TreeColumn[] allColumns = VTView.getTreeViewer().getTree().getColumns();
+			for (int i = 0; i < allColumns.length; i++) {
+				TreeColumn treeColumn = allColumns[i];
+				if (treeColumn.equals(column)) {
+					switch (Columns.fromInteger(i)) {
+					case CLOSE:
+						preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_CLOSE, column.getWidth());
+						break;
+					case PIN:
+						preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PIN, column.getWidth());
+						break;
+					case PROJECT:
 						preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PROJECT, column.getWidth());
-					break;
-				case NAME:
-					preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_NAME, column.getWidth());
-					break;
-				default:
-					break;
+						break;
+					case NAME:
+						preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_NAME, column.getWidth());
+						break;
+					case PATH:
+						preferenceStore.setValue(PreferenceConstants.COLUMN_WIDTH_PATH, column.getWidth());
+						break;
+					default:
+						break;
 
+					}
 				}
-			}
 
+			}
 		}
 	}
 
