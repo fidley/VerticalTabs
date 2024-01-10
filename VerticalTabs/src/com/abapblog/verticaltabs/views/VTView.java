@@ -30,6 +30,7 @@ import com.abapblog.verticaltabs.tree.TreeSorting;
 import com.abapblog.verticaltabs.tree.VTFilteredTree;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeCloseCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeNameCellLabelProvider;
+import com.abapblog.verticaltabs.tree.labelproviders.TreePathCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreePinCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeProjectCellLabelProvider;
 
@@ -117,10 +118,11 @@ public class VTView extends ViewPart {
 
 	private void createColumns(TreeViewer viewer) {
 
-		createColumnName(Columns.fromInteger(0), viewer);
-		createColumnName(Columns.fromInteger(1), viewer);
-		createColumnName(Columns.fromInteger(2), viewer);
-		createColumnName(Columns.fromInteger(3), viewer);
+		createColumnName(Columns.getBySequence(0), viewer);
+		createColumnName(Columns.getBySequence(1), viewer);
+		createColumnName(Columns.getBySequence(2), viewer);
+		createColumnName(Columns.getBySequence(3), viewer);
+		createColumnName(Columns.getBySequence(4), viewer);
 	}
 
 	private void createColumnName(Columns column, TreeViewer viewer) {
@@ -137,6 +139,9 @@ public class VTView extends ViewPart {
 		case PROJECT:
 			createProjectColumn(viewer);
 			break;
+		case PATH:
+			createPathColumn(viewer);
+			break;
 		}
 	}
 
@@ -150,6 +155,8 @@ public class VTView extends ViewPart {
 			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_NAME);
 		case PROJECT:
 			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_PROJECT);
+		case PATH:
+			return preferenceStore.getInt(PreferenceConstants.COLUMN_WIDTH_PATH);
 		}
 		return 40;
 	}
@@ -158,9 +165,18 @@ public class VTView extends ViewPart {
 		TreeViewerColumn closeColumn = new TreeViewerColumn(viewer, SWT.NONE);
 		closeColumn.getColumn().setWidth(getColumnWidth(Columns.CLOSE));
 		closeColumn.getColumn().setResizable(false);
-		closeColumn.getColumn().setText("Close");
+		closeColumn.getColumn().setText(Columns.CLOSE.getColumnHeaderText());
 		closeColumn.setLabelProvider(new TreeCloseCellLabelProvider());
 		closeColumn.getColumn().addControlListener(columnListener);
+	}
+
+	private void createPathColumn(TreeViewer viewer) {
+		TreeViewerColumn pathColumn = new TreeViewerColumn(viewer, SWT.NONE);
+		pathColumn.getColumn().setWidth(getColumnWidth(Columns.PATH));
+		pathColumn.getColumn().setResizable(true);
+		pathColumn.getColumn().setText(Columns.PATH.getColumnHeaderText());
+		pathColumn.setLabelProvider(new TreePathCellLabelProvider());
+		pathColumn.getColumn().addControlListener(columnListener);
 	}
 
 	private void createProjectColumn(TreeViewer viewer) {
@@ -171,7 +187,7 @@ public class VTView extends ViewPart {
 			projectColumn.getColumn().setWidth(0);
 		}
 		projectColumn.getColumn().setResizable(true);
-		projectColumn.getColumn().setText("Project");
+		projectColumn.getColumn().setText(Columns.PROJECT.getColumnHeaderText());
 		projectColumn.setLabelProvider(new TreeProjectCellLabelProvider());
 		projectColumn.getColumn().addControlListener(columnListener);
 	}
@@ -184,17 +200,18 @@ public class VTView extends ViewPart {
 	private void createNAMEColumn(TreeViewer viewer) {
 		TreeViewerColumn tabColumn = new TreeViewerColumn(viewer, SWT.NONE);
 		tabColumn.getColumn().setWidth(getColumnWidth(Columns.NAME));
-		tabColumn.getColumn().setText("Name");
+		tabColumn.getColumn().setText(Columns.NAME.getColumnHeaderText());
 		tabColumn.getColumn().setResizable(true);
 		tabColumn.setLabelProvider(new TreeNameCellLabelProvider());
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		tabColumn.getColumn().addControlListener(columnListener);
+
 	}
 
 	private void createPINColumn(TreeViewer viewer) {
 		TreeViewerColumn pinColumn = new TreeViewerColumn(viewer, SWT.NONE);
 		pinColumn.getColumn().setWidth(getColumnWidth(Columns.PIN));
-		pinColumn.getColumn().setText("Pin");
+		pinColumn.getColumn().setText(Columns.PIN.getColumnHeaderText());
 		pinColumn.getColumn().setResizable(true);
 		pinColumn.setLabelProvider(new TreePinCellLabelProvider());
 		pinColumn.getColumn().addControlListener(columnListener);
@@ -211,13 +228,57 @@ public class VTView extends ViewPart {
 	}
 
 	public static void hideProjectColumn() {
-		TreeColumn projectColumn = filteredTree.getViewer().getTree().getColumn(Columns.getInteger(Columns.PROJECT));
-		projectColumn.setWidth(0);
+		hideColumn(Columns.PROJECT);
 	}
 
 	public static void showProjectColumn() {
-		TreeColumn projectColumn = filteredTree.getViewer().getTree().getColumn(Columns.getInteger(Columns.PROJECT));
-		projectColumn.setWidth(getColumnWidth(Columns.PROJECT));
+		showColumn(Columns.PROJECT);
+	}
+
+	public static void hideColumn(Columns column) {
+		TreeColumn columnToHide = filteredTree.getViewer().getTree().getColumn(Columns.getInteger(column));
+		columnToHide.setWidth(0);
+		columnToHide.setResizable(false);
+	}
+
+	public static void showColumn(Columns column) {
+		TreeColumn columnToShow = filteredTree.getViewer().getTree().getColumn(Columns.getInteger(column));
+		columnToShow.setWidth(getColumnWidth(column));
+		columnToShow.setResizable(true);
+	}
+
+	public static void changeColumnsVisibility() {
+		if (preferenceStore.getString(PreferenceConstants.COLUMN_VISIBILITY_CLOSE).equals(Columns.VISIBLE)) {
+			showColumn(Columns.CLOSE);
+		} else {
+			hideColumn(Columns.CLOSE);
+		}
+		if (preferenceStore.getString(PreferenceConstants.COLUMN_VISIBILITY_NAME).equals(Columns.VISIBLE)) {
+			showColumn(Columns.NAME);
+		} else {
+			hideColumn(Columns.NAME);
+		}
+		if (preferenceStore.getString(PreferenceConstants.COLUMN_VISIBILITY_PATH).equals(Columns.VISIBLE)) {
+			showColumn(Columns.PATH);
+		} else {
+			hideColumn(Columns.PATH);
+		}
+
+		if (preferenceStore.getString(PreferenceConstants.COLUMN_VISIBILITY_PIN).equals(Columns.VISIBLE)) {
+			showColumn(Columns.PIN);
+		} else {
+			hideColumn(Columns.PIN);
+		}
+
+		if (preferenceStore.getString(PreferenceConstants.COLUMN_VISIBILITY_PROJECT).equals(Columns.VISIBLE)) {
+			showColumn(Columns.PROJECT);
+		} else {
+			hideColumn(Columns.PROJECT);
+		}
+	}
+
+	public static void changeColumnSequence() {
+		filteredTree.getViewer().getTree().setColumnOrder(Columns.getSortOrderForTreeViewer());
 	}
 
 	@Override

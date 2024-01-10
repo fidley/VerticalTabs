@@ -6,6 +6,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import com.abapblog.verticaltabs.preferences.pages.ColumnsSettingsPage;
 import com.abapblog.verticaltabs.preferences.pages.MainPage;
 
 public class OpenPreferences implements IHandler {
@@ -27,7 +28,7 @@ public class OpenPreferences implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		PreferencesUtil.createPreferenceDialogOn(null, MainPage.ID,
-				new String[] { MainPage.ID, ORG_ECLIPSE_UI_PREFERENCE_PAGES_KEYS }, null).open();
+				new String[] { MainPage.ID, ColumnsSettingsPage.ID, ORG_ECLIPSE_UI_PREFERENCE_PAGES_KEYS }, null).open();
 		return null;
 	}
 
