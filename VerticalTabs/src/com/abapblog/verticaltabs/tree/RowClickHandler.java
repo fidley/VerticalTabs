@@ -2,6 +2,11 @@ package com.abapblog.verticaltabs.tree;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.ISafeRunnableWithResult;
+import org.eclipse.core.runtime.RegistryFactory;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MCompositePart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -29,6 +34,34 @@ public class RowClickHandler {
 	private final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 	public void handleClick(MouseEvent e, ITreeNode treeNode, int columnIndex) {
+		IConfigurationElement[] config = RegistryFactory.getRegistry()
+				.getConfigurationElementsFor(IRowClickExtension.ROW_CLICK_EXTENSION_ID);
+		try {
+			for (IConfigurationElement ce : config) {
+				final Object o = ce.createExecutableExtension("class");
+				if (o instanceof IRowClickExtension) {
+					ISafeRunnableWithResult runnable = new ISafeRunnableWithResult<Boolean>() {
+						@Override
+						public void handleException(Throwable er) {
+							System.out.println("Exception in client");
+						}
+
+						@Override
+						public Boolean runWithResult() throws Exception {
+
+							return ((IRowClickExtension) o).handleClick(e, treeNode, columnIndex);
+						}
+					};
+
+					Boolean handled = (Boolean) SafeRunner.run(runnable);
+					if (handled)
+						return;
+				}
+			}
+		} catch (CoreException ex) {
+			System.out.println(ex.getMessage());
+		}
+
 		if (e.button == 3) {
 			VTView.getTreeViewer().getTree().setFocus();
 			return;
@@ -39,6 +72,7 @@ public class RowClickHandler {
 			if (e.count < 2
 					&& store.getString(PreferenceConstants.TAB_NAVIGATION).equals(TabNavigation.AT_DOUBLE_CLICK.name()))
 				break;
+
 			if (treeNode.isOpenable())
 				treeNode.open();
 			break;

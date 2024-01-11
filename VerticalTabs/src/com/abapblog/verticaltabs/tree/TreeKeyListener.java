@@ -10,6 +10,7 @@ import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.views.VTView;
 
 public class TreeKeyListener extends KeyAdapter {
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if ((e.keyCode == SWT.CR || e.keyCode == SWT.Selection || e.keyCode == 16777296) && e.stateMask == SWT.NONE) {
@@ -31,6 +32,7 @@ public class TreeKeyListener extends KeyAdapter {
 			ft.setFocusOnFilter();
 
 		}
+
 	}
 
 }

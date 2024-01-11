@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:com.abapblog.verticaltabs.view">
+         <dynamic
+               class="com.abapblog.verticaltabs.abap.commands.OpenInProjectDynamic"
+               id="com.abapblog.verticaltabs.commands.abap.openInProjectDynamic">
+         </dynamic>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="com.abapblog.verticaltabs.view.context"
+            name="Vertical Tabs View Context"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
+   <extension
+         point="com.abapblog.verticaltabs.extensions.RowClick">
+      <client
+            class="com.abapblog.verticaltabs.abap.extensions.RowClickHandler">
+      </client>
+   </extension>
+
+</plugin>

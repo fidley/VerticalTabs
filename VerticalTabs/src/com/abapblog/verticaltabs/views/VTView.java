@@ -56,6 +56,7 @@ public class VTView extends ViewPart {
 		viewer.setContentProvider(contentProvider);
 		setTreeProperties(viewer.getTree());
 		createColumns(viewer);
+		changeColumnsVisibility();
 		createGridData(viewer);
 		createSorter(viewer);
 		new TreeDragAndDrop(viewer);
@@ -63,6 +64,7 @@ public class VTView extends ViewPart {
 
 		contentProvider.setExpandedElementsForTreeViewer();
 		contentProvider.setInitialRootNode();
+
 	}
 
 	private static void createFilteredTreeViewer(Composite parent) {
@@ -86,6 +88,7 @@ public class VTView extends ViewPart {
 		TreeSorting treeSorter = SortCommand.getSorterFromPreference();
 		sorter.setSorting(treeSorter);
 		markSortRadiobutton(treeSorter);
+		SortCommand.sort(treeSorter);
 	}
 
 	private void markSortRadiobutton(TreeSorting treeSorter) {
@@ -274,6 +277,14 @@ public class VTView extends ViewPart {
 			showColumn(Columns.PROJECT);
 		} else {
 			hideColumn(Columns.PROJECT);
+		}
+		try {
+			TreeContentProvider tcp = (TreeContentProvider) VTView.getTreeViewer().getContentProvider();
+			if (tcp.getInvisibleRoot().equals(tcp.getProjectsRoot())) {
+				VTView.hideProjectColumn();
+			}
+		} catch (Exception e) {
+
 		}
 	}
 
