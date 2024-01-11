@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.abapblog.verticaltabs.feature"
-      label="Vertical Tabs Feature"
-      version="0.0.5.qualifier"
+      id="com.abapblog.verticaltabs.abap.feature"
+      label="Vertical Tabs Abap Specific Features"
+      version="0.0.1.qualifier"
       provider-name="AbapBlog.com"
       plugin="com.abapblog.branding">
 
    <description>
-      This plugin adds new view called Vertical Tabs into your Eclipse installation.
-This view will allow you to see, filter, sort, group and navigate to all open editor tabs.
+      This plugin is optional for ABAP developers only.
+It add ABAP specific features to the vertical tabs, like Open in Project context menu.
    </description>
 
    <copyright>
@@ -41,20 +41,20 @@ SOFTWARE.
 
    <url>
       <update label="Vertical Tabs Update Site" url="https://fidley.github.io/VerticalTabs/"/>
-      <discovery label="Feedback, Bugs &amp; Enhancements" url="https://github.com/fidley/VerticalTabs"/>
       <discovery label="Buy Me a Beer" url="https://www.buymeacoffee.com/AbapBlog"/>
+      <discovery label="Feedback, Bugs &amp; Enhancements" url="https://github.com/fidley/VerticalTabs"/>
    </url>
 
+   <requires>
+      <import feature="com.abapblog.verticaltabs.feature" version="0.0.5.202401110918" match="greaterOrEqual"/>
+   </requires>
+
    <plugin
-         id="com.abapblog.verticaltabs"
-         version="0.0.0"/>
+         id="com.abapblog.verticaltabs.abap"
+         version="0.0.1.qualifier"/>
 
    <plugin
          id="com.abapblog.branding"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.abapblog.verticaltabs.release.notes.content"
-         version="0.0.0"/>
+         version="0.0.1.qualifier"/>
 
 </feature>

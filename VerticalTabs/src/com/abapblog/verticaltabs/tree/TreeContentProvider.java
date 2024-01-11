@@ -333,11 +333,8 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private static void setInvisibleRoot(RootNode root) {
 		if (invisibleRoot.equals(projectsRoot))
 			getExpandedElementsIntoList(expandedProjects);
-//		VTView.showProjectColumn();
 		if (invisibleRoot.equals(manualRoot))
 			getExpandedElementsIntoList(getExpandedGroups());
-//		VTView.hideProjectColumn();
-
 		if (root.equals(projectsRoot) && getExpandedProjects() != null)
 			treeViewer.setExpandedElements(getExpandedProjects());
 		if (root.equals(manualRoot) && getExpandedGroups() != null)

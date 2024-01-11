@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="com.abapblog.verticaltabs.extensions.RowClick" name="Row Click Extension" schema="schema/com.abapblog.verticaltabs.extensions.RowClick.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <view
