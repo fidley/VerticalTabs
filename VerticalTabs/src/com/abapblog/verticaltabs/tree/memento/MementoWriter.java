@@ -85,8 +85,10 @@ public class MementoWriter extends MementoOperations {
 			tabNodeMememento.putInteger(MementoConstants.Keys.NodeSortIndex, i);
 			tabNodeMememento.putBoolean(MementoConstants.Keys.NodeExpanded, false);
 			tabNodeMememento.putBoolean(MementoConstants.Keys.NodePinned, tn.isPinned());
+
 			i++;
 		}
+
 	}
 
 	private void saveProjectNodes(IMemento treeNodesMememento) {

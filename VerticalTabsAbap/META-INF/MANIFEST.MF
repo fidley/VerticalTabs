@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vertical Tabs Abap additions
 Bundle-SymbolicName: com.abapblog.verticaltabs.abap;singleton:=true
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 0.0.6.qualifier
 Import-Package: com.sap.adt.destinations.ui.logon,
  com.sap.adt.tools.core.ui.editors,
  com.sap.adt.tools.core.ui.navigation

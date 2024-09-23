@@ -2,7 +2,7 @@
 <feature
       id="com.abapblog.verticaltabs.feature"
       label="Vertical Tabs Feature"
-      version="0.0.5.qualifier"
+      version="0.0.6.qualifier"
       provider-name="AbapBlog.com"
       plugin="com.abapblog.branding">
 
