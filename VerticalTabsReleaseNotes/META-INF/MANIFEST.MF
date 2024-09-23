@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: VerticalTabsReleaseNotes
 Bundle-SymbolicName: com.abapblog.verticaltabs.release.notes.content;singleton:=true
 Bundle-Vendor: ABAPBlog.com
-Bundle-Version: 0.0.3.qualifier
+Bundle-Version: 0.0.6.qualifier
 Bundle-Activator: com.abapblog.verticaltabs.release.notes.Activator
 Eclipse-BundleShape: dir
 Require-Bundle: org.eclipse.ui,

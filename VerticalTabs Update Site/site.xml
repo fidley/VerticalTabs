@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.abapblog.verticaltabs.feature_0.0.5.202401111542.jar" id="com.abapblog.verticaltabs.feature" version="0.0.5.202401111542">
-      <category name="Vertical Tabs"/>
-   </feature>
    <feature url="features/com.abapblog.verticaltabs.abap.feature_0.0.1.202406281321.jar" id="com.abapblog.verticaltabs.abap.feature" version="0.0.1.202406281321">
       <category name="Vertical Tabs Language Specific Features"/>
+   </feature>
+   <feature url="features/com.abapblog.verticaltabs.feature_0.0.6.202409232148.jar" id="com.abapblog.verticaltabs.feature" version="0.0.6.202409232148">
+      <category name="Vertical Tabs"/>
    </feature>
    <category-def name="Vertical Tabs" label="Vertical Tabs"/>
    <category-def name="Vertical Tabs Language Specific Features" label="Vertical Tabs Language Specific Features"/>

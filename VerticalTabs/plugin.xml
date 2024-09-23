@@ -145,10 +145,123 @@
             </visibleWhen>
          </command>
          <command
+               commandId="com.abapblog.verticaltabs.commands.PinAll"
+               icon="icons/pin_view.png"
+               label="Pin All"
+               style="push"
+               tooltip="Pin All">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="com.abapblog.verticaltabs.tree.nodes.GroupNode">
+                           </instanceof>
+                        </and>
+                        <and>
+                           <instanceof
+                                 value="com.abapblog.verticaltabs.tree.nodes.ProjectNode">
+                           </instanceof>
+                        </and>
+                     </or>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.PinAndCloseAll"
+               icon="icons/pin_view.png"
+               label="Pin and Close All"
+               style="push"
+               tooltip="Pin and Close All">
+               <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                        <or><and>
+                     <instanceof
+                           value="com.abapblog.verticaltabs.tree.nodes.GroupNode">
+
+                     </instanceof></and><and>
+                                          <instanceof
+                           value="com.abapblog.verticaltabs.tree.nodes.ProjectNode">
+                     </instanceof></and>
+                     </or>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.UnpinAll"
+               label="Unpin All"
+               style="push"
+               tooltip="Unpin All">
+                <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <count
+                        value="+">
+                  </count>
+                   <iterate
+                        ifEmpty="false"
+                        operator="or">
+                        <or><and>
+                     <instanceof
+                           value="com.abapblog.verticaltabs.tree.nodes.GroupNode">
+
+                     </instanceof></and><and>
+                                          <instanceof
+                           value="com.abapblog.verticaltabs.tree.nodes.ProjectNode">
+                     </instanceof></and>
+                     </or>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
                commandId="com.abapblog.verticaltabs.commands.closeSelected"
                icon="icons/notification-close.png"
                label="Close"
                style="push">
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.OpenAll"
+               label="Open All"
+               style="push"
+               tooltip="Open All">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <count
+                        value="+">
+                  </count>
+                   <iterate
+                        ifEmpty="false"
+                        operator="or">
+                        <or><and>
+                     <instanceof
+                           value="com.abapblog.verticaltabs.tree.nodes.GroupNode">
+
+                     </instanceof></and><and>
+                                          <instanceof
+                           value="com.abapblog.verticaltabs.tree.nodes.ProjectNode">
+                     </instanceof></and>
+                     </or>
+                  </iterate>
+               </with>
+            </visibleWhen>
          </command>
       </menuContribution>
       <menuContribution
@@ -269,6 +382,30 @@
             defaultHandler="com.abapblog.verticaltabs.handlers.OpenPreferences"
             id="com.abapblog.verticaltabs.commands.openPreferences"
             name="Open Preferences">
+      </command>
+      <command
+            category="com.abapblog.verticaltabs.commands.category"
+            defaultHandler="com.abapblog.verticaltabs.handlers.OpenAll"
+            id="com.abapblog.verticaltabs.commands.OpenAll"
+            name="Open All">
+      </command>
+      <command
+            category="com.abapblog.verticaltabs.commands.category"
+            defaultHandler="com.abapblog.verticaltabs.handlers.PinAndCloseAll"
+            id="com.abapblog.verticaltabs.commands.PinAndCloseAll"
+            name="Pin and Close All">
+      </command>
+      <command
+            category="com.abapblog.verticaltabs.commands.category"
+                        defaultHandler="com.abapblog.verticaltabs.handlers.UnpinAll"
+            id="com.abapblog.verticaltabs.commands.UnpinAll"
+            name="Unpin All">
+      </command>
+      <command
+            category="com.abapblog.verticaltabs.commands.category"
+            defaultHandler="com.abapblog.verticaltabs.handlers.PinAll"
+            id="com.abapblog.verticaltabs.commands.PinAll"
+            name="Pin All">
       </command>
    </extension>
    <extension

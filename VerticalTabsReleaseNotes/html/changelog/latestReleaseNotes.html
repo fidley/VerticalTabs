@@ -7,6 +7,23 @@
 </head>
 
 <body id="doc-body">
+	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.6</h2>
+	<h3>Pinned and closed tabs are reopened at closing</h3>
+	<p>When you have some tabs that are pinned and closed, then during the shutdown event of Eclipse, the tabs are reopened</p>
+	<p>It will make the tabs available after the next start of Eclipse</p>
+	<br>Changes based on issue raised in the GH <a href="https://github.com/fidley/VerticalTabs/issues/47" target="_blank">47</a></p>
+
+
+
+
+	<h3>New menu options on Groups and Projects</h3>
+	<p>You can now pin/unpin all tabs of Groups and Projects at once. You can also open all closed tabs from Group or Project</p>
+	<p>Additionally you can pin and close all tabs of the Group or Project, to let you better manage the opened tabs.
+	<br>Changes based on idea raised in the GH <a href="https://github.com/fidley/VerticalTabs/issues/40" target="_blank">40</a></p>
+<figure>
+		<img src="../../media/img/0.0.6 New Menu Options.png">
+		<figcaption><strong>Figure 1:</strong> New Menu Options</figcaption>
+		</figure>
 	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.5</h2>
 	<h3>Column for Path of file added</h3>
 	<p>Column with path of the file linked to editor is now added to the view. Visibility of this column can be customized in preferences.
@@ -71,109 +88,6 @@
 		<img src="../../media/img/0.0.4 PreferencesFilteredView.png">
 		<figcaption><strong>Figure 3:</strong> Filtered Preferences for plugin</figcaption>
 		</figure></p>
-	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.3</h2>
-	<h3>New Sorting possiblity - Editor</h3>
-	<p>When selected, the internal Editor ID is used for sorting on first place.<br>
-	<br>Full sorting sequence: Editor ID, Tab Name, Tab Project</p>
-<figure>
-		<img src="../../media/img/0.0.3.EditorSort.png">
-		<figcaption><strong>Figure 1:</strong> Sorting by Editor</figcaption>
-		</figure>
-
-	<h3>Preferences for the plugin added</h3>
-	<p>You can now access plugin preferences: Windows->Preferences->Vertical Tabs<br>
-	<br>For the moment following settings are possible:
-	<ul><li>Show Separate tabs for splitted editors</li>
-	<li>Navigation to linked TAB by: Selection or Double-Click</li></ul></p>
-<figure>
-		<img src="../../media/img/0.0.3.Preferences.png">
-		<figcaption><strong>Figure 2:</strong> Plugin preferences</figcaption>
-		</figure>
-	<h4>Show Separate tabs for splitted editors</h4>
-		<p>When the setting in <b>enabled</b>, then in case you split editor window vertically or horizontally<br>
-		you'll get separate tabs for each editor pane. <br>
-		Additionally the position of the ediotor pane will be visible next to it's name. (Left/Right/Top/Bottom)</p>
-		<figure>
-		<img src="../../media/img/0.0.3.SplittedEditorsOn.png">
-		<figcaption><strong>Figure 2:</strong> Splitted Editor shown as two tabs</figcaption>
-		</figure>
-
-		<p>When the setting in <b>disabled</b>, then in case you split editor window vertically or horizontally<br>
-		you'll get only one tab in the plugin, pointing to intial editor pane.<br>
-		Additionally the position of the pane will be visible next to it's name. (Left/Top)</p>
-		<figure>
-		<img src="../../media/img/0.0.3.SplittedEditorsOff.png">
-		<figcaption><strong>Figure 2:</strong> Splitted Editor shown as one tab</figcaption>
-		</figure>
-		<h4>Navigation to linked TAB by</h4>
-		<p>You can now choose how you would like to navigate from the Vertical Tabs to linked editor:<br></p>
-		<ul><li>Selection (single click) - Default</li>
-		<li>Double-Click</li></ul>
-	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.2</h2>
-	<p>You can now rename tabs as you wish using the context menu of the view.<br>
-	The name will be kept also after restart of Eclipse.<br>
-	To come back to original name, use rename function and set the name to empty.</p>
-<figure>
-		<img src="../../media/img/TabRename.gif">
-		<figcaption><strong>Figure 1:</strong> Renaming of the Tab</figcaption>
-		</figure>
-	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.1</h2>
-	<p>
-		This plugin adds new view called <b>Vertical Tabs</b> into your Eclipse installation.<br>
-		This view will allow you to <strong>see, filter, sort, group and navigate</strong> to all open editor tabs.<br><br><br>
-		When the view will be open, it will add all open editors into the tree.
-		<h3>Grouping</h3>
-		<p>There are two possibilities to do grouping in the view: manual and by project.</p>
-		<h4>Manual Grouping</h4>
-		<p>In manual grouping mode, all editor tabs are added directly to the root node of the tree.<br>
-			<figure>
-		<img src="../../media/img/verticalTabsView.png">
-		<figcaption><strong>Figure 1:</strong> Vertical Tabs View - Manual Groups</figcaption>
-		</figure>
-		</p>
-		<p>In order to group tabs, you need select one or more tabs in the tree,press CTRL button and do drag & drop on another entry.<br>
-		Group will be created from all entries. Using F2 button or context menu, you can rename your group.</p>
-
-		<figure>
-		<img src="../../media/img/manualTabGrouping.gif">
-		<figcaption><strong>Figure 2:</strong> Manual Tab Grouping</figcaption>
-		</figure>
-<h4>Group by Project</h4>
-<p>In order to group tabs by project, use the "Group by Project" button on the view toolbar.<br>
-Tabs will be automatically grouped in folders of their projects.<br>
-Tabs not linked with any projects, will be kept in separate folder named 'Not linked'</p>
-
-		<figure>
-		<img src="../../media/img/verticalTabsViewByProject.png">
-		<figcaption><strong>Figure 3:</strong> Vertical Tabs View - Project Groups</figcaption>
-		</figure>
-
-<h3>Sorting</h3>
-<p>Sort button allows you to choose how the tabs should be displayed. Currently Manual, Name or Project sorting is allowed.<br></p>
-		<figure>
-		<img src="../../media/img/viewSortingPossibilities.png">
-		<figcaption><strong>Figure 4:</strong> Sorting possibilties of the View</figcaption>
-		</figure>
-<h4>Manual sorting</h4>
-<P>Manual sorting is done by drag & drop. You can sort tabs, groups or projects.</P>
-		<figure>
-		<img src="../../media/img/manualTabSorting.gif">
-		<figcaption><strong>Figure 5:</strong> Manual sorting</figcaption>
-		</figure>
-<h4>Sorting by Name</h4>
-	<p>When used Tabs, Groups and Projects will be sorted alpabetically by Name/Project</p>
-<h4>Sorting by Project</h4>
-	<p>When used Tabs, Groups and Projects will be sorted alpabetically by Project/Name</p>
-<h3>Pinning</h3>
-<p>When you select your tab to be pinned in the Vertical Tabs view, then after closing the editor window linked with that tab, the tab will remain on the tree.<br>
-On selection of the pinned tab, linked editor will be restored.</p>
-		<figure>
-		<img src="../../media/img/pinTab.png">
-		<figcaption><strong>Figure 6:</strong> Manual sorting</figcaption>
-		</figure>
-<h3>Restoring after startup</h3>
-<p>During the shutdown of the Eclipse, sorting & grouping of the tabs is stored.<br>
-This data is then used, to restore grouping and sorting after the next Eclipse startup</p>
 
 </body>
 </html>

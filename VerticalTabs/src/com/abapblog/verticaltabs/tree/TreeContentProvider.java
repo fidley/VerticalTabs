@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -189,8 +190,12 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 			IEditorReference er = (IEditorReference) partRef;
 			try {
 				TabNode tn = nodesFactory.getTabNode(er);
-				if (tn.isPinned())
+				if (tn.isPinned()) {
+					IEditorReference[] editors = { er };
+					IMemento[] memento = partRef.getPage().getEditorState(editors, true);
+					tn.SetClosedMementos(memento);
 					return;
+				}
 				nodesFactory.removeTabNode(er);
 				if (tn.getClonedFrom() != null) {
 					TabNode cn = nodesFactory.getTabNode(tn.getClonedFrom());
@@ -386,6 +391,11 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	@Override
 	public boolean preShutdown(IWorkbench workbench, boolean forced) {
 		removePartListener();
+		for (TabNode node : nodesFactory.getTabNodes().values()) {
+			if (node.isPinned() && node.isOpenable()) {
+				node.open();
+			}
+		}
 		return true;
 	}
 

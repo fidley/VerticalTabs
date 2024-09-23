@@ -13,6 +13,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -38,8 +39,10 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	private String manualTitle = "";
 	private String originalTitle = "";
 	private String splitTag = "";
+	private boolean archived = false;
 	private int splitIndex = SPLIT_INDEX_NONE;
 	private IEditorReference clonedFrom = null;
+	private IMemento[] closedMementos;
 	private final static IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 	public TabNode(IEditorReference editorReference) {
@@ -198,10 +201,18 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	@Override
 	public void open() {
 		IWorkbenchPart part = getEditorReference().getPart(true);
+
 		if (part != null) {
-			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (activePage != null) {
-				activePage.activate(part);
+			try {
+				IEditorInput[] ei = { editorReference.getEditorInput() };
+				String[] editorIDs = { editorReference.getId() };
+				part.getSite().getPage().openEditors(ei, editorIDs, closedMementos, IWorkbenchPage.MATCH_ID, 0);
+			} catch (Exception e) {
+				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				if (activePage != null) {
+					activePage.activate(part);
+				}
+
 			}
 		}
 	}
@@ -384,5 +395,22 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 
 	private void setClonedFrom(IEditorReference clonedFrom) {
 		this.clonedFrom = clonedFrom;
+	}
+
+	public void SetClosedMementos(IMemento[] memento) {
+		closedMementos = memento;
+
+	}
+
+	public IMemento[] getClosedMementos() {
+		return closedMementos;
+	}
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 }
