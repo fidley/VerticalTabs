@@ -206,7 +206,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			try {
 				IEditorInput[] ei = { editorReference.getEditorInput() };
 				String[] editorIDs = { editorReference.getId() };
-				part.getSite().getPage().openEditors(ei, editorIDs, closedMementos, IWorkbenchPage.MATCH_ID, 0);
+				part.getSite().getPage().openEditors(ei, editorIDs, closedMementos, IWorkbenchPage.MATCH_INPUT, 0);
 			} catch (Exception e) {
 				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				if (activePage != null) {

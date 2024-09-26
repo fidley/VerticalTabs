@@ -8,7 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -25,7 +27,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.abapblog.verticaltabs.Activator;
 import com.abapblog.verticaltabs.handlers.GroupByProject;
+import com.abapblog.verticaltabs.preferences.PreferenceConstants;
 import com.abapblog.verticaltabs.tree.nodes.GroupNode;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.NodesFactory;
@@ -45,6 +49,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private static TreeViewer treeViewer;
 	private static NodesFactory nodesFactory;
 	private static TreeContentProvider contentProvider;
+	private final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 	private TreeContentProvider(TreeViewer treeViewer) {
 		createPartListener();
@@ -265,6 +270,16 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 
 				}
 			}
+			if (store.getBoolean(PreferenceConstants.SELECT_ACTIVE_TAB_IN_TREE) == true) {
+				try {
+					TabNode activatedNode = nodesFactory.getTabNode(er);
+					treeViewer.expandToLevel(activatedNode, 0);
+					treeViewer.setSelection(new StructuredSelection(activatedNode));
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+			}
+
 		}
 	}
 

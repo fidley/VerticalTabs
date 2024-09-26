@@ -22,5 +22,6 @@ public class PreferenceConstants {
 	public static final String SEPARATE_TABS_FOR_SPLITTED_EDITORS = "SeparateTabsForSplittedEditors";
 	public static final String TAB_NAVIGATION = "TabNavigationBy";
 	public static final String COLUMNS_DISPLAY_PREFERENCES = "ColumnsDisplayPreferences";
+	public static final String SELECT_ACTIVE_TAB_IN_TREE = "SelectActiveTabInTree";
 
 }
