@@ -49,7 +49,8 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	private static TreeViewer treeViewer;
 	private static NodesFactory nodesFactory;
 	private static TreeContentProvider contentProvider;
-	private final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+	private final static IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+	public static TabNode tabNodeToSelect = null;
 
 	private TreeContentProvider(TreeViewer treeViewer) {
 		createPartListener();
@@ -260,8 +261,18 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 			partInTabs = nodesFactory.getTabNodes().containsKey(er);
 			if (!partInTabs) {
 				nodesFactory.addEditorReferenceToNodesAndGroups(er);
+				try {
+					tabNodeToSelect = nodesFactory.getTabNode(er);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
 				refreshTree();
 			} else {
+				try {
+					tabNodeToSelect = nodesFactory.getTabNode(er);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
 				try {
 					nodesFactory.getTabNode(er).updateFromEditorReferenece();
 				} catch (PartInitException e) {
@@ -270,16 +281,29 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 
 				}
 			}
-			if (store.getBoolean(PreferenceConstants.SELECT_ACTIVE_TAB_IN_TREE) == true) {
-				try {
-					TabNode activatedNode = nodesFactory.getTabNode(er);
-					treeViewer.expandToLevel(activatedNode, 0);
-					treeViewer.setSelection(new StructuredSelection(activatedNode));
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
-			}
+			selectTabInTreeViewer(er);
 
+		}
+	}
+
+	private void selectTabInTreeViewer(IEditorReference er) {
+		if (store.getBoolean(PreferenceConstants.SELECT_ACTIVE_TAB_IN_TREE) == true) {
+			try {
+				TabNode activatedNode = nodesFactory.getTabNode(er);
+				treeViewer.expandToLevel(activatedNode, 0);
+				treeViewer.setSelection(new StructuredSelection(activatedNode));
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private static void selectTabInTreeViewer() {
+		if (tabNodeToSelect == null)
+			return;
+		if (store.getBoolean(PreferenceConstants.SELECT_ACTIVE_TAB_IN_TREE) == true) {
+			treeViewer.expandToLevel(tabNodeToSelect, 0);
+			treeViewer.setSelection(new StructuredSelection(tabNodeToSelect));
 		}
 	}
 
@@ -299,6 +323,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 				redrawFalseControl.setRedraw(false);
 				treeViewer.refresh();
 				contentProvider.setExpandedElementsForTreeViewer();
+				selectTabInTreeViewer();
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
