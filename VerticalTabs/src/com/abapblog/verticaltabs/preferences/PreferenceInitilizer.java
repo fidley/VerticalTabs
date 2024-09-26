@@ -21,6 +21,7 @@ public class PreferenceInitilizer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.COLUMN_WIDTH_PATH, 300);
 		store.setDefault(PreferenceConstants.SEPARATE_TABS_FOR_SPLITTED_EDITORS, true);
 		store.setDefault(PreferenceConstants.TAB_NAVIGATION, TabNavigation.AT_SELECTION.name());
+		store.setDefault(PreferenceConstants.SELECT_ACTIVE_TAB_IN_TREE, true);
 		initializeColumnVisibilityAndSorting(store);
 	}
 

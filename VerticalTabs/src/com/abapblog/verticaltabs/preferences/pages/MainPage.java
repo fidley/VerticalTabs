@@ -36,6 +36,9 @@ public class MainPage extends FieldEditorPreferencePage implements IWorkbenchPre
 		addField(new RadioGroupFieldEditor(PreferenceConstants.TAB_NAVIGATION, "Navigation to linked TAB by", 1,
 				TabNavigation.toNamesAndKeys(), getFieldEditorParent(), true));
 
+		addField(new BooleanFieldEditor(PreferenceConstants.SELECT_ACTIVE_TAB_IN_TREE,
+				"&Select active tab in tree and expand its parent", getFieldEditorParent()));
+
 	}
 
 	@Override
