@@ -15,6 +15,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
 import org.eclipse.e4.ui.workbench.IPresentationEngine;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -26,7 +27,6 @@ import com.abapblog.verticaltabs.preferences.PreferenceConstants;
 import com.abapblog.verticaltabs.preferences.TabNavigation;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
-import com.abapblog.verticaltabs.views.VTView;
 
 public class RowClickHandler {
 	private EModelService modelService;
@@ -63,7 +63,7 @@ public class RowClickHandler {
 		}
 
 		if (e.button == 3) {
-			VTView.getTreeViewer().getTree().setFocus();
+//			VTView.getTreeViewer().getTree().setFocus();
 			return;
 		}
 
@@ -73,7 +73,8 @@ public class RowClickHandler {
 					&& store.getString(PreferenceConstants.TAB_NAVIGATION).equals(TabNavigation.AT_DOUBLE_CLICK.name()))
 				break;
 
-			if (treeNode.isOpenable())
+			if (treeNode.isOpenable() && !((e.stateMask & SWT.CTRL) == SWT.CTRL)
+					&& !((e.stateMask & SWT.SHIFT) == SWT.SHIFT))
 				treeNode.open();
 			break;
 		case PIN:
