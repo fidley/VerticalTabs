@@ -2,6 +2,7 @@ package com.abapblog.verticaltabs.tree.nodes;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.impl.CompositePartImpl;
 import org.eclipse.e4.ui.model.application.ui.basic.impl.PartImpl;
@@ -18,6 +19,7 @@ import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartConstants;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPartReference;
@@ -44,6 +46,8 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	private IEditorReference clonedFrom = null;
 	private IMemento[] closedMementos;
 	private final static IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+	private MElementContainer parentContainer;
+	private MPart editorPart;
 
 	public TabNode(IEditorReference editorReference) {
 		super(editorReference.getTitle(), editorReference.getTitleImage(), editorReference.getTitleToolTip());
@@ -53,6 +57,32 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 		setSortIndex(getNextSortIndex());
 		setOriginalTitle(editorReference.getTitle());
 		setSplitOfEdior(editorReference);
+		addUIParts();
+	}
+
+	/**
+	 * Adds the UI parts to the TabNode, making it possible to restore the tab in
+	 * the same position after pinning and opening it again. Works only for fully
+	 * loaded editors. First try at creation of the tab, second try is done at close
+	 * in method {@link #atClose(IWorkbenchPartReference)}, but may not catch all
+	 * cases as the editor may be closed before or with use of Close All/Close
+	 * Others actions.
+	 */
+	private void addUIParts() {
+		try {
+			editorPart = editorReference.getEditor(false).getSite().getService(MPart.class);
+			parentContainer = editorPart.getParent();
+		} catch (Exception e) {
+			// Editor is not loaded yet. Stay calm there are other ways to get the editor
+			// part
+			try {
+				if (editorReference instanceof WorkbenchPartReference) {
+					editorPart = ((WorkbenchPartReference) editorReference).getModel();
+					parentContainer = editorPart.getParent();
+				}
+			} catch (Exception e2) {
+			}
+		}
 	}
 
 	private void setSplitOfEdior(IEditorReference editorReference) {
@@ -141,7 +171,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 		try {
 			editorInput = editorReference.getEditorInput();
 			if (editorInput instanceof IFileEditorInput) {
-				extracted(editorInput);
+				setProjectAndPathForIFileEditorInput(editorInput);
 
 			} else {
 				setProject(editorInput.getAdapter(IProject.class));
@@ -155,7 +185,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 
 	}
 
-	private void extracted(IEditorInput editorInput) {
+	private void setProjectAndPathForIFileEditorInput(IEditorInput editorInput) {
 		try {
 
 			IFileEditorInput input = (IFileEditorInput) editorInput;
@@ -178,6 +208,21 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	@Override
 	public boolean isOpenable() {
 		return true;
+	}
+
+	public boolean isClosed() {
+		IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getEditorReferences();
+		for (int i = 0; i < editorReferences.length; i++) {
+			try {
+				if (editorReference == editorReferences[i])
+					return false;
+			} catch (Exception e) {
+
+			}
+		}
+		return true;
+
 	}
 
 	@Override
@@ -206,6 +251,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			try {
 				IEditorInput[] ei = { editorReference.getEditorInput() };
 				String[] editorIDs = { editorReference.getId() };
+				addToOldUIPart();
 				part.getSite().getPage().openEditors(ei, editorIDs, closedMementos, IWorkbenchPage.MATCH_INPUT, 0);
 			} catch (Exception e) {
 				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -214,6 +260,16 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 				}
 
 			}
+		}
+	}
+
+	private void addToOldUIPart() {
+
+		if (parentContainer != null && editorPart != null && !parentContainer.getChildren().contains(editorPart)
+				&& !parentContainer.getChildren().isEmpty()) {
+			editorPart.getParent().getChildren().remove(editorPart);
+			parentContainer.getChildren().add(editorPart);
+
 		}
 	}
 
@@ -397,9 +453,8 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 		this.clonedFrom = clonedFrom;
 	}
 
-	public void SetClosedMementos(IMemento[] memento) {
+	private void SetClosedMementos(IMemento[] memento) {
 		closedMementos = memento;
-
 	}
 
 	public IMemento[] getClosedMementos() {
@@ -413,4 +468,16 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	public void setArchived(boolean archived) {
 		this.archived = archived;
 	}
+
+	public void atClose(IWorkbenchPartReference partRef) {
+		addUIParts();
+		addClosedMemento(partRef);
+	}
+
+	private void addClosedMemento(IWorkbenchPartReference partRef) {
+		IEditorReference[] editors = { editorReference };
+		IMemento[] memento = partRef.getPage().getEditorState(editors, true);
+		SetClosedMementos(memento);
+	}
+
 }
