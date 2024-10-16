@@ -251,8 +251,13 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			try {
 				IEditorInput[] ei = { editorReference.getEditorInput() };
 				String[] editorIDs = { editorReference.getId() };
-				addToOldUIPart();
-				part.getSite().getPage().openEditors(ei, editorIDs, closedMementos, IWorkbenchPage.MATCH_INPUT, 0);
+				if (splitTag.isEmpty()) {
+					addToOldUIPart();
+					part.getSite().getPage().openEditors(ei, editorIDs, closedMementos, IWorkbenchPage.MATCH_INPUT, 0);
+				} else {
+					IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					activePage.activate(part);
+				}
 			} catch (Exception e) {
 				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				if (activePage != null) {
@@ -267,9 +272,10 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 
 		if (parentContainer != null && editorPart != null && !parentContainer.getChildren().contains(editorPart)
 				&& !parentContainer.getChildren().isEmpty()) {
-			editorPart.getParent().getChildren().remove(editorPart);
-			parentContainer.getChildren().add(editorPart);
-
+			if (splitTag.isEmpty()) {
+				editorPart.getParent().getChildren().remove(editorPart);
+				parentContainer.getChildren().add(editorPart);
+			}
 		}
 	}
 
