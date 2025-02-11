@@ -2,6 +2,8 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="com.abapblog.verticaltabs.extensions.RowClick" name="Row Click Extension" schema="schema/com.abapblog.verticaltabs.extensions.RowClick.exsd"/>
+   <extension-point id="com.abapblog.verticaltabs.extensions.TabNode" name="TabNode Extension" schema="schema/com.abapblog.verticaltabs.extensions.TabNode.exsd"/>
+   <extension-point id="com.abapblog.verticaltabs.extensions.PatternFilter" name="Pattern Filter Extension" schema="schema/com.abapblog.verticaltabs.extensions.PatternFilter.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <view
@@ -21,6 +23,16 @@
             allPopups="false"
             locationURI="toolbar:com.abapblog.verticaltabs.view">
          <command
+               commandId="com.abapblog.verticaltabs.commands.onlyDirtyEditors"
+               icon="icons/only_dirty_editors.png"
+               label="Show only dirty editors"
+               style="toggle">
+         </command>
+         <separator
+               name="filterSeparator"
+               visible="true">
+         </separator>
+         <command
                commandId="com.abapblog.verticaltabs.commands.expandAll"
                icon="icons/expand_all.gif"
                label="Expand All"
@@ -35,7 +47,7 @@
                tooltip="Collapse All">
          </command>
          <separator
-               name="separator"
+               name="sortAndGroupSeparator"
                visible="true">
          </separator>
          <command
@@ -406,6 +418,16 @@
             defaultHandler="com.abapblog.verticaltabs.handlers.PinAll"
             id="com.abapblog.verticaltabs.commands.PinAll"
             name="Pin All">
+      </command>
+      <command
+            category="com.abapblog.verticaltabs.commands.category"
+            defaultHandler="com.abapblog.verticaltabs.handlers.OnlyDirtyEditorsHandler"
+            id="com.abapblog.verticaltabs.commands.onlyDirtyEditors"
+            name="Show only dirty editors">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
       </command>
    </extension>
    <extension

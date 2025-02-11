@@ -2,21 +2,20 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vertical Tabs Abap additions
 Bundle-SymbolicName: com.abapblog.verticaltabs.abap;singleton:=true
-Bundle-Version: 0.0.6.qualifier
+Bundle-Version: 0.0.2.qualifier
 Import-Package: com.sap.adt.destinations.ui.logon,
  com.sap.adt.tools.core.ui.editors,
  com.sap.adt.tools.core.ui.navigation
 Bundle-Activator: com.abapblog.verticaltabs.abap.Activator
 Bundle-Vendor: abapBlog.com
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- com.sap.adt.project.ui;bundle-version="2.73.0",
+Require-Bundle: org.eclipse.core.runtime,
  com.abapblog.verticaltabs;bundle-version="0.0.5",
- org.eclipse.text,
  org.eclipse.core.resources,
- com.sap.adt.project,
- com.sap.adt.tools.core.base,
- com.sap.adt.tools.core.ui
+ com.sap.adt.tools.core.ui,
+ org.eclipse.ui.ide,
+ com.sap.adt.tools.filesystem,
+ org.eclipse.emf.common,
+ com.sap.adt.project.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.abapblog.verticaltabs.abap
 Bundle-ActivationPolicy: lazy

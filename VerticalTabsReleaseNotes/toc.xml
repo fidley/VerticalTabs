@@ -4,6 +4,8 @@
 <toc label="abapBlog.com - Vertical Tabs" topic="html/maintopic.html">
 	<topic label="Vertical Tabs"  href="html/maintopic.html">
     <topic href="html/changelog.html" label="Changelog">
+       <topic href="html/changelog/0.0.7.html" label="0.0.7">
+       </topic>
        <topic href="html/changelog/0.0.6.html" label="0.0.6">
        </topic>
        <topic href="html/changelog/0.0.5.html" label="0.0.5">

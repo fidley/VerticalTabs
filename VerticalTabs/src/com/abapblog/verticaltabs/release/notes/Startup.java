@@ -50,7 +50,7 @@ public class Startup implements IStartup {
 	}
 
 	private String getLatestReleaseNoteId() {
-		return "0.0.6";
+		return "0.0.7";
 	}
 
 	public void openReleaseNotesAsync() {
