@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.RegistryFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
@@ -93,7 +95,11 @@ public class NodesFactory {
 	}
 
 	private TabNode createTabNode(IEditorReference editorReference) throws PartInitException {
-		TabNode tabNode = new TabNode(editorReference);
+		TabNode tabNode = null;
+		tabNode = getTabNodeFromExtension(editorReference);
+		if (tabNode == null) {
+			tabNode = new TabNode(editorReference);
+		}
 		updateTabNodeFromMemento(tabNode);
 		getTabNodes().put(editorReference, tabNode);
 		ProjectNode projectNode = getProjectNode(tabNode.getProject());
@@ -242,6 +248,44 @@ public class NodesFactory {
 			}
 			TreeContentProvider.refreshTree();
 		}
+	}
+
+	private TabNode getTabNodeFromExtension(IEditorReference editorReference) {
+		TabNode extendedTab = null;
+		IConfigurationElement[] config = RegistryFactory.getRegistry()
+				.getConfigurationElementsFor(ITabNodeExtension.TAB_NODE_EXTENSION_ID);
+		try {
+			for (IConfigurationElement ce : config) {
+				final Object o = ce.createExecutableExtension("class");
+				if (o instanceof ITabNodeExtension) {
+					ITabNodeExtension tabNodeExtension = (ITabNodeExtension) o;
+					return tabNodeExtension.createExtendedTabNode(editorReference);
+//					ISafeRunnableWithResult runnable = new ISafeRunnableWithResult<TabNode>() {
+//						@Override
+//						public void handleException(Throwable er) {
+//							System.out.println("Exception in client");
+//						}
+//
+//						@Override
+//						public TabNode runWithResult() throws Exception {
+//
+//							TabNode extendedTab = ((ITabNodeExtension) o).createExtendedTabNode(editorReference);
+//							return extendedTab;
+//
+//						}
+//					};
+//
+//					extendedTab = (TabNode) SafeRunner.run(runnable);
+//					if (handled != null && handled == true) {
+//						extendedTab = ((ITabNodeExtension) o).getExtendedTabNode();
+//						return extendedTab;
+//					}
+				}
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+		return extendedTab;
 	}
 
 }

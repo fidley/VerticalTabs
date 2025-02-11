@@ -315,6 +315,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 		if (propId == IWorkbenchPartConstants.PROP_TITLE) {
 			IWorkbenchPart part = (IWorkbenchPart) source;
 			if (part instanceof IEditorPart) {
+				getEditorReference().getTitleToolTip();
 				if (getEditorReference().isDirty()) {
 					setOriginalTitle("*" + part.getTitle());
 					if (!getManualTitle().equals("") && !getManualTitle().substring(0, 1).equals("*"))
@@ -405,7 +406,11 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 	}
 
 	public void setOriginalTitle(String originalTitle) {
-		this.originalTitle = originalTitle;
+		if (editorReference.isDirty() && originalTitle.length() > 0 && !originalTitle.substring(0, 1).equals("*")) {
+			originalTitle = "*" + originalTitle;
+		} else {
+			this.originalTitle = originalTitle;
+		}
 	}
 
 	public String getSplitTag() {

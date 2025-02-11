@@ -9,12 +9,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import com.abapblog.verticaltabs.Activator;
+import com.abapblog.verticaltabs.handlers.OnlyDirtyEditorsHandler;
 import com.abapblog.verticaltabs.handlers.SortCommand;
 import com.abapblog.verticaltabs.icons.Icons;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
@@ -25,9 +27,9 @@ import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.TreeDragAndDrop;
 import com.abapblog.verticaltabs.tree.TreeKeyListener;
 import com.abapblog.verticaltabs.tree.TreeMouseHandler;
-import com.abapblog.verticaltabs.tree.TreePatternFilter;
 import com.abapblog.verticaltabs.tree.TreeSorting;
 import com.abapblog.verticaltabs.tree.VTFilteredTree;
+import com.abapblog.verticaltabs.tree.filters.TreePatternFilter;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeCloseCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeNameCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreePathCellLabelProvider;
@@ -68,9 +70,20 @@ public class VTView extends ViewPart {
 	}
 
 	private static void createFilteredTreeViewer(Composite parent) {
-		if (filteredTree == null)
+		if (filteredTree == null) {
+			TreePatternFilter filter = new TreePatternFilter();
 			filteredTree = new VTFilteredTree(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL,
-					new TreePatternFilter(), true, true);
+					filter, true, true);
+			addFilterListeners(filter);
+		}
+	}
+
+	private static void addFilterListeners(TreePatternFilter filter) {
+		Text filterText = filteredTree.getFilterControl();
+		filterText.addModifyListener(filter);
+		filterText.addFocusListener(filter);
+		filterText.addMouseListener(filter);
+		OnlyDirtyEditorsHandler.setDefaultToggleStatus();
 	}
 
 	private void createMenuManager(TreeViewer viewer) {

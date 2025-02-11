@@ -11,6 +11,22 @@
                id="com.abapblog.verticaltabs.commands.abap.openInProjectDynamic">
          </dynamic>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:com.abapblog.verticaltabs.view?before=com.abapblog.verticaltabs.commands.onlyDirtyEditors">
+         <command
+               commandId="com.abapblog.verticaltabs.commands.onlyInactiveEditors"
+               icon="icons/activate.png"
+               label="Show only inactive editors"
+               style="toggle">
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.onlyLockedEditors"
+               icon="icons/deadlock_view.png"
+               label="Show only locked editors"
+               style="toggle">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -25,6 +41,47 @@
       <client
             class="com.abapblog.verticaltabs.abap.extensions.RowClickHandler">
       </client>
+   </extension>
+   <extension
+         point="com.abapblog.verticaltabs.extensions.TabNode">
+      <client
+            class="com.abapblog.verticaltabs.abap.extensions.AbapTabNodeCreationHandler">
+      </client>
+   </extension>
+   <extension
+         point="com.abapblog.verticaltabs.extensions.PatternFilter">
+      <client
+            class="com.abapblog.verticaltabs.abap.extensions.PatternFilterExtensionHandler">
+      </client>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            category="com.abapblog.verticaltabs.commands.category"
+            defaultHandler="com.abapblog.verticaltabs.abap.commands.OnlyInactiveEditorsHandler"
+            id="com.abapblog.verticaltabs.commands.onlyInactiveEditors"
+            name="Show only inactive editors">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            category="com.abapblog.verticaltabs.commands.category"
+            defaultHandler="com.abapblog.verticaltabs.abap.commands.OnlyLockedEditorsHandler"
+            id="com.abapblog.verticaltabs.commands.onlyLockedEditors"
+            name="Show only locked editors">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.abapblog.verticaltabs.abap.preferences.PreferenceInitilizer">
+      </initializer>
    </extension>
 
 </plugin>

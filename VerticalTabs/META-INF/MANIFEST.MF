@@ -6,6 +6,7 @@ Bundle-Version: 0.0.5.qualifier
 Export-Package: com.abapblog.verticaltabs,
  com.abapblog.verticaltabs.preferences,
  com.abapblog.verticaltabs.tree,
+ com.abapblog.verticaltabs.tree.filters,
  com.abapblog.verticaltabs.tree.nodes,
  com.abapblog.verticaltabs.views
 Bundle-Activator: com.abapblog.verticaltabs.Activator
