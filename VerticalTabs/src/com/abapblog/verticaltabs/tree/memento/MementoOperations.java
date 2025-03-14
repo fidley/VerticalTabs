@@ -8,7 +8,7 @@ public abstract class MementoOperations {
 
 	protected File getMementoFile() {
 		File stateFile = new File(
-				Activator.getDefault().getStateLocation().toString() + "\\contentProviderMemento.xml");
+				Activator.getDefault().getStateLocation().toString(), "contentProviderMemento.xml");
 		return stateFile;
 	}
 
