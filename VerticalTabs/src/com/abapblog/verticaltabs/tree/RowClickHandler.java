@@ -18,11 +18,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 import com.abapblog.verticaltabs.Activator;
+import com.abapblog.verticaltabs.handlers.CloseEditor;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
 import com.abapblog.verticaltabs.preferences.TabNavigation;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
@@ -90,15 +89,14 @@ public class RowClickHandler {
 		case CLOSE:
 			if (treeNode instanceof TabNode) {
 				TabNode tabNode = (TabNode) treeNode;
-				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				IWorkbenchPage page = workbenchWindow.getActivePage();
-				IEditorPart editor = tabNode.getEditorReference().getEditor(true);
 				if (tabNode.getSplitTag().equals("")) {
-					page.closeEditor(editor, true);
+					CloseEditor.closeEditor(tabNode.getEditorReference());
+					TreeContentProvider.refreshTree();
 				} else {
 					closeSplittedEditor(tabNode);
 					if (!store.getBoolean(PreferenceConstants.SEPARATE_TABS_FOR_SPLITTED_EDITORS))
-						page.closeEditor(editor, true);
+						CloseEditor.closeEditor(tabNode.getEditorReference());
+					TreeContentProvider.refreshTree();
 				}
 
 			}

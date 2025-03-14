@@ -1,15 +1,16 @@
 package com.abapblog.verticaltabs.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IEditorReference;
 
+import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.nodes.GroupNode;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.ProjectNode;
@@ -32,8 +33,7 @@ public class CloseSelectedTabNodes implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IWorkbenchPage page = workbenchWindow.getActivePage();
+		List<IEditorReference> editorReferencesToClose = new ArrayList<>();
 		IStructuredSelection selection;
 		selection = (IStructuredSelection) VTView.getTreeViewer().getSelection();
 		for (Object selectedNode : selection) {
@@ -41,18 +41,20 @@ public class CloseSelectedTabNodes implements IHandler {
 				TabNode tabNode = (TabNode) selectedNode;
 				if (tabNode.getParent() == null)
 					continue;
-				IEditorPart editor = tabNode.getEditorReference().getEditor(true);
-				page.closeEditor(editor, true);
+				editorReferencesToClose.add(tabNode.getEditorReference());
 			}
 			if (selectedNode instanceof GroupNode || selectedNode instanceof ProjectNode) {
 				ITreeNode tn = (ITreeNode) selectedNode;
 				for (ITreeNode treeNode : tn.getChildren()) {
 					TabNode tabNode = (TabNode) treeNode;
-					IEditorPart editor = tabNode.getEditorReference().getEditor(true);
-					page.closeEditor(editor, true);
+					editorReferencesToClose.add(tabNode.getEditorReference());
 				}
 			}
 		}
+		if (editorReferencesToClose.size() > 0)
+			CloseEditor.closeEditors(
+					editorReferencesToClose.toArray(new IEditorReference[editorReferencesToClose.size()]));
+		TreeContentProvider.refreshTree();
 		return null;
 	}
 

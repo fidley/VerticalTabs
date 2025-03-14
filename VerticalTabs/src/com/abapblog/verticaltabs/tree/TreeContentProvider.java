@@ -189,6 +189,11 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 
 	@Override
 	public void partClosed(IWorkbenchPartReference partRef) {
+		removeClosedTab(partRef);
+
+	}
+
+	public static void removeClosedTab(IWorkbenchPartReference partRef) {
 		if (nodesFactory == null)
 			return;
 		if (partRef instanceof IEditorReference) {
@@ -212,14 +217,13 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 			}
 			HandleCloseAll();
 		}
-
 	}
 
-	private void HandleCloseAll() {
+	private static void HandleCloseAll() {
 		removeClosedTabs();
 	}
 
-	private void removeClosedTabs() {
+	public static void removeClosedTabs() {
 		Job job = Job.create("Update Vertical Tabs At Close", (ICoreRunnable) monitor -> {
 			try {
 				TimeUnit.SECONDS.sleep(3);

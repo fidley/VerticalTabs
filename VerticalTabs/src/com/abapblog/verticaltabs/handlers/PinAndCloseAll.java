@@ -1,11 +1,14 @@
 package com.abapblog.verticaltabs.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -33,6 +36,7 @@ public class PinAndCloseAll implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		List<IEditorReference> editorReferencesToClose = new ArrayList<>();
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbenchWindow.getActivePage();
 		IStructuredSelection selection;
@@ -43,12 +47,14 @@ public class PinAndCloseAll implements IHandler {
 				for (ITreeNode child : tn.getChildren()) {
 					TabNode tabNode = (TabNode) child;
 					tabNode.pin();
-					IEditorPart editor = tabNode.getEditorReference().getEditor(true);
-					page.closeEditor(editor, true);
+					editorReferencesToClose.add(tabNode.getEditorReference());
 				}
 
 			}
 		}
+		if (editorReferencesToClose.size() > 0)
+			CloseEditor.closeEditors(
+					editorReferencesToClose.toArray(new IEditorReference[editorReferencesToClose.size()]));
 		TreeContentProvider.refreshTree();
 		return null;
 	}
