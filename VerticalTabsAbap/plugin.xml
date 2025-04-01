@@ -10,6 +10,10 @@
                class="com.abapblog.verticaltabs.abap.commands.OpenInProjectDynamic"
                id="com.abapblog.verticaltabs.commands.abap.openInProjectDynamic">
          </dynamic>
+         <dynamic
+               class="com.abapblog.verticaltabs.abap.commands.SapGuiDebugginHandler"
+               id="com.abapblog.verticaltabs.commands.abap.setSapGuiDebuggingOn">
+         </dynamic>
       </menuContribution>
       <menuContribution
             allPopups="false"

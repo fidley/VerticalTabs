@@ -18,7 +18,6 @@ public class AbapTabNodeCreationHandler implements ITabNodeExtension {
 
 	@Override
 	public TabNode createExtendedTabNode(IEditorReference editorReference) {
-		TabNode extendedTabNode = null;
 		try {
 			IAdtFormEditor editor = (IAdtFormEditor) editorReference.getEditor(false);
 			if (editor != null) {
@@ -32,12 +31,7 @@ public class AbapTabNodeCreationHandler implements ITabNodeExtension {
 
 			return getTabNodeFromFile(editorReference);
 		}
-//		IEditorPart test = editorReference.getEditor(false);
-//		if (test instanceof AbapSourceMultiPageEditor) {
-//			extendedTabNode = new AbapTabNode(editorReference);
-//			return true;
-//		}
-//		return false;
+
 	}
 
 	private TabNode getTabNodeFromFile(IEditorReference editorReference) {
