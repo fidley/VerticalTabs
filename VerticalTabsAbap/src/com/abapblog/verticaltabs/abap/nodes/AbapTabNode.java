@@ -12,6 +12,7 @@ public class AbapTabNode extends TabNode {
 
 	public AbapTabNode(IEditorReference editorReference) {
 		super(editorReference);
+
 	}
 
 	public AdtVersionEnum getActivationState() {
@@ -33,7 +34,6 @@ public class AbapTabNode extends TabNode {
 		} catch (Exception e) {
 			return false;
 		}
-//		}
 
 	}
 }
