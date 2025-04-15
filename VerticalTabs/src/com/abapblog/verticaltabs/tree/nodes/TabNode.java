@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.internal.WorkbenchPartReference;
 
 import com.abapblog.verticaltabs.Activator;
@@ -196,8 +197,32 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 			if (file.getFullPath() != null)
 				setPath(file.getFullPath().toString());
 		} catch (Exception e) {
+
+			try {
+				FileStoreEditorInput uriEditor = (FileStoreEditorInput) editorInput;
+
+				setPath((new java.io.File(uriEditor.getURI()).getAbsolutePath()));
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String getPath() {
+		if (super.getPath() == "") {
+			try {
+				setProjectAndPathForIFileEditorInput(editorReference.getEditorInput());
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		return super.getPath();
 	}
 
 	@Override

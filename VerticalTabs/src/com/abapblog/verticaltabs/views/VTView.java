@@ -22,6 +22,7 @@ import com.abapblog.verticaltabs.icons.Icons;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
 import com.abapblog.verticaltabs.tree.ColumnControlListener;
 import com.abapblog.verticaltabs.tree.Columns;
+import com.abapblog.verticaltabs.tree.FolderDoubleClickListener;
 import com.abapblog.verticaltabs.tree.Sorter;
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.TreeDragAndDrop;
@@ -63,9 +64,15 @@ public class VTView extends ViewPart {
 		createSorter(viewer);
 		new TreeDragAndDrop(viewer);
 		createMenuManager(viewer);
+		addDoubleClick(viewer);
 
 		contentProvider.setExpandedElementsForTreeViewer();
 		contentProvider.setInitialRootNode();
+
+	}
+
+	private void addDoubleClick(TreeViewer viewer) {
+		viewer.addDoubleClickListener(new FolderDoubleClickListener());
 
 	}
 
