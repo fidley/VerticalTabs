@@ -18,7 +18,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.core.contexts,
- org.eclipse.ui.workbench
+ org.eclipse.ui.workbench,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.core.expressions
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.abapblog.verticaltabs
 Bundle-ActivationPolicy: lazy

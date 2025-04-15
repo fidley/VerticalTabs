@@ -275,6 +275,80 @@
                </with>
             </visibleWhen>
          </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.CopyName"
+               label="Copy name"
+               style="push">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <or>
+                        <instanceof
+                              value="com.abapblog.verticaltabs.tree.nodes.TabNode">
+                        </instanceof>
+                     </or>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.CopyPath"
+               label="Copy path"
+               style="push">
+            <visibleWhen>
+            <test
+            	 property="com.abapblog.verticaltabs.propertyTester.IsVirtualElement"
+            	 value="true">
+            	 </test>
+               <with
+                     variable="activeMenuSelection">
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <or>
+                        <instanceof
+                              value="com.abapblog.verticaltabs.tree.nodes.TabNode">
+                        </instanceof>
+                     </or>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.abapblog.verticaltabs.commands.OpenContainingFolderInExplorer"
+               label="Open containing folder"
+               style="push">
+            <visibleWhen>
+            <test
+            	 property="com.abapblog.verticaltabs.propertyTester.IsVirtualElement"
+            	 value="true">
+            	 </test>
+               <with
+                     variable="activeMenuSelection">
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <or>
+                        <instanceof
+                              value="com.abapblog.verticaltabs.tree.nodes.TabNode">
+                        </instanceof>
+                     </or>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -429,6 +503,22 @@
                id="org.eclipse.ui.commands.toggleState">
          </state>
       </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.CopyName"
+            id="com.abapblog.verticaltabs.commands.CopyName"
+            name="Copy Name">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.CopyPath"
+            id="com.abapblog.verticaltabs.commands.CopyPath"
+            name="Copy Path">
+
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.OpenContainingFolderInExplorer"
+            id="com.abapblog.verticaltabs.commands.OpenContainingFolderInExplorer"
+            name="Open containing folder">
+      </command>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -501,6 +591,16 @@
             id="com.abapblog.verticalTabs.preferences.Columns"
             name="Columns">
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="com.abapblog.verticaltabs.propertyTester.IsVirtualElement"
+            id="com.abapblog.verticaltabs.propertyTester.IsVirtualElement"
+            namespace="com.abapblog.verticaltabs.propertyTester"
+            properties="IsVirtualElement"
+            type="java.lang.Object">
+      </propertyTester>
    </extension>
 
 </plugin>
