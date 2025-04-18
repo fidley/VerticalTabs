@@ -50,7 +50,11 @@ public class Startup implements IStartup {
 	}
 
 	private String getLatestReleaseNoteId() {
-		return "0.0.7";
+		String version = Platform.getBundle(FrameworkUtil.getBundle(Startup.class).getSymbolicName()).getVersion()
+				.toString();
+		version = version.substring(0, version.lastIndexOf("."));
+
+		return version;
 	}
 
 	public void openReleaseNotesAsync() {

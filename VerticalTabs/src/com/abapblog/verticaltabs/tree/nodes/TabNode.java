@@ -203,11 +203,9 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 
 				setPath((new java.io.File(uriEditor.getURI()).getAbsolutePath()));
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				// e1.printStackTrace();
 			}
 
-			e.printStackTrace();
 		}
 	}
 

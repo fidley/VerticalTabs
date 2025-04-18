@@ -24,5 +24,6 @@ public class PreferenceConstants {
 	public static final String COLUMNS_DISPLAY_PREFERENCES = "ColumnsDisplayPreferences";
 	public static final String SELECT_ACTIVE_TAB_IN_TREE = "SelectActiveTabInTree";
 	public static final String SHOW_ONLY_DIRTY_EDITORS = "ShowOnlyDirtyEditors";
+	public static final String LING_WITH_PROJECT = "LinkWithProject";
 
 }

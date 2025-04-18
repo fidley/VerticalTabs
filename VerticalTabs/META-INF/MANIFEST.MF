@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VerticalTabs
 Bundle-SymbolicName: com.abapblog.verticaltabs;singleton:=true
-Bundle-Version: 0.0.5.qualifier
+Bundle-Version: 0.0.8.qualifier
 Export-Package: com.abapblog.verticaltabs,
  com.abapblog.verticaltabs.preferences,
  com.abapblog.verticaltabs.tree,

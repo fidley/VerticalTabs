@@ -3,7 +3,7 @@
    <feature url="features/com.abapblog.verticaltabs.abap.feature_0.0.3.202504011036.jar" id="com.abapblog.verticaltabs.abap.feature" version="0.0.3.202504011036">
       <category name="Vertical Tabs Language Specific Features"/>
    </feature>
-   <feature url="features/com.abapblog.verticaltabs.feature_0.0.7.202504151610.jar" id="com.abapblog.verticaltabs.feature" version="0.0.7.202504151610">
+   <feature url="features/com.abapblog.verticaltabs.feature_0.0.8.202504181450.jar" id="com.abapblog.verticaltabs.feature" version="0.0.8.202504181450">
       <category name="Vertical Tabs"/>
    </feature>
    <category-def name="Vertical Tabs" label="Vertical Tabs"/>

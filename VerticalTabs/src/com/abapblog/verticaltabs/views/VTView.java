@@ -30,6 +30,7 @@ import com.abapblog.verticaltabs.tree.TreeKeyListener;
 import com.abapblog.verticaltabs.tree.TreeMouseHandler;
 import com.abapblog.verticaltabs.tree.TreeSorting;
 import com.abapblog.verticaltabs.tree.VTFilteredTree;
+import com.abapblog.verticaltabs.tree.filters.LinkedWithProjectFilter;
 import com.abapblog.verticaltabs.tree.filters.TreePatternFilter;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeCloseCellLabelProvider;
 import com.abapblog.verticaltabs.tree.labelproviders.TreeNameCellLabelProvider;
@@ -65,9 +66,15 @@ public class VTView extends ViewPart {
 		new TreeDragAndDrop(viewer);
 		createMenuManager(viewer);
 		addDoubleClick(viewer);
+		addLinkedWithProjectFilter(viewer);
 
 		contentProvider.setExpandedElementsForTreeViewer();
 		contentProvider.setInitialRootNode();
+
+	}
+
+	private void addLinkedWithProjectFilter(TreeViewer viewer) {
+		viewer.addFilter(new LinkedWithProjectFilter());
 
 	}
 

@@ -83,4 +83,16 @@ public class ProjectNode extends TreeNode implements Comparable<ProjectNode> {
 			return 0;
 		return getSortIndex().compareTo(o.getSortIndex());
 	}
+
+	@Override
+	public String getProjectName() {
+		try {
+			if (project != null) {
+				return project.getName();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
 }
