@@ -29,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 import com.abapblog.verticaltabs.Activator;
 import com.abapblog.verticaltabs.handlers.GroupByProject;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
+import com.abapblog.verticaltabs.tree.filters.LinkedWithProjectFilter;
 import com.abapblog.verticaltabs.tree.nodes.GroupNode;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.NodesFactory;
@@ -259,6 +260,7 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 		boolean partInTabs = false;
 		if (partRef instanceof IEditorReference) {
 			IEditorReference er = (IEditorReference) partRef;
+			Boolean needsRefresh = updateLinkingWithProject(er);
 			partInTabs = nodesFactory.getTabNodes().containsKey(er);
 			if (!partInTabs) {
 				nodesFactory.addEditorReferenceToNodesAndGroups(er);
@@ -281,10 +283,21 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 				} catch (SplittedEditorTabNotAllowedException e) {
 
 				}
+				if (needsRefresh) {
+					refreshTree();
+				}
 			}
+
 			selectTabInTreeViewer(er);
 
 		}
+	}
+
+	private Boolean updateLinkingWithProject(IEditorReference er) {
+		if (store.getBoolean(PreferenceConstants.LING_WITH_PROJECT)) {
+			return LinkedWithProjectFilter.setLinkedProjectName(er);
+		}
+		return false;
 	}
 
 	private void selectTabInTreeViewer(IEditorReference er) {
@@ -309,9 +322,12 @@ public class TreeContentProvider implements ITreeContentProvider, IPartListener2
 	}
 
 	private static void getExpandedElementsIntoList(List<Object> list) {
-		list.clear();
+		if (!store.getBoolean(PreferenceConstants.LING_WITH_PROJECT)) {
+			list.clear();
+		}
 		for (Object expanded : treeViewer.getExpandedElements()) {
-			list.add(expanded);
+			if (!list.contains(list))
+				list.add(expanded);
 		}
 	}
 

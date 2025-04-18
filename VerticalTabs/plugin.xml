@@ -51,6 +51,12 @@
                visible="true">
          </separator>
          <command
+               commandId="com.abapblog.verticaltabs.commands.linkWithProject"
+               icon="icons/link_to_editor.png"
+               label="Link with project"
+               style="toggle">
+         </command>
+         <command
                commandId="com.abapblog.verticaltabs.commands.groupbyproject"
                icon="icons/group_by_project.png"
                label="Group by project"
@@ -518,6 +524,15 @@
             defaultHandler="com.abapblog.verticaltabs.handlers.OpenContainingFolderInExplorer"
             id="com.abapblog.verticaltabs.commands.OpenContainingFolderInExplorer"
             name="Open containing folder">
+      </command>
+      <command
+            defaultHandler="com.abapblog.verticaltabs.handlers.LinkWithProject"
+            id="com.abapblog.verticaltabs.commands.linkWithProject"
+            name="Link with project">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
       </command>
    </extension>
    <extension

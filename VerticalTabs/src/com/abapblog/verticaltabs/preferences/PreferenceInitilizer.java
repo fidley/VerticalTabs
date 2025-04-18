@@ -23,6 +23,7 @@ public class PreferenceInitilizer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.TAB_NAVIGATION, TabNavigation.AT_SELECTION.name());
 		store.setDefault(PreferenceConstants.SELECT_ACTIVE_TAB_IN_TREE, true);
 		store.setDefault(PreferenceConstants.SHOW_ONLY_DIRTY_EDITORS, false);
+		store.setDefault(PreferenceConstants.LING_WITH_PROJECT, false);
 		initializeColumnVisibilityAndSorting(store);
 	}
 
