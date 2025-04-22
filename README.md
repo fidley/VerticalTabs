@@ -1,6 +1,6 @@
 # VerticalTabs
 
-Still in beta phase. Should work with all editors.
+Should work with all editors.
 
 ![image](https://github.com/fidley/VerticalTabs/assets/7912195/7340d070-fb69-402e-9019-4780b584b14b)
 
@@ -17,6 +17,7 @@ What is working:
 - saving sorting at close of eclipse
 - grouping like in Edge cards and restoring groups at startup
 - renaming of groups and tabs
+- filtering by text, dirty state or linked project
 
 
 <h1>Vertical Tabs plugin update Site</h1>
