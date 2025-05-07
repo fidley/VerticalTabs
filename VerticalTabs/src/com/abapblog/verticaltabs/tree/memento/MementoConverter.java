@@ -12,6 +12,7 @@ import org.eclipse.ui.IMemento;
 
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.nodes.GroupNode;
+import com.abapblog.verticaltabs.tree.nodes.INodeWithDescription;
 import com.abapblog.verticaltabs.tree.nodes.ProjectNode;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
 
@@ -172,7 +173,15 @@ public class MementoConverter {
 			} catch (Exception e) {
 
 			}
+			try {
+				String nodeDescription = tm.getString(MementoConstants.Keys.NodeDescription);
+				if (!nodeDescription.equals("") && tabNode instanceof INodeWithDescription) {
+					INodeWithDescription nodeWithDescription = (INodeWithDescription) tabNode;
+					nodeWithDescription.setObjectDescription(nodeDescription);
+				}
+			} catch (Exception e) {
 
+			}
 		}
 
 	}

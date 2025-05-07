@@ -6,8 +6,10 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 
 import com.abapblog.verticaltabs.abap.nodes.AbapTabNode;
+import com.abapblog.verticaltabs.abap.nodes.SapGuiNode;
 import com.abapblog.verticaltabs.tree.nodes.ITabNodeExtension;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
+import com.sap.adt.sapgui.ui.ISapGui;
 import com.sap.adt.tools.core.ui.editors.IAdtFormEditor;
 
 public class AbapTabNodeCreationHandler implements ITabNodeExtension {
@@ -19,10 +21,11 @@ public class AbapTabNodeCreationHandler implements ITabNodeExtension {
 	@Override
 	public TabNode createExtendedTabNode(IEditorReference editorReference) {
 		try {
+			if (editorReference.getEditor(false) instanceof ISapGui)
+				return getSapGuiNode(editorReference);
 			IAdtFormEditor editor = (IAdtFormEditor) editorReference.getEditor(false);
 			if (editor != null) {
 				return getTabNode(editorReference);
-
 			} else {
 				return getTabNodeFromFile(editorReference);
 			}
@@ -32,6 +35,11 @@ public class AbapTabNodeCreationHandler implements ITabNodeExtension {
 			return getTabNodeFromFile(editorReference);
 		}
 
+	}
+
+	private TabNode getSapGuiNode(IEditorReference editorReference) {
+		TabNode extendedTabNode = new SapGuiNode(editorReference);
+		return extendedTabNode;
 	}
 
 	private TabNode getTabNodeFromFile(IEditorReference editorReference) {

@@ -7,6 +7,29 @@
 </head>
 
 <body id="doc-body">
+	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.9</h2>
+	<h3>Minor adaptation + Extensions</h3>
+	<p>Several small bugs were solved and performance was tweaked. <br/>
+	Additionally more extensions possibility were added, in order to be able to add language specific functionalities. So far they are used by ABAP language only, but if you have any ideas for any of the programming language, please create an issue on the project Github page</p>
+
+	<h3>ABAP Language Feature - 0.0.4</h3>
+	<p>In default, currently for the ABAP and SAP GUI tabs, beside the object name, description is displayed next to it. When available, description is also used during filtering of the entries. This behaviour can be switched off in Preferences.</p>
+<figure>
+		<img src="../../media/img/0.0.9 ABAP Tabs with description.png">
+		<figcaption><strong>Figure 1:</strong> ABAP / SAP GUI tabs with description</figcaption>
+		</figure>
+		</br>
+		<figure>
+		<img src="../../media/img/0.0.9 Additional description.png">
+		<figcaption><strong>Figure 2:</strong> Preferences to switch of description showing</figcaption>
+		</figure>
+
+		<p>For SAP GUI tabs experimental feature to update the name of the tab with current transaction/program name and it's title is added. This behaviour can be switched off in Preferences.</p>
+
+<figure>
+		<img src="../../media/img/0.0.9 ABAP Preferences.png">
+		<figcaption><strong>Figure 3:</strong> Preferences to switch off updating of SAP GUI tabs</figcaption>
+		</figure>
 	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.8</h2>
 	<h3>New toolbar button - Link with Project</h3>
 	<p>Using the new button you can now specify, if you'd like to see only the tabs linked to the project of the currently active editor. </p>
@@ -46,67 +69,5 @@
 		<img src="../../media/img/0.0.7 ABAP Features.png">
 		<figcaption><strong>Figure 3:</strong> ABAP filters (only inactive and/or locked objects)</figcaption>
 		</figure>
-
-	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.6</h2>
-	<h3>Pinned and closed tabs are reopened at closing</h3>
-	<p>When you have some tabs that are pinned and closed, then during the shutdown event of Eclipse, the tabs are reopened</p>
-	<p>It will make the tabs available after the next start of Eclipse</p>
-	<br>Changes based on issue raised in the GH <a href="https://github.com/fidley/VerticalTabs/issues/47" target="_blank">47</a></p>
-
-
-
-
-	<h3>New menu options on Groups and Projects</h3>
-	<p>You can now pin/unpin all tabs of Groups and Projects at once. You can also open all closed tabs from Group or Project</p>
-	<p>Additionally you can pin and close all tabs of the Group or Project, to let you better manage the opened tabs.
-	<br>Changes based on idea raised in the GH <a href="https://github.com/fidley/VerticalTabs/issues/40" target="_blank">40</a></p>
-<figure>
-		<img src="../../media/img/0.0.6 New Menu Options.png">
-		<figcaption><strong>Figure 1:</strong> New Menu Options</figcaption>
-		</figure>
-	<h2 class="heading">Vertical Tabs Release Notes  - 0.0.5</h2>
-	<h3>Column for Path of file added</h3>
-	<p>Column with path of the file linked to editor is now added to the view. Visibility of this column can be customized in preferences.
-	<br>Changes based on idea raised in the GH <a href="https://github.com/fidley/VerticalTabs/issues/42" target="_blank">42</a></p>
-	<figure>
-		<img src="../../media/img/0.0.5 Ne column Path.png">
-		<figcaption><strong>Figure 1:</strong> Path column</figcaption>
-		</figure>
-	<h3>Columns settings</h3>
-	<p>It is now possible to configure which columns and in which sequence are displayed.</p>
-	<p>The settings are available in the plugin Preferences in the Columns page.
-	<br>Changes based on idea raised in the GH <a href="https://github.com/fidley/VerticalTabs/issues/41" target="_blank">41</a></p>
-<figure>
-		<img src="../../media/img/0.0.5 Columns Settings.png">
-		<figcaption><strong>Figure 2:</strong> Columns settings</figcaption>
-		</figure>
-
-
-
-	<h3>ABAP specific features available</h3>
-	<p>The update site of the plugin contains now additional feature for ABAP developers only.</p>
-	<p>It requires ADT tools to be installed.</p>
-	<p>The settings are available in the plugin Preferences in the Columns page.
-	<br>Changes based on idea raised in the GH <a href="https://github.com/fidley/VerticalTabs/issues/43" target="_blank">43</a></p>
-<figure>
-		<img src="../../media/img/0.0.5 abap new feature for ABAP Language.png">
-		<figcaption><strong>Figure 3:</strong> New feature on update site</figcaption>
-		</figure>
-
-
-		<br>
-		<p>After installation, two additional functionalities on the ABAP nodes will be available.</p>
-		<h4>Context menu: Open in project</h4>
-	<figure>
-		<img src="../../media/img/0.0.5 abap Open in project menu.png">
-		<figcaption><strong>Figure 4:</strong> Context menu for ABAP item</figcaption>
-		</figure>
-
-		<h4>Ctrl+Double-Click opens list of ABAP projects in which we want open the object</h4>
-		<figure>
-		<img src="../../media/img/0.0.5 abap Open in project double click.png">
-		<figcaption><strong>Figure 5:</strong> Ctrl+Double-Click behaviour</figcaption>
-		</figure>
-
 </body>
 </html>

@@ -16,6 +16,7 @@ import org.eclipse.ui.internal.IWorkbenchConstants;
 
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.nodes.GroupNode;
+import com.abapblog.verticaltabs.tree.nodes.INodeWithDescription;
 import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.NodesFactory;
 import com.abapblog.verticaltabs.tree.nodes.ProjectNode;
@@ -85,6 +86,11 @@ public class MementoWriter extends MementoOperations {
 			tabNodeMememento.putInteger(MementoConstants.Keys.NodeSortIndex, i);
 			tabNodeMememento.putBoolean(MementoConstants.Keys.NodeExpanded, false);
 			tabNodeMememento.putBoolean(MementoConstants.Keys.NodePinned, tn.isPinned());
+			if (tn instanceof INodeWithDescription) {
+				INodeWithDescription nodeWithDescription = (INodeWithDescription) tn;
+				tabNodeMememento.putString(MementoConstants.Keys.NodeDescription,
+						nodeWithDescription.getObjectDescription());
+			}
 
 			i++;
 		}

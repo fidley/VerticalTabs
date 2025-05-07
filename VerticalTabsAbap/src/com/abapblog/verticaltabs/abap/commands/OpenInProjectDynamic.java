@@ -20,6 +20,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import com.abapblog.verticaltabs.abap.nodes.AbapTabNode;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
 import com.abapblog.verticaltabs.views.VTView;
 import com.sap.adt.destinations.ui.logon.AdtLogonServiceUIFactory;
@@ -47,15 +48,15 @@ public class OpenInProjectDynamic extends ContributionItem {
 		final Iterator<?> selIter = ((IStructuredSelection) selection).iterator();
 		while (selIter.hasNext()) {
 			final Object selObj = selIter.next();
-			if (selObj instanceof TabNode) {
-				final TabNode treeObject = (TabNode) selObj;
-				IEditorPart editor = treeObject.getEditorReference().getEditor(true);
-				if (editor instanceof IAdtFormEditor) {
-					IAdtFormEditor formEditor = (IAdtFormEditor) editor;
-					IFile file = formEditor.getModelFile();
-					IAdtObjectReference ref = Adapters.adapt((Object) file, IAdtObjectReference.class);
-					isABAPTabNode = true;
-				}
+			if (selObj instanceof AbapTabNode) {
+//				final TabNode treeObject = (TabNode) selObj;
+//				IEditorPart editor = treeObject.getEditorReference().getEditor(false);
+//				if (editor instanceof IAdtFormEditor) {
+//					IAdtFormEditor formEditor = (IAdtFormEditor) editor;
+//					IFile file = formEditor.getModelFile();
+//					IAdtObjectReference ref = Adapters.adapt((Object) file, IAdtObjectReference.class);
+				isABAPTabNode = true;
+//				}
 			}
 		}
 

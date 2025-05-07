@@ -173,4 +173,8 @@ public enum Columns {
 		return defaultColumnSequence.size();
 	}
 
+	public static Boolean isNameDescriptionVisible() {
+		return store.getBoolean(PreferenceConstants.COLUMN_VISIBILITY_NAME_DESCRIPTION);
+	}
+
 }

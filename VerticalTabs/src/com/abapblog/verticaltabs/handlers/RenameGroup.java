@@ -5,11 +5,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
 
-import com.abapblog.verticaltabs.dialogs.GroupRenameDialog;
-import com.abapblog.verticaltabs.dialogs.TabRenameDialog;
+import com.abapblog.verticaltabs.tree.CellEditingSupport;
 import com.abapblog.verticaltabs.tree.nodes.GroupNode;
+import com.abapblog.verticaltabs.tree.nodes.ITreeNode;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
 import com.abapblog.verticaltabs.views.VTView;
 
@@ -17,13 +16,13 @@ public class RenameGroup implements IHandler {
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
-		// TODO Auto-generated method stub
+		return;
 
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		return;
 
 	}
 
@@ -32,24 +31,9 @@ public class RenameGroup implements IHandler {
 		IStructuredSelection selection;
 		selection = (IStructuredSelection) VTView.getTreeViewer().getSelection();
 		for (Object selectedNode : selection) {
-			if (selectedNode instanceof GroupNode) {
-				GroupNode gn = (GroupNode) selectedNode;
-				final GroupRenameDialog dialog = new GroupRenameDialog(VTView.getTreeViewer().getControl().getShell(),
-						gn.getTitle());
-				dialog.create();
-				if (dialog.open() == Window.OK) {
-					gn.setTitle(dialog.getName());
-				}
-			} else if (selectedNode instanceof TabNode) {
-				TabNode tn = (TabNode) selectedNode;
-				final TabRenameDialog dialog = new TabRenameDialog(VTView.getTreeViewer().getControl().getShell(),
-						tn.getTitle());
-				dialog.create();
-				if (dialog.open() == Window.OK) {
-					tn.setManualTitle(dialog.getName());
-				}
+			if (selectedNode instanceof GroupNode || selectedNode instanceof TabNode) {
+				CellEditingSupport.setSelectedNodeNameEditable((ITreeNode) selectedNode);
 			}
-			VTView.getTreeViewer().refresh();
 		}
 
 		return null;
@@ -57,19 +41,17 @@ public class RenameGroup implements IHandler {
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isHandled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public void removeHandlerListener(IHandlerListener handlerListener) {
-		// TODO Auto-generated method stub
+		return;
 
 	}
 

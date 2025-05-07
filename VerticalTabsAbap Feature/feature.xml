@@ -2,7 +2,7 @@
 <feature
       id="com.abapblog.verticaltabs.abap.feature"
       label="Vertical Tabs Abap Specific Features"
-      version="0.0.3.qualifier"
+      version="0.0.4.qualifier"
       provider-name="AbapBlog.com"
       plugin="com.abapblog.branding">
 
@@ -46,7 +46,7 @@ SOFTWARE.
    </url>
 
    <requires>
-      <import feature="com.abapblog.verticaltabs.feature" version="0.0.5.202401110918" match="greaterOrEqual"/>
+      <import plugin="com.abapblog.verticaltabs"/>
    </requires>
 
    <plugin

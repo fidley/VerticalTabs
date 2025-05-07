@@ -33,6 +33,7 @@ public class PreferenceInitilizer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.COLUMN_VISIBILITY_PROJECT, Columns.VISIBLE);
 		store.setDefault(PreferenceConstants.COLUMN_VISIBILITY_NAME, Columns.VISIBLE);
 		store.setDefault(PreferenceConstants.COLUMN_VISIBILITY_PATH, Columns.VISIBLE);
+		store.setDefault(PreferenceConstants.COLUMN_VISIBILITY_NAME_DESCRIPTION, true);
 		store.setDefault(PreferenceConstants.COLUMN_INDEX_CLOSE, 1);
 		store.setDefault(PreferenceConstants.COLUMN_INDEX_PIN, 2);
 		store.setDefault(PreferenceConstants.COLUMN_INDEX_PROJECT, 3);

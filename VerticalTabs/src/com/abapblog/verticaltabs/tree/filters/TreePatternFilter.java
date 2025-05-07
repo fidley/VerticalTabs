@@ -16,6 +16,8 @@ import org.eclipse.ui.dialogs.PatternFilter;
 
 import com.abapblog.verticaltabs.Activator;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
+import com.abapblog.verticaltabs.tree.Columns;
+import com.abapblog.verticaltabs.tree.nodes.INodeWithDescription;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
 
 public class TreePatternFilter extends PatternFilter implements ModifyListener, FocusListener, MouseListener {
@@ -32,11 +34,18 @@ public class TreePatternFilter extends PatternFilter implements ModifyListener, 
 	protected boolean isLeafMatch(final Viewer viewer, final Object element) {
 
 		boolean isMatch = false;
+		if (!isMatch && element instanceof INodeWithDescription && Columns.isNameDescriptionVisible()) {
+			INodeWithDescription node = (INodeWithDescription) element;
+			isMatch |= wordMatches(node.getObjectDescription());
+		}
+
 		if (element instanceof TabNode) {
 			TabNode leaf = (TabNode) element;
-			isMatch |= wordMatches(leaf.getTitle());
-			if (!isMatch)
-				return isMatch;
+			if (!isMatch) {
+				isMatch |= wordMatches(leaf.getTitle());
+				if (!isMatch)
+					return isMatch;
+			}
 			if (preferenceStore.getBoolean(PreferenceConstants.SHOW_ONLY_DIRTY_EDITORS)
 					&& leaf.getEditorReference().isDirty()
 					|| !preferenceStore.getBoolean(PreferenceConstants.SHOW_ONLY_DIRTY_EDITORS)) {
@@ -55,34 +64,8 @@ public class TreePatternFilter extends PatternFilter implements ModifyListener, 
 
 	}
 
-//	public boolean isElementVisible(Viewer viewer, Object element) {
-////		Boolean isVisible = super.isElementVisible(viewer, element);
-////		if (!isVisible)
-////			return isVisible;
-////
-////		if (element instanceof TabNode) {
-////			TabNode leaf = (TabNode) element;
-////			if (preferenceStore.getBoolean(PreferenceConstants.SHOW_ONLY_DIRTY_EDITORS)
-////					&& leaf.getEditorReference().isDirty()
-////					|| !preferenceStore.getBoolean(PreferenceConstants.SHOW_ONLY_DIRTY_EDITORS)) {
-////				isVisible = true;
-////			} else {
-////				isVisible = false;
-////			}
-////		}
-////
-////		if (isVisible) {
-////			Boolean visible = callIsElementVisibleExtension(viewer, element);
-////			if (visible != null) {
-////				isVisible = visible;
-////			}
-////		}
-////		return isVisible;
-//	}
-
 	@Override
 	public boolean isFilterProperty(Object element, String property) {
-		// TODO Auto-generated method stub
 		return super.isFilterProperty(element, property);
 	}
 
@@ -162,27 +145,6 @@ public class TreePatternFilter extends PatternFilter implements ModifyListener, 
 				if (o instanceof IPaternFilterExtension) {
 					IPaternFilterExtension paternFilterExtension = (IPaternFilterExtension) o;
 					return paternFilterExtension.isLeafMatch(viewer, element, orginalMatch);
-//
-//					ISafeRunnableWithResult runnable = new ISafeRunnableWithResult<Boolean>() {
-//						@Override
-//						public void handleException(Throwable er) {
-//							System.out.println("Exception in client");
-//						}
-//
-//						@Override
-//						public Boolean runWithResult() throws Exception {
-//
-//							Boolean leafMatched = ((IPaternFilterExtension) o).isLeafMatch(viewer, element,
-//									orginalMatch);
-//							return leafMatched;
-//
-//						}
-//					};
-//
-//					Boolean leafMatched = (Boolean) SafeRunner.run(runnable);
-//					if (leafMatched != null) {
-//						return leafMatched;
-//					}
 				}
 			}
 		} catch (Exception ex) {
@@ -190,39 +152,4 @@ public class TreePatternFilter extends PatternFilter implements ModifyListener, 
 		}
 		return null;
 	}
-
-//	private Boolean callIsElementVisibleExtension(final Viewer viewer, final Object element) {
-//
-//		IConfigurationElement[] config = RegistryFactory.getRegistry()
-//				.getConfigurationElementsFor(IPaternFilterExtension.PATTERN_FILTER_EXTENSION_ID);
-//		try {
-//			for (IConfigurationElement ce : config) {
-//				final Object o = ce.createExecutableExtension("class");
-//				if (o instanceof IPaternFilterExtension) {
-//					ISafeRunnableWithResult runnable = new ISafeRunnableWithResult<Boolean>() {
-//						@Override
-//						public void handleException(Throwable er) {
-//							System.out.println("Exception in client");
-//						}
-//
-//						@Override
-//						public Boolean runWithResult() throws Exception {
-//
-//							Boolean visible = ((IPaternFilterExtension) o).isElementVisible(viewer, element);
-//							return visible;
-//
-//						}
-//					};
-//
-//					Boolean visible = (Boolean) SafeRunner.run(runnable);
-//					if (visible != null) {
-//						return visible;
-//					}
-//				}
-//			}
-//		} catch (CoreException ex) {
-//			System.out.println(ex.getMessage());
-//		}
-//		return null;
-//	}
 }

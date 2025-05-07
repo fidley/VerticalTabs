@@ -20,6 +20,7 @@ import com.abapblog.verticaltabs.handlers.OnlyDirtyEditorsHandler;
 import com.abapblog.verticaltabs.handlers.SortCommand;
 import com.abapblog.verticaltabs.icons.Icons;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
+import com.abapblog.verticaltabs.tree.CellEditingSupport;
 import com.abapblog.verticaltabs.tree.ColumnControlListener;
 import com.abapblog.verticaltabs.tree.Columns;
 import com.abapblog.verticaltabs.tree.FolderDoubleClickListener;
@@ -235,7 +236,7 @@ public class VTView extends ViewPart {
 		tabColumn.setLabelProvider(new TreeNameCellLabelProvider());
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		tabColumn.getColumn().addControlListener(columnListener);
-
+		tabColumn.setEditingSupport(new CellEditingSupport(viewer));
 	}
 
 	private void createPINColumn(TreeViewer viewer) {

@@ -87,5 +87,19 @@
             class="com.abapblog.verticaltabs.abap.preferences.PreferenceInitilizer">
       </initializer>
    </extension>
-
+   <extension
+         point="com.sap.adt.tools.abapsource.ui.processAfterSourcePageLoaded">
+               <class
+            name="com.abapblog.verticaltabs.abap.nodes.AbapPageLoadListener">
+      </class>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="com.abapblog.verticalTabs.preferences.MainPage"
+            class="com.abapblog.verticaltabs.abap.preferences.pages.AbapSpecific"
+            id="com.abapblog.verticalTabs.abap.preferences.AbapSpecific"
+            name="ABAP Specific settings">
+      </page>
+   </extension>
 </plugin>
