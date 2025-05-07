@@ -68,7 +68,7 @@ public abstract class TreeNode implements IAdaptable, ITreeNode {
 		return image;
 	}
 
-	protected void setImage(Image image) {
+	public void setImage(Image image) {
 		this.image = image;
 	}
 

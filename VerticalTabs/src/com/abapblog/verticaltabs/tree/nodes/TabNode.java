@@ -352,7 +352,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 
 				Display.getCurrent().asyncExec(() -> {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(200);
 						setImage(getEditorReference().getTitleImage());
 						TreeContentProvider.refreshTree();
 					} catch (Exception e) {

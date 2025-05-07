@@ -12,6 +12,7 @@ public class PreferenceInitilizer extends AbstractPreferenceInitializer {
 		final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.SHOW_ONLY_INACTIVE_EDITORS, false);
 		store.setDefault(PreferenceConstants.SHOW_ONLY_LOCKED_EDITORS, false);
+		store.setDefault(PreferenceConstants.UPDATE_SAP_GUI_TABS_TITLE_AND_DESCRIPTION, true);
 	}
 
 }

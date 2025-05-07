@@ -1,5 +1,6 @@
 package com.abapblog.verticaltabs.preferences.pages;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.TableViewer;
@@ -23,12 +24,14 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.abapblog.verticaltabs.Activator;
 import com.abapblog.verticaltabs.preferences.PreferenceConstants;
 import com.abapblog.verticaltabs.tree.Columns;
+import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.views.VTView;
 
 public class ColumnsSettingsPage extends PreferencePage implements IWorkbenchPreferencePage {
 	private static final String COLUMN = "column";
 	private static final String VISIBLE = "visible";
 	private final IPreferenceStore store;
+	private static BooleanFieldEditor visibilityNameDescriptionEditor;
 	public static final String ID = "com.abapblog.verticalTabs.preferences.Columns";
 	private Table table;
 	private TableItem[] tableItems = new TableItem[Columns.getTotalNumberOfColumns()];
@@ -51,7 +54,16 @@ public class ColumnsSettingsPage extends PreferencePage implements IWorkbenchPre
 		Composite container = createTableViewer(parent);
 		createTableEntries();
 		createSortButtons(container);
+		createDescriptionSelectionCheckbox(parent);
+
 		return container;
+	}
+
+	private void createDescriptionSelectionCheckbox(Composite parent) {
+		visibilityNameDescriptionEditor = new BooleanFieldEditor(PreferenceConstants.COLUMN_VISIBILITY_NAME_DESCRIPTION,
+				"Show Description in the Name column (if available)", parent);
+		visibilityNameDescriptionEditor.setPreferenceStore(store);
+		visibilityNameDescriptionEditor.load();
 	}
 
 	private void switchItemPlaces(int fromRow, int toRow) {
@@ -213,6 +225,8 @@ public class ColumnsSettingsPage extends PreferencePage implements IWorkbenchPre
 		}
 		VTView.changeColumnsVisibility();
 		VTView.changeColumnSequence();
+		visibilityNameDescriptionEditor.store();
+		TreeContentProvider.refreshTree();
 	}
 
 //Apply&Close
@@ -232,6 +246,8 @@ public class ColumnsSettingsPage extends PreferencePage implements IWorkbenchPre
 		moveItemsToDefaultSequence();
 		VTView.changeColumnsVisibility();
 		VTView.changeColumnSequence();
+		TreeContentProvider.refreshTree();
+
 	}
 
 	private void moveItemsToDefaultSequence() {
@@ -288,6 +304,9 @@ public class ColumnsSettingsPage extends PreferencePage implements IWorkbenchPre
 				store.getDefaultInt(PreferenceConstants.COLUMN_INDEX_NAME));
 		store.setValue(PreferenceConstants.COLUMN_INDEX_PATH,
 				store.getDefaultInt(PreferenceConstants.COLUMN_INDEX_PATH));
+		store.setValue(PreferenceConstants.COLUMN_VISIBILITY_NAME_DESCRIPTION,
+				store.getDefaultBoolean(PreferenceConstants.COLUMN_VISIBILITY_NAME_DESCRIPTION));
+		visibilityNameDescriptionEditor.load();
 	}
 
 }

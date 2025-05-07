@@ -35,6 +35,7 @@ public abstract class MementoConstants {
 		public static final String NodeExpanded = "Expanded";
 		public static final String NodeID = "Expanded";
 		public static final String NodePinned = "Pinned";
+		public static final String NodeDescription = "ObjectDescription";
 	}
 
 }
