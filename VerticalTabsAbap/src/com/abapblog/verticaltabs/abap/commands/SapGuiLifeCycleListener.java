@@ -19,6 +19,8 @@ import com.sap.adt.sapgui.ui.internal.handlers.ISapGuiLifeCycleListener;
 
 @SuppressWarnings("restriction")
 public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
+	private static final String ProgramSAPLSLVC_FULLSCREEN = "SAPLSLVC_FULLSCREEN";
+	private static final String ProgramSAPLZFALV = "SAPLZFALV";
 	private static final String EventPropertyTransaction = "transaction";
 	private static final String EventPropertyProgram = "program";
 	private static final String EventPropertyTitle = "title";
@@ -86,35 +88,8 @@ public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
 				String program = eventProperties.get(EventPropertyProgram);
 				String description = eventProperties.get(EventPropertyTitle);
 				SapGuiNode node = (SapGuiNode) set.getValue();
-				String newTitle = "";
-				boolean updated = false;
 				node.setShouldIgnorePropertyChange(true);
-				if ((transaction.equals(TransactionSA38) || transaction.equals(TransactionSE38)
-						|| transaction.equals(TransactionSADT_START_WB_URI))
-						&& !(program.equals(ProgramSAPMS38M) || program.equals(ProgramSAPLWBABAP))) {
-					newTitle = updateProjectNameInTitle(node.getOriginalTitle(), program);
-					if (!newTitle.equals(node.getOriginalTitle())) {
-						node.setOriginalTitle(newTitle);
-						updated = true;
-					}
-				} else if (transaction.equals(TransactionS000)) {
-					newTitle = updateProjectNameInTitle(node.getOriginalTitle(), node.getProjectName());
-					if (!newTitle.equals(node.getOriginalTitle())) {
-						node.setOriginalTitle(newTitle);
-						updated = true;
-					}
-				} else {
-					newTitle = updateProjectNameInTitle(node.getOriginalTitle(), transaction);
-					if (!newTitle.equals(node.getOriginalTitle())) {
-						node.setOriginalTitle(newTitle);
-						updated = true;
-					}
-				}
-				if (node.getObjectDescription() != null && !node.getObjectDescription().equals(description)) {
-					node.setObjectDescription(description);
-					updated = true;
-				}
-				if (updated) {
+				if (updateTitleAndDescription(editorPart, transaction, program, description, node)) {
 					TreeContentProvider.refreshTree();
 				}
 				return;
@@ -123,6 +98,65 @@ public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
 		}
 	}
 
+	private boolean updateTitleAndDescription(IEditorPart editorPart, String transaction, String program,
+			String description, SapGuiNode node) {
+		String newTitle;
+		boolean titleUpdated = false;
+		boolean descriptionUpdated = false;
+		if (notFullScreenALV(transaction, program)) {
+			if ((transaction.equals(TransactionSA38) || transaction.equals(TransactionSE38))
+					&& !(program.equals(ProgramSAPMS38M) || program.equals(ProgramSAPLWBABAP))) {
+				newTitle = updateProjectNameInTitle(node.getOriginalTitle(), program);
+				titleUpdated = updateTitle(node, newTitle);
+			} else if (transaction.equals(TransactionSADT_START_WB_URI)) {
+				newTitle = editorPart.getTitle();
+				titleUpdated = updateTitle(node, newTitle);
+			}
+
+			else if (transaction.equals(TransactionS000)) {
+				newTitle = updateProjectNameInTitle(node.getOriginalTitle(), node.getProjectName());
+				titleUpdated = updateTitle(node, newTitle);
+			} else {
+				newTitle = updateProjectNameInTitle(node.getOriginalTitle(), transaction);
+				titleUpdated = updateTitle(node, newTitle);
+			}
+		}
+		descriptionUpdated = updateDescription(description, node);
+		return titleUpdated || descriptionUpdated;
+	}
+
+	private boolean updateDescription(String description, SapGuiNode node) {
+		if (node.getObjectDescription() != null && !node.getObjectDescription().equals(description)) {
+			node.setObjectDescription(description);
+			return true;
+		}
+		return false;
+	}
+
+	private boolean updateTitle(SapGuiNode node, String newTitle) {
+		if (!newTitle.equals(node.getOriginalTitle())) {
+			node.setOriginalTitle(newTitle);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * This method checks if the program is not a full screen ALV like SALF,
+	 * REUSE_ALV or FALV. In this case if they are and the transaction is SE38 or
+	 * SA38, we do not want to update the title with program name, as it would be
+	 * then one of the Full Screen Function Group name like SAPLZFALV or
+	 * SAPLSLVC_FULLSCREEN.
+	 */
+	private boolean notFullScreenALV(String transaction, String program) {
+		return !((transaction.equals(TransactionSA38) || transaction.equals(TransactionSE38))
+				&& (program.equals(ProgramSAPLZFALV) || program.equals(ProgramSAPLSLVC_FULLSCREEN)));
+	}
+
+	/**
+	 * If in the previous title with have a project name contained, we add this
+	 * project name also to then new title, keeping consistency.
+	 */
 	private String updateProjectNameInTitle(String previousTitle, String newTitle) {
 		if (previousTitle != null && previousTitle.contains("[")) {
 			int start = previousTitle.indexOf("[");
