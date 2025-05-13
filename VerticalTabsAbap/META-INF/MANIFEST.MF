@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.abapblog.verticaltabs.abap;singleton:=true
 Bundle-Version: 0.0.4.qualifier
 Import-Package: com.sap.adt.destinations.ui.logon,
  com.sap.adt.tools.core.ui.editors,
- com.sap.adt.tools.core.ui.navigation
+ com.sap.adt.tools.core.ui.navigation,
+ org.eclipse.emf.ecore
 Bundle-Activator: com.abapblog.verticaltabs.abap.Activator
 Bundle-Vendor: abapBlog.com
 Require-Bundle: org.eclipse.core.runtime,
