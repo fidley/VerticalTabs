@@ -1,19 +1,29 @@
 package com.abapblog.verticaltabs.abap.commands;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.part.WorkbenchPart;
 
 import com.abapblog.verticaltabs.Activator;
 import com.abapblog.verticaltabs.abap.nodes.SapGuiNode;
 import com.abapblog.verticaltabs.abap.preferences.PreferenceConstants;
 import com.abapblog.verticaltabs.tree.TreeContentProvider;
 import com.abapblog.verticaltabs.tree.nodes.TabNode;
+import com.sap.adt.sapgui.ui.internal.editors.GuiEditorInput;
+import com.sap.adt.sapgui.ui.internal.editors.SapGuiStartupData;
 import com.sap.adt.sapgui.ui.internal.handlers.ISapGuiLifeCycleEvent;
 import com.sap.adt.sapgui.ui.internal.handlers.ISapGuiLifeCycleListener;
 
@@ -32,44 +42,54 @@ public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
 	private static final String ProgramSAPLWBABAP = "SAPLWBABAP";
 	private static final String EventPropertyIsModal = "isModal";
 	private Timer timer = new Timer();
-	private boolean isProcessing = false;
 	private long delay = 1000;
 	private Map<String, String> eventProperties = new HashMap<String, String>();
 	private IEditorPart editorPart = null;
 	private static final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+	private static final ConcurrentHashMap<IEditorPart, Timer> editorLocks = new ConcurrentHashMap<>();
 
 	@Override
 	public void handleLifeCycleEvent(ISapGuiLifeCycleEvent event) {
 		if (store.getBoolean(PreferenceConstants.UPDATE_SAP_GUI_TABS_TITLE_AND_DESCRIPTION) == false) {
 			return;
 		}
-//		System.out.println("Event: " + event.getType() + " " + event.getProperties().toString());
+		// System.out.println("Event: " + event.getType() + " " +
+		// event.getProperties().toString());
 		if (event == null || !event.getType().equals(ISapGuiLifeCycleEvent.EventType.GUI_REQUEST_ENDED)) {
 			return;
 		}
 		eventProperties = event.getProperties();
-		if (eventProperties.get(EventPropertyIsModal) == null
-				|| eventProperties.get(EventPropertyIsModal).equals("1")) {
+		if (eventProperties.get(EventPropertyIsModal) == null || (eventProperties.get(EventPropertyIsModal).equals("1")
+				&& !eventProperties.get(EventPropertyTransaction).equals(TransactionSADT_START_WB_URI))) {
 			return;
 		}
 		editorPart = (IEditorPart) event.getEditor();
-		if (!isProcessing) {
-			isProcessing = true;
+		if (timer == null) {
+			timer = new Timer();
+		}
+		if (editorLocks.putIfAbsent(editorPart, timer) == null) {
+
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
 					processEvent(editorPart, eventProperties);
-					isProcessing = false;
+					editorLocks.remove(editorPart);
+
 				}
 			}, delay);
 		} else {
-			timer.cancel();
+			timer = editorLocks.get(editorPart);
+			if (timer != null) {
+				timer.cancel();
+			}
+
 			timer = new Timer();
+			editorLocks.put(editorPart, timer);
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
 					processEvent(editorPart, eventProperties);
-					isProcessing = false;
+					editorLocks.remove(editorPart);
 				}
 			}, delay);
 		}
@@ -90,7 +110,9 @@ public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
 				SapGuiNode node = (SapGuiNode) set.getValue();
 				node.setShouldIgnorePropertyChange(true);
 				if (updateTitleAndDescription(editorPart, transaction, program, description, node)) {
+					updateTabName(node, editorPart);
 					TreeContentProvider.refreshTree();
+
 				}
 				return;
 			}
@@ -110,11 +132,15 @@ public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
 				titleUpdated = updateTitle(node, newTitle);
 			} else if (transaction.equals(TransactionSADT_START_WB_URI)) {
 				newTitle = editorPart.getTitle();
+				newTitle = getTitleFromGuiLinkedObject(editorPart, newTitle, transaction);
+				newTitle = updateProjectNameInTitle(node.getOriginalTitle(), newTitle);
 				titleUpdated = updateTitle(node, newTitle);
 			}
 
 			else if (transaction.equals(TransactionS000)) {
-				newTitle = updateProjectNameInTitle(node.getOriginalTitle(), node.getProjectName());
+
+				newTitle = getTitleFromGuiLinkedObject(editorPart, node.getProjectName(), transaction);
+				newTitle = updateProjectNameInTitle(node.getOriginalTitle(), newTitle);
 				titleUpdated = updateTitle(node, newTitle);
 			} else {
 				newTitle = updateProjectNameInTitle(node.getOriginalTitle(), transaction);
@@ -123,6 +149,29 @@ public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
 		}
 		descriptionUpdated = updateDescription(description, node);
 		return titleUpdated || descriptionUpdated;
+	}
+
+	private String getTitleFromGuiLinkedObject(IEditorPart editorPart, String newTitle, String transaction) {
+		if (editorPart.getEditorInput() instanceof IFileEditorInput) {
+			IFile file = ((IFileEditorInput) editorPart.getEditorInput()).getFile();
+			newTitle = file.getName();// 170
+		} else if (editorPart.getEditorInput() instanceof GuiEditorInput) {// 179
+			SapGuiStartupData startupInfo = ((GuiEditorInput) editorPart.getEditorInput()).getStartupInfo();
+			if (startupInfo != null) {
+				String parameters = startupInfo.getParameters(true);
+				Pattern pattern = Pattern.compile("tran=\\**(\\w*)\\s*");
+				Matcher matcher = pattern.matcher(parameters);
+				String startupTransaction = "";
+				if (matcher.find()) {
+					startupTransaction = matcher.group(1);
+				}
+				if (startupTransaction.equals(transaction)) {
+					newTitle = startupInfo.getTitle();
+
+				}
+			}
+		}
+		return newTitle;
 	}
 
 	private boolean updateDescription(String description, SapGuiNode node) {
@@ -169,6 +218,37 @@ public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
 			}
 		} else {
 			return newTitle;
+		}
+	}
+
+	private void updateTabName(SapGuiNode node, IEditorPart editorPart) {
+		Display.getDefault().asyncExec(() -> {
+			updateGUITabName(node, editorPart);
+			updateGUIToolTip(node, editorPart);
+		});
+	}
+
+	private void updateGUIToolTip(SapGuiNode node, IEditorPart editorPart) {
+		try {
+			Method method = WorkbenchPart.class.getDeclaredMethod("setTitleToolTip", String.class);
+			method.setAccessible(true);
+			method.invoke(editorPart, node.getObjectDescription());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void updateGUITabName(SapGuiNode node, IEditorPart editorPart) {
+		try {
+			Method method = WorkbenchPart.class.getDeclaredMethod("setPartName", String.class);
+			method.setAccessible(true);
+			String title = node.getTitle();
+			if (store.getBoolean(PreferenceConstants.PUT_DESCRIPTION_INTO_SAP_GUI_EDITOR_TABS_TITLE)) {
+				title = title + " " + node.getObjectDescription();
+			}
+			method.invoke(editorPart, title); // pass arguments as needed
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
