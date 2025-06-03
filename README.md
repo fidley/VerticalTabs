@@ -1,4 +1,13 @@
 # VerticalTabs
+  [![Eclipse](https://img.shields.io/badge/Eclipse-FE7A16.svg?logo=Eclipse&logoColor=white)](#)  [![Eclipse Marketplace](https://img.shields.io/eclipse-marketplace/favorites/vertical-tabs)](https://marketplace.eclipse.org/content/vertical-tabs)
+[![Downloads](https://img.shields.io/eclipse-marketplace/dt/vertical-tabs)](https://marketplace.eclipse.org/content/vertical-tabs)
+
+  [![fidley - VerticalTabs](https://img.shields.io/static/v1?label=fidley&message=VerticalTabs&color=blue&logo=github)](https://github.com/fidley/VerticalTabs "Go to GitHub repo")
+[![stars - VerticalTabs](https://img.shields.io/github/stars/fidley/VerticalTabs?style=social)](https://github.com/fidley/VerticalTabs)
+[![forks - VerticalTabs](https://img.shields.io/github/forks/fidley/VerticalTabs?style=social)](https://github.com/fidley/VerticalTabs)
+[![License](https://img.shields.io/badge/License-MIT-blue)](#license)
+[![issues - HelpdeskLinks](https://img.shields.io/github/issues/fidley/VerticalTabs)](https://github.com/fidley/VerticalTabs/issues)
+
 
 Should work with all editors.
 
@@ -6,10 +15,6 @@ Should work with all editors.
 
 [Latest Release Notes](https://raw.githack.com/fidley/VerticalTabs/main/VerticalTabsReleaseNotes/html/changelog/latestReleaseNotes.html)
 
-Eclipse Marketplace Stats
-
-![Eclipse Marketplace](https://img.shields.io/eclipse-marketplace/favorites/vertical-tabs)
-![Downloads](https://img.shields.io/eclipse-marketplace/dt/vertical-tabs)
 
 What is working:
 - Sorting -> manual (drag & drop), by project, by name, editor ID
