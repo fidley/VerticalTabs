@@ -1,7 +1,11 @@
 package com.abapblog.verticaltabs.tree.nodes;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 import com.abapblog.verticaltabs.icons.Icons;
 
@@ -94,5 +98,21 @@ public class ProjectNode extends TreeNode implements Comparable<ProjectNode> {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	@Override
+	public Image getImage() {
+		if (project == null) {
+			return super.getImage();
+		}
+		ILabelProvider baseProvider = new WorkbenchLabelProvider();
+		DecoratingLabelProvider decoratingProvider = new DecoratingLabelProvider(baseProvider,
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
+		Image decoratedImage = decoratingProvider.getImage(project);
+		if (decoratedImage != null) {
+			return decoratedImage;
+		} else {
+			return super.getImage();
+		}
 	}
 }
