@@ -385,6 +385,7 @@ public class TabNode extends TreeNode implements IPropertyListener, Comparable<T
 		setImage(editorReference.getTitleImage());
 		setProjectAndPath(editorReference);
 		setSplitOfEdior(editorReference);
+		addUIParts();
 	}
 
 	public IProject getProject() {
