@@ -232,7 +232,15 @@ public class SapGuiLifeCycleListener implements ISapGuiLifeCycleListener {
 		try {
 			Method method = WorkbenchPart.class.getDeclaredMethod("setTitleToolTip", String.class);
 			method.setAccessible(true);
-			method.invoke(editorPart, node.getObjectDescription());
+
+			String tooltip = "";
+
+			if (store.getBoolean(PreferenceConstants.PUT_TABNAME_INTO_SAP_GUI_EDITOR_TOOLTIP)) {
+				tooltip = node.getTitle() + " " + node.getObjectDescription();
+			} else {
+				tooltip = node.getObjectDescription();
+			}
+			method.invoke(editorPart, tooltip);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
