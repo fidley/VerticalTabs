@@ -17,6 +17,7 @@ public class AbapSpecific extends FieldEditorPreferencePage implements IWorkbenc
 	public static final String ID = "com.abapblog.verticalTabs.abap.preferences.AbapSpecific";
 	private FieldEditor updateSapGuiTabsTitleAndDescriptionFieldEditor;
 	private FieldEditor putDescriptionIntoSapGuiEditorTabsTitleFieldEditor;
+	private FieldEditor putTabnameIntoSapGuiEditorTooltipFieldEditor;
 
 	public AbapSpecific() {
 		super(GRID);
@@ -42,6 +43,10 @@ public class AbapSpecific extends FieldEditorPreferencePage implements IWorkbenc
 				"&Put description into SAP GUI Editor Tab title - works only with above setting on (experimental)",
 				getFieldEditorParent());
 		addField(putDescriptionIntoSapGuiEditorTabsTitleFieldEditor);
+		putTabnameIntoSapGuiEditorTooltipFieldEditor = new BooleanFieldEditor(
+				PreferenceConstants.PUT_TABNAME_INTO_SAP_GUI_EDITOR_TOOLTIP,
+				"&Put tab name into SAP GUI Editor Tooltip (instead of description)", getFieldEditorParent());
+		addField(putTabnameIntoSapGuiEditorTooltipFieldEditor);
 	}
 
 	@Override
@@ -71,6 +76,7 @@ public class AbapSpecific extends FieldEditorPreferencePage implements IWorkbenc
 		store.setToDefault(PreferenceConstants.PUT_DESCRIPTION_INTO_SAP_GUI_EDITOR_TABS_TITLE);
 		updateSapGuiTabsTitleAndDescriptionFieldEditor.loadDefault();
 		putDescriptionIntoSapGuiEditorTabsTitleFieldEditor.loadDefault();
+		putTabnameIntoSapGuiEditorTooltipFieldEditor.loadDefault();
 	}
 
 }

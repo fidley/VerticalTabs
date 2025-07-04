@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.abapblog.verticaltabs.feature_0.0.9.202506121552.jar" id="com.abapblog.verticaltabs.feature" version="0.0.9.202506121552">
+   <feature url="features/com.abapblog.verticaltabs.feature_0.0.9.202507031330.jar" id="com.abapblog.verticaltabs.feature" version="0.0.9.202507031330">
       <category name="Vertical Tabs"/>
    </feature>
-   <feature url="features/com.abapblog.verticaltabs.abap.feature_0.0.4.202506121552.jar" id="com.abapblog.verticaltabs.abap.feature" version="0.0.4.202506121552">
+   <feature url="features/com.abapblog.verticaltabs.abap.feature_0.0.4.202507031330.jar" id="com.abapblog.verticaltabs.abap.feature" version="0.0.4.202507031330">
       <category name="Vertical Tabs Language Specific Features"/>
    </feature>
    <category-def name="Vertical Tabs" label="Vertical Tabs"/>

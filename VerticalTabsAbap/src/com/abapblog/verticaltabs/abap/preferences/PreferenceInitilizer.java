@@ -14,6 +14,7 @@ public class PreferenceInitilizer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.SHOW_ONLY_LOCKED_EDITORS, false);
 		store.setDefault(PreferenceConstants.UPDATE_SAP_GUI_TABS_TITLE_AND_DESCRIPTION, true);
 		store.setDefault(PreferenceConstants.PUT_DESCRIPTION_INTO_SAP_GUI_EDITOR_TABS_TITLE, true);
+		store.setDefault(PreferenceConstants.PUT_TABNAME_INTO_SAP_GUI_EDITOR_TOOLTIP, false);
 	}
 
 }
