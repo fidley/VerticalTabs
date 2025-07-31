@@ -19,6 +19,6 @@ Require-Bundle: org.eclipse.core.runtime,
  com.sap.adt.project.ui,
  com.sap.adt.sapgui.ui,
  com.sap.adt.tools.abapsource.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: com.abapblog.verticaltabs.abap
 Bundle-ActivationPolicy: lazy

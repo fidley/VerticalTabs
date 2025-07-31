@@ -8,6 +8,6 @@ Bundle-Activator: com.abapblog.verticaltabs.release.notes.Activator
 Eclipse-BundleShape: dir
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: VerticalTabsReleaseNotes
 Bundle-ActivationPolicy: lazy
